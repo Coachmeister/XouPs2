@@ -1,10 +1,12 @@
 package net.ximias;
 
+import net.ximias.psEventHandlers.Ps2EventHandler;
+import org.json.JSONObject;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Scanner;
 
 /**
  * Connects to the event streaming part of the census API.
@@ -23,6 +25,12 @@ public class Ps2EventStreamingConnection {
 			
 			// add debug
 			clientEndPoint.addMessageHandler(System.out::println);
+			clientEndPoint.addMessageHandler(message -> {
+				JSONObject response = new JSONObject(message);
+				JSONObject payload = response.getJSONObject("payload");
+				subscribedEvents.keySet().stream().filter(it -> it.equals(payload.getString("event_name")))
+						.forEach(it -> subscribedEvents.get(it).forEach(eventHandler -> eventHandler.eventRecieved(payload)));
+			});
 			
 		} catch (URISyntaxException ex) {
 			System.err.println("URISyntaxException exception: " + ex.getMessage());
