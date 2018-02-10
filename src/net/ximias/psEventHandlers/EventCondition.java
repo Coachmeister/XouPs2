@@ -9,5 +9,11 @@ public class EventCondition {
 	
 	What condition to be applied to data set.
 	
+	
+	
+	Receiving data:
+	Receive payload
+	Process payload
+	Return true or false
 	 */
 }

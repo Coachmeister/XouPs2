@@ -66,8 +66,29 @@ public class CensusConnection {
 		return players.getJSONArray("character_name_list");
 	}
 	
-	public static void main(String[] args) throws IOException {
-		listPlayersStartsWith("ximia").forEach(System.out::println);
-		//System.out.println(findPlayerByName("trick2scuard"));
+	public static JSONObject sendQuery(String query){
+		try {
+			return censusQuery(query);
+		} catch (IOException e) {
+			return null;
+		}
 	}
+	
+	public static void main(String[] args) throws IOException {
+		listPlayersStartsWith("ximias").forEach(System.out::println);
+		System.out.println(findPlayerByName("ximias"));
+	}
+	
+	
 }
+
+/*{"character_list":[{
+"times":{"login_count":"29","last_save":"1510257548","last_login":"1510254664","minutes_played":"2797","creation_date":"2017-09-28 18:30:22.0","last_login_date":"2017-11-09 19:11:04.0","creation":"1506623422","last_save_date":"2017-11-09 19:59:08.0"},
+"battle_rank":{"percent_to_next":"94","value":"31"},
+"profile_id":"20",
+"name":{"first_lower":"ximiasfromcobalt","first":"XimiasFromCobalt"},
+"title_id":"0",
+"faction_id":"1",
+"daily_ribbon":{"date":"2017-11-08 23:00:00.0","count":"5","time":"1510182000"},"character_id":"5428653157989617089","head_id":"1","certs":{"earned_points":"3428","spent_points":"4474","percent_to_next":"0.64","available_points":"468","gifted_points":"1514"}}],"returned":1}
+
+ */
