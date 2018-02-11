@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 
+/**
+ * Receives an array of Condition data and a Condition to apply to the given data.
+ */
 public class EventCondition {
 	
 	/*

@@ -19,5 +19,9 @@ public abstract class Ps2EventHandler {
 		view.addEffect(processEvent(payload));
 	}
 	
-	public abstract Effect processEvent(JSONObject payload);
+	protected abstract Effect processEvent(JSONObject payload);
+}
+enum Ps2EventType{
+	PLAYER,
+	WORLD;
 }

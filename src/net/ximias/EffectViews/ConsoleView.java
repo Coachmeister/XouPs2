@@ -29,6 +29,8 @@ public class ConsoleView implements EffectView {
 	@Override
 	public synchronized void addEffect(Effect effect) {
 		if (effect instanceof ColorEffect){
+			System.out.println("effect Added size: "+effects.size());
+			System.out.println(((ColorEffect) effect).isDone());
 			effects.add((ColorEffect) effect);
 		}
 	}

@@ -27,9 +27,12 @@ public class Ps2EventStreamingConnection {
 			clientEndPoint.addMessageHandler(System.out::println);
 			clientEndPoint.addMessageHandler(message -> {
 				JSONObject response = new JSONObject(message);
+				System.out.println(response);
+				if(!response.has("payload")) return;
 				JSONObject payload = response.getJSONObject("payload");
-				subscribedEvents.keySet().stream().filter(it -> it.equals(payload.getString("event_name")))
-						.forEach(it -> subscribedEvents.get(it).forEach(eventHandler -> eventHandler.eventRecieved(payload)));
+				System.out.println(payload);
+				subscribedEvents.get(payload.getString("event_name")).forEach(it -> it.eventRecieved(payload));
+				System.out.println(subscribedEvents.get(payload.getString("event_name")).size()+" Handlers");
 			});
 			
 		} catch (URISyntaxException ex) {
@@ -49,7 +52,7 @@ public class Ps2EventStreamingConnection {
 			subscribedEvents.get(eventName).add(handler);
 		}else{
 			subscribedEvents.put(eventName,new ArrayList<>(10));
-			
+			subscribedEvents.get(eventName).add(handler);
 			clientEndPoint.sendMessage(
 					"{" +
 					"\"service\":\"event\"," +
@@ -73,7 +76,7 @@ public class Ps2EventStreamingConnection {
 			subscribedEvents.get(eventName).add(handler);
 		}else{
 			subscribedEvents.put(eventName,new ArrayList<>(10));
-			
+			subscribedEvents.get(eventName).add(handler);
 			clientEndPoint.sendMessage(
 					"{" +
 					"\"service\":\"event\"," +

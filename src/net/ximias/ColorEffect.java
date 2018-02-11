@@ -14,6 +14,7 @@ public class ColorEffect implements Effect{
 	
 	public ColorEffect(int duration_miliseconds, Color color_javafx){
 		endTime = LocalDateTime.now().plus(duration_miliseconds, ChronoUnit.MILLIS);
+		if (endTime.isBefore(LocalDateTime.now())) throw new Error("Time is weird");
 		color = color_javafx;
 	}
 	
