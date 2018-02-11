@@ -1,6 +1,6 @@
-package net.ximias;
+package net.ximias.network;
 
-import net.ximias.psEventHandlers.Ps2EventHandler;
+import net.ximias.psEvent.handler.Ps2EventHandler;
 import org.json.JSONObject;
 
 import java.net.URI;
@@ -31,7 +31,7 @@ public class Ps2EventStreamingConnection {
 				if(!response.has("payload")) return;
 				JSONObject payload = response.getJSONObject("payload");
 				System.out.println(payload);
-				subscribedEvents.get(payload.getString("event_name")).forEach(it -> it.eventRecieved(payload));
+				subscribedEvents.get(payload.getString("event_name")).forEach(it -> it.eventReceived(payload));
 				System.out.println(subscribedEvents.get(payload.getString("event_name")).size()+" Handlers");
 			});
 			

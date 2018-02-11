@@ -1,10 +1,8 @@
-package net.ximias.psEventHandlers;
+package net.ximias.psEvent.condition;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.function.BiConsumer;
-import java.util.function.BiPredicate;
 
 /**
  * Receives an array of Condition data and a Condition to apply to the given data.

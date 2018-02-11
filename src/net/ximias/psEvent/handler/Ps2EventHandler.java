@@ -1,7 +1,7 @@
-package net.ximias.psEventHandlers;
+package net.ximias.psEvent.handler;
 
-import net.ximias.Effect;
-import net.ximias.EffectView;
+import net.ximias.effects.Effect;
+import net.ximias.effects.EffectView;
 import org.json.JSONObject;
 
 /**
@@ -15,7 +15,7 @@ public abstract class Ps2EventHandler {
 		this.view = view;
 	}
 	
-	public void eventRecieved(JSONObject payload){
+	public void eventReceived(JSONObject payload){
 		view.addEffect(processEvent(payload));
 	}
 	

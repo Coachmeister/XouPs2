@@ -1,4 +1,4 @@
-package net.ximias;
+package net.ximias.effects.EffectViews;
 
 import javafx.application.Application;
 import javafx.stage.Stage;

@@ -1,12 +1,12 @@
-package net.ximias.psEventHandlers;
+package net.ximias.psEvent.condition;
 
-import net.ximias.CensusConnection;
+import net.ximias.network.CensusConnection;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class CensusQuery implements ConditionData{
+public class CensusData implements ConditionData {
 	/*
 	What to do:
 	Returns a single data point from the census
@@ -27,7 +27,7 @@ public class CensusQuery implements ConditionData{
 	HashMap<String, String> searchTerms;
 	HashMap<String, String> eventSearchTerms;
 	
-	public CensusQuery(String lookup, String get, String resolve, HashMap<String, String> searchTerms, HashMap<String, String> eventSearchTerms) {
+	public CensusData(String lookup, String get, String resolve, HashMap<String, String> searchTerms, HashMap<String, String> eventSearchTerms) {
 		this.lookup = lookup;
 		this.get = get;
 		this.resolve = resolve;
@@ -35,7 +35,7 @@ public class CensusQuery implements ConditionData{
 		this.eventSearchTerms = eventSearchTerms;
 	}
 	
-	public CensusQuery(String lookup, String get, HashMap<String, String> searchTerms, HashMap<String, String> eventSearchTerms) {
+	public CensusData(String lookup, String get, HashMap<String, String> searchTerms, HashMap<String, String> eventSearchTerms) {
 		this.lookup = lookup;
 		this.get = get;
 		this.searchTerms = searchTerms;
@@ -99,7 +99,7 @@ public class CensusQuery implements ConditionData{
 	public static void main(String[] args) {
 		HashMap<String, String> params = new HashMap<>();
 		params.put("character_id", "8287548916321388337");
-		CensusQuery query = new CensusQuery("character", "faction_id", params, new HashMap<>(1));
+		CensusData query = new CensusData("character", "faction_id", params, new HashMap<>(1));
 		System.out.println(query.get(new JSONObject("{}")));
 	}
 }

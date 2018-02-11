@@ -1,10 +1,11 @@
-package net.ximias.EffectViews;
+package net.ximias.effects.EffectViews;
 
 import javafx.scene.paint.Color;
-import net.ximias.ColorEffect;
-import net.ximias.Effect;
-import net.ximias.EffectView;
-import net.ximias.EventColorEffect;
+import net.ximias.effects.impl.TimedColorEffect;
+import net.ximias.effects.Effect;
+import net.ximias.effects.EffectView;
+import net.ximias.effects.impl.EventColorEffect;
+import net.ximias.effects.impl.TimedFadingColorAnimation;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -14,7 +15,7 @@ import java.util.TimerTask;
  * Debug view. Used for displaying the colors in the console.
  */
 public class ConsoleView implements EffectView {
-	ArrayList<ColorEffect> effects;
+	private ArrayList<Effect> effects;
 	
 	public ConsoleView(){
 		effects = new ArrayList<>(60);
@@ -28,18 +29,15 @@ public class ConsoleView implements EffectView {
 	
 	@Override
 	public synchronized void addEffect(Effect effect) {
-		if (effect instanceof ColorEffect){
-			System.out.println("effect Added size: "+effects.size());
-			System.out.println(((ColorEffect) effect).isDone());
-			effects.add((ColorEffect) effect);
-		}
+		effects.add(effect);
+		System.out.println("Effect added. current effect size: "+effects.size());
 	}
 	
 	private synchronized Color getColorAndClearFinishedEffects(){
 		double r, g, b, a;
 		r=g=b=a=0;
-		effects.removeIf(ColorEffect::isDone);
-		for (ColorEffect effect : effects) {
+		effects.removeIf(Effect::isDone);
+		for (Effect effect : effects) {
 			
 			r += effect.getColor().getRed()*effect.getColor().getOpacity();
 			g += effect.getColor().getGreen()*effect.getColor().getOpacity();
@@ -51,14 +49,15 @@ public class ConsoleView implements EffectView {
 	
 	public static void main(String[] args) {
 		ConsoleView view = new ConsoleView();
-		EventColorEffect effect = new EventColorEffect(0,Color.BLUE);
+		
+		EventColorEffect effect = new EventColorEffect(Color.BLUE);
 		view.addEffect(effect);
 		
 		Color yellow = Color.color(0.5,0.5,0,0.5);
-		ColorEffect effect1 = new ColorEffect(1300, yellow);
+		TimedColorEffect effect1 = new TimedColorEffect(1300, yellow);
 		view.addEffect(effect1);
 		
-		
+		view.addEffect(new TimedFadingColorAnimation(Color.WHITE,3000));
 	}
 	
 }

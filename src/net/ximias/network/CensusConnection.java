@@ -1,4 +1,4 @@
-package net.ximias;
+package net.ximias.network;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

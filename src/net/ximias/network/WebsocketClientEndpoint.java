@@ -1,4 +1,4 @@
-package net.ximias;
+package net.ximias.network;
 
 import java.net.URI;
 import javax.websocket.ClientEndpoint;

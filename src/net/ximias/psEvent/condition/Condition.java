@@ -1,4 +1,4 @@
-package net.ximias.psEventHandlers;
+package net.ximias.psEvent.condition;
 
 import java.util.function.BiPredicate;
 

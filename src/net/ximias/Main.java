@@ -1,6 +1,8 @@
 package net.ximias;
 
 
+import net.ximias.network.WebsocketClientEndpoint;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Scanner;

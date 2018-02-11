@@ -1,6 +1,5 @@
-package net.ximias.psEventHandlers;
+package net.ximias.network;
 
-import net.ximias.CensusConnection;
 import org.json.JSONObject;
 
 public class CurrentPlayer {

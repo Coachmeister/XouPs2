@@ -1,4 +1,4 @@
-package net.ximias;
+package net.ximias.effects;
 
 public interface EffectProducer {
 	public Effect build();

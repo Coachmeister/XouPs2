@@ -1,5 +1,6 @@
-package net.ximias.psEventHandlers;
+package net.ximias.psEvent.condition;
 
+import net.ximias.network.CurrentPlayer;
 import org.json.JSONObject;
 
 public class ConstantData implements ConditionData {
