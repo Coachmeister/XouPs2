@@ -3,6 +3,7 @@ package net.ximias.psEvent.condition;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Receives an array of Condition data and a Condition to apply to the given data.
@@ -29,6 +30,11 @@ public class EventCondition {
 	
 	public EventCondition(ArrayList<ConditionData> data, Condition condition) {
 		this.data = data;
+		this.condition = condition;
+	}
+	public EventCondition(Condition condition, ConditionData... data) {
+		this.data = new ArrayList<>();
+		this.data.addAll(Arrays.asList(data));
 		this.condition = condition;
 	}
 	

@@ -1,6 +1,7 @@
 package net.ximias.psEvent.handler;
 
 import net.ximias.effects.Effect;
+import net.ximias.effects.EffectProducer;
 import net.ximias.effects.EffectView;
 import org.json.JSONObject;
 
@@ -9,17 +10,21 @@ import org.json.JSONObject;
  */
 public abstract class Ps2EventHandler {
 	
-	protected EffectView view;
+	private EffectView view;
+	private EffectProducer effect;
 	
-	Ps2EventHandler(EffectView view){
+	Ps2EventHandler(EffectView view, EffectProducer effect){
 		this.view = view;
+		this.effect = effect;
 	}
 	
 	public void eventReceived(JSONObject payload){
-		view.addEffect(processEvent(payload));
+		if (conditionIsSatisfied(payload)){
+			view.addEffect(effect.build());
+		}
 	}
 	
-	protected abstract Effect processEvent(JSONObject payload);
+	protected abstract boolean conditionIsSatisfied(JSONObject payload);
 }
 enum Ps2EventType{
 	PLAYER,
