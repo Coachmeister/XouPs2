@@ -3,11 +3,15 @@ package net.ximias.effects.impl;
 import javafx.scene.paint.Color;
 import net.ximias.effects.Effect;
 import net.ximias.effects.EffectProducer;
+import net.ximias.fileParser.JsonSerializable;
+import org.json.JSONObject;
 
-public class TimedColorAnimationProducer implements EffectProducer {
-	private Color startColor;
+import java.util.HashMap;
+
+public class TimedColorAnimationProducer extends JsonSerializable implements EffectProducer {
+	protected Color startColor;
 	private Color endColor;
-	private long duration;
+	protected long duration;
 	
 	TimedColorAnimationProducer(Color startColor, Color endColor, long duration_milliseconds) {
 		this.startColor = startColor;
@@ -18,6 +22,20 @@ public class TimedColorAnimationProducer implements EffectProducer {
 	@Override
 	public Effect build() {
 		return new TimedColorAnimation(startColor, endColor, duration);
+	}
+	
+	@Override
+	public JsonSerializable fromJson(JSONObject data) {
+		return new TimedColorAnimationProducer(getColor(data, "startColor"), getColor(data, "endColor"), data.getLong("duration"));
+	}
+	
+	@Override
+	public HashMap<String, String> toJson() {
+		HashMap<String, String> h = new HashMap<>(4);
+		h.put("duration", String.valueOf(duration));
+		h.put("startColor", startColor.toString());
+		h.put("endColor", endColor.toString());
+		return h;
 	}
 }
 class TimedColorAnimation implements Effect{
