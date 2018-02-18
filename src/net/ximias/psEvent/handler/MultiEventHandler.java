@@ -7,12 +7,10 @@ import net.ximias.effects.EffectViews.ConsoleView;
 import net.ximias.effects.impl.TimedColorEffectProducer;
 import net.ximias.network.Ps2EventStreamingConnection;
 import net.ximias.psEvent.condition.Condition;
-import net.ximias.psEvent.condition.ConditionDataType;
-import net.ximias.psEvent.condition.ConstantData;
+import net.ximias.psEvent.condition.ConditionDataSource;
+import net.ximias.psEvent.condition.EventData;
 import net.ximias.psEvent.condition.EventCondition;
 import org.json.JSONObject;
-
-import java.util.*;
 
 public class MultiEventHandler extends Ps2EventHandler {
 	/*
@@ -78,9 +76,9 @@ public class MultiEventHandler extends Ps2EventHandler {
 		TimedColorEffectProducer white = new TimedColorEffectProducer(2100, Color.WHITE);
 		TimedColorEffectProducer red = new TimedColorEffectProducer(2100, Color.RED);
 		
-		ConstantData c13 = new ConstantData("13", ConditionDataType.CONSTANT_DATA);
-		ConstantData c1 = new ConstantData("1", ConditionDataType.CONSTANT_DATA);
-		ConstantData world = new ConstantData("world_id", ConditionDataType.EVENT_VARIABLE);
+		EventData c13 = new EventData("13", ConditionDataSource.CONSTANT);
+		EventData c1 = new EventData("1", ConditionDataSource.CONSTANT);
+		EventData world = new EventData("world_id", ConditionDataSource.EVENT);
 		
 		EventCondition worldis1 = new EventCondition(Condition.EQUALS, c1, world);
 		EventCondition worldis13 = new EventCondition(Condition.EQUALS, c13, world);

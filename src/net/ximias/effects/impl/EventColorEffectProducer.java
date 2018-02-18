@@ -29,6 +29,10 @@ public class EventColorEffectProducer extends JsonSerializable implements Effect
 		this.color = color;
 	}
 	
+	public EventColorEffectProducer(JSONObject data) {
+		this(Color.valueOf(data.getString("color")), data.getString("name"));
+	}
+	
 	public void clearEffect(){
 		if (eventEffects.get(name) != null) {
 			EventColorEffect ec = eventEffects.get(name).get();
@@ -55,11 +59,6 @@ public class EventColorEffectProducer extends JsonSerializable implements Effect
 		}
 		
 		return ec;
-	}
-	
-	@Override
-	public JsonSerializable fromJson(JSONObject data) {
-		return new EventColorEffectProducer(getColor(data, "color"), data.getString("name"));
 	}
 	
 	@Override

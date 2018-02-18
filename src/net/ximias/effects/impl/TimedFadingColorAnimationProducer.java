@@ -11,9 +11,9 @@ public class TimedFadingColorAnimationProducer extends TimedColorAnimationProduc
 		super(startColor, Color.TRANSPARENT, duration_milliseconds);
 	}
 	
-	@Override
-	public JsonSerializable fromJson(JSONObject data) {
-		return new TimedFadingColorAnimationProducer(getColor(data, "color"), data.getLong("duration"));
+	
+	TimedFadingColorAnimationProducer(JSONObject data) {
+		this(Color.valueOf(data.getString("color")), data.getLong("duration"));
 	}
 	
 	@Override

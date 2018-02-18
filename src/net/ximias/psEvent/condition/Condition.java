@@ -18,4 +18,15 @@ public enum Condition {
 		return predicate.test(a,b);
 	}
 	
+	@Override
+	public String toString() {
+		return getClass().getSimpleName();
+	}
+	
+	public static void main(String[] args) {
+		for (int i = 0; i < Condition.values().length; i++) {
+			Condition condition = Condition.values()[i];
+			System.out.println(condition.toString());
+		}
+	}
 }

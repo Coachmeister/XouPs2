@@ -22,14 +22,13 @@ public class TimedColorEffectProducer extends JsonSerializable implements Effect
 		color = color_javafx;
 	}
 	
-	@Override
-	public Effect build() {
-		return new TimedColorEffect(duration, color);
+	public TimedColorEffectProducer(JSONObject data) {
+		this(data.getLong("duration"),Color.valueOf(data.getString("color")));
 	}
 	
 	@Override
-	public JsonSerializable fromJson(JSONObject data) {
-		return new TimedColorEffectProducer(data.getLong("duration"),getColor(data,"color"));
+	public Effect build() {
+		return new TimedColorEffect(duration, color);
 	}
 	
 	@Override

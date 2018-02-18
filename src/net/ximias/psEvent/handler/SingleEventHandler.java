@@ -3,14 +3,12 @@ package net.ximias.psEvent.handler;
 import javafx.scene.paint.Color;
 import net.ximias.effects.EffectProducer;
 import net.ximias.effects.impl.TimedColorEffectProducer;
-import net.ximias.effects.Effect;
 import net.ximias.effects.EffectView;
 import net.ximias.effects.EffectViews.ConsoleView;
 import net.ximias.network.Ps2EventStreamingConnection;
 import net.ximias.psEvent.condition.*;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class SingleEventHandler extends Ps2EventHandler {
@@ -45,8 +43,8 @@ public class SingleEventHandler extends Ps2EventHandler {
 	
 	public static void main(String[] args) {
 		ArrayList<ConditionData> data= new ArrayList<>(5);
-		data.add(new ConstantData("13", ConditionDataType.CONSTANT_DATA));
-		data.add(new ConstantData("world_id",ConditionDataType.EVENT_VARIABLE));
+		data.add(new EventData("13", ConditionDataSource.CONSTANT));
+		data.add(new EventData("world_id", ConditionDataSource.EVENT));
 		
 		EventCondition worldIdIs13 = new EventCondition(data,Condition.EQUALS);
 		SingleEventHandler event = new SingleEventHandler(new ConsoleView(), new TimedColorEffectProducer(1600, Color.WHITE),worldIdIs13);

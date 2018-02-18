@@ -18,7 +18,5 @@ public abstract class JsonSerializable {
 		return jsonObject;
 	}
 	
-	public abstract JsonSerializable fromJson(JSONObject data);
-	
 	public abstract HashMap<String, String> toJson();
 }

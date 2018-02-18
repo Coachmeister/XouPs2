@@ -1,7 +1,8 @@
 package net.ximias.psEvent.condition;
 
+import net.ximias.fileParser.JsonSerializable;
 import org.json.JSONObject;
 
-public interface ConditionData {
-	public String get(JSONObject payload);
+public abstract class ConditionData extends JsonSerializable {
+	public abstract String get(JSONObject payload);
 }

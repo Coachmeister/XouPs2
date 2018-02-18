@@ -19,14 +19,13 @@ public class TimedColorAnimationProducer extends JsonSerializable implements Eff
 		duration = duration_milliseconds;
 	}
 	
-	@Override
-	public Effect build() {
-		return new TimedColorAnimation(startColor, endColor, duration);
+	public TimedColorAnimationProducer(JSONObject data) {
+		this(Color.valueOf(data.getString("startColor")), Color.valueOf(data.getString("endColor")), data.getLong("duration"));
 	}
 	
 	@Override
-	public JsonSerializable fromJson(JSONObject data) {
-		return new TimedColorAnimationProducer(getColor(data, "startColor"), getColor(data, "endColor"), data.getLong("duration"));
+	public Effect build() {
+		return new TimedColorAnimation(startColor, endColor, duration);
 	}
 	
 	@Override
