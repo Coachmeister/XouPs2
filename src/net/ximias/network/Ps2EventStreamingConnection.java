@@ -14,6 +14,7 @@ import java.util.HashMap;
  */
 public class Ps2EventStreamingConnection {
 	private HashMap<String, ArrayList<Ps2EventHandler>> subscribedEvents = new HashMap<>();
+	private HashMap<String, ArrayList<String>> eventsIds = new HashMap<>();
 	private WebsocketClientEndpoint clientEndPoint;
 	
 	private ArrayList<Ps2EventHandler> playerEvents = new ArrayList<>(120);
@@ -49,21 +50,32 @@ public class Ps2EventStreamingConnection {
 	 */
 	public void subscribePlayerEvent(String eventName, String playerId, Ps2EventHandler handler){
 		if (subscribedEvents.containsKey(eventName)){
-			subscribedEvents.get(eventName).add(handler);
+			if (!eventsIds.get(eventName).contains(playerId)){
+				subscribeNewPlayerEvent(eventName, playerId, handler);
+			}
+			if (!subscribedEvents.get(eventName).contains(handler)){
+				subscribedEvents.get(eventName).add(handler);
+			}
 		}else{
 			subscribedEvents.put(eventName,new ArrayList<>(10));
-			subscribedEvents.get(eventName).add(handler);
-			clientEndPoint.sendMessage(
-					"{" +
-					"\"service\":\"event\"," +
-					"\"action\":\"subscribe\"," +
-					"\"characters\":[\""+playerId+"\"]," +
-					"\"eventNames\":[\""+eventName+"\"]" +
-					"}"
-			);
+			eventsIds.put(eventName, new ArrayList<>(10));
+			
+			subscribeNewPlayerEvent(eventName, playerId, handler);
 		}
 	}
 	
+	private void subscribeNewPlayerEvent(String eventName, String playerId, Ps2EventHandler handler) {
+		eventsIds.get(eventName).add(playerId);
+		subscribedEvents.get(eventName).add(handler);
+		clientEndPoint.sendMessage(
+				"{" +
+						"\"service\":\"event\"," +
+						"\"action\":\"subscribe\"," +
+						"\"characters\":[\""+playerId+"\"]," +
+						"\"eventNames\":[\""+eventName+"\"]" +
+						"}"
+		);
+	}
 	/**
 	 * Subscribe to a world-centric event in the streaming API.
 	 * SIDE EFFECT! SUBSCRIBING TO THE SAME EVENT NAME MULTIPLE TIMES, ONLY APPLIES TO THE FIRST WORLD ID
@@ -73,19 +85,30 @@ public class Ps2EventStreamingConnection {
 	 */
 	public void subscribeWorldEvent(String eventName, String worldId, Ps2EventHandler handler){
 		if (subscribedEvents.containsKey(eventName)){
-			subscribedEvents.get(eventName).add(handler);
+			if (!eventsIds.get(eventName).contains(worldId)){
+				subscribeNewWorldEvent(eventName, worldId, handler);
+			}
+			if (!subscribedEvents.get(eventName).contains(handler)){
+				subscribedEvents.get(eventName).add(handler);
+			}
 		}else{
 			subscribedEvents.put(eventName,new ArrayList<>(10));
-			subscribedEvents.get(eventName).add(handler);
-			clientEndPoint.sendMessage(
-					"{" +
-					"\"service\":\"event\"," +
-					"\"action\":\"subscribe\"," +
-					"\"worlds\":[\""+worldId+"\"]," +
-					"\"eventNames\":[\""+eventName+"\"]" +
-					"}"
-			);
+			eventsIds.put(eventName, new ArrayList<>(10));
+			subscribeNewWorldEvent(eventName, worldId, handler);
 		}
+	}
+	
+	private void subscribeNewWorldEvent(String eventName, String worldId, Ps2EventHandler handler) {
+		eventsIds.get(eventName).add(worldId);
+		subscribedEvents.get(eventName).add(handler);
+		clientEndPoint.sendMessage(
+				"{" +
+						"\"service\":\"event\"," +
+						"\"action\":\"subscribe\"," +
+						"\"worlds\":[\""+worldId+"\"]," +
+						"\"eventNames\":[\""+eventName+"\"]" +
+						"}"
+		);
 	}
 }
 

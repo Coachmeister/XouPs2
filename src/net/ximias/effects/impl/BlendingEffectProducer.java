@@ -3,23 +3,22 @@ package net.ximias.effects.impl;
 import javafx.scene.paint.Color;
 import net.ximias.effects.Effect;
 import net.ximias.effects.EffectProducer;
-import net.ximias.fileParser.JsonSerializable;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 
-public class TimedColorAnimationProducer extends JsonSerializable implements EffectProducer {
+public class BlendingEffectProducer extends EffectProducer {
 	protected Color startColor;
 	private Color endColor;
 	protected long duration;
 	
-	TimedColorAnimationProducer(Color startColor, Color endColor, long duration_milliseconds) {
+	BlendingEffectProducer(Color startColor, Color endColor, long duration_milliseconds) {
 		this.startColor = startColor;
 		this.endColor = endColor;
 		duration = duration_milliseconds;
 	}
 	
-	public TimedColorAnimationProducer(JSONObject data) {
+	public BlendingEffectProducer(JSONObject data) {
 		this(Color.valueOf(data.getString("startColor")), Color.valueOf(data.getString("endColor")), data.getLong("duration"));
 	}
 	

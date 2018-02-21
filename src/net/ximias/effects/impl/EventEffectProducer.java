@@ -4,12 +4,10 @@ package net.ximias.effects.impl;
 import javafx.scene.paint.Color;
 import net.ximias.effects.Effect;
 import net.ximias.effects.EffectProducer;
-import net.ximias.fileParser.JsonSerializable;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
-import java.util.Objects;
 
 /**
  * Modifiable color effect.
@@ -18,18 +16,18 @@ import java.util.Objects;
  * Should only return an effect on build, when no effect is showing with the same name.
  * Weak references!
  */
-public class EventColorEffectProducer extends JsonSerializable implements EffectProducer{
+public class EventEffectProducer extends EffectProducer{
 	private static final HashMap<String, WeakReference<EventColorEffect>> eventEffects = new HashMap<>(12);
 	
 	private String name;
 	private Color color;
 	
-	public EventColorEffectProducer(Color color, String name){
+	public EventEffectProducer(Color color, String name){
 		this.name = name;
 		this.color = color;
 	}
 	
-	public EventColorEffectProducer(JSONObject data) {
+	public EventEffectProducer(JSONObject data) {
 		this(Color.valueOf(data.getString("color")), data.getString("name"));
 	}
 	

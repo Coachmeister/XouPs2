@@ -1,5 +1,15 @@
 package net.ximias.effects;
 
-public interface EffectProducer {
-	public Effect build();
+import net.ximias.fileParser.JsonSerializable;
+
+import java.util.HashMap;
+
+public abstract class EffectProducer extends JsonSerializable{
+	private String name;
+	
+	public abstract Effect build();
+	
+	public String getName() {
+		return name;
+	}
 }

@@ -1,11 +1,10 @@
 package net.ximias.effects.EffectViews;
 
 import javafx.scene.paint.Color;
-import net.ximias.effects.impl.EventColorEffectProducer;
-import net.ximias.effects.impl.TimedColorEffectProducer;
+import net.ximias.effects.impl.EventEffectProducer;
+import net.ximias.effects.impl.TimedEffectProducer;
 import net.ximias.effects.Effect;
 import net.ximias.effects.EffectView;
-import net.ximias.effects.impl.TimedFadingColorAnimationProducer;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -50,11 +49,11 @@ public class ConsoleView implements EffectView {
 	public static void main(String[] args) {
 		ConsoleView view = new ConsoleView();
 		
-		EventColorEffectProducer effect = new EventColorEffectProducer( Color.BLUE,"blue");
+		EventEffectProducer effect = new EventEffectProducer( Color.BLUE,"blue");
 		view.addEffect(effect.build());
 		
 		Color yellow = Color.color(1.0,1.0,1.0,0.0);
-		TimedColorEffectProducer effect1 = new TimedColorEffectProducer(1300, yellow);
+		TimedEffectProducer effect1 = new TimedEffectProducer(1300, yellow);
 		view.addEffect(effect1.build());
 	}
 	

@@ -1,5 +1,6 @@
 package net.ximias.network;
 
+import com.sun.org.apache.xpath.internal.SourceTree;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -70,6 +71,20 @@ public class CensusConnection {
 		try {
 			return censusQuery(query);
 		} catch (IOException e) {
+			System.out.println("Query failed: "+e);
+			System.out.println("retrying...");
+			try{
+				return censusQuery(query);
+			}catch (IOException e1){
+				System.out.println("Second query attempt failed: "+e);
+				System.out.println("retrying..");
+				try {
+					return censusQuery(query);
+				}catch (IOException e2){
+					System.out.println("Third attempt failed: "+e);
+					System.out.println("I'll assume trying any more times won't fix the issue. I hope the rest of the program can cope with an empty response");
+				}
+			}
 			return null;
 		}
 	}

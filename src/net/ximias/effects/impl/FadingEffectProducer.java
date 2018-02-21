@@ -1,18 +1,17 @@
 package net.ximias.effects.impl;
 
 import javafx.scene.paint.Color;
-import net.ximias.fileParser.JsonSerializable;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 
-public class TimedFadingColorAnimationProducer extends TimedColorAnimationProducer {
-	TimedFadingColorAnimationProducer(Color startColor, long duration_milliseconds) {
+public class FadingEffectProducer extends BlendingEffectProducer {
+	FadingEffectProducer(Color startColor, long duration_milliseconds) {
 		super(startColor, Color.TRANSPARENT, duration_milliseconds);
 	}
 	
 	
-	TimedFadingColorAnimationProducer(JSONObject data) {
+	FadingEffectProducer(JSONObject data) {
 		this(Color.valueOf(data.getString("color")), data.getLong("duration"));
 	}
 	

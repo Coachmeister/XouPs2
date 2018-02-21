@@ -1,5 +1,6 @@
 package net.ximias.network;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class CurrentPlayer {
@@ -17,7 +18,12 @@ public class CurrentPlayer {
 	private JSONObject playerInfo;
 	
 	private void updatePlayerInfo(){
-		playerInfo = CensusConnection.sendQuery("character/?character_id="+playerID).getJSONArray("character_list").getJSONObject(0);
+		JSONObject playerObject = CensusConnection.sendQuery("character/?character_id="+playerID+"&c:resolve=world");
+		if(playerObject.has("character_list")){
+			playerInfo = playerObject.getJSONArray("character_list").getJSONObject(0);
+		}else{
+			System.out.println(playerObject.toString());
+		}
 	}
 	
 	public void setPlayerID(String playerID) {

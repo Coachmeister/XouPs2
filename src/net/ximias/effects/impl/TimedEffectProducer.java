@@ -3,26 +3,23 @@ package net.ximias.effects.impl;
 import javafx.scene.paint.Color;
 import net.ximias.effects.Effect;
 import net.ximias.effects.EffectProducer;
-import net.ximias.fileParser.JsonSerializable;
 import org.json.JSONObject;
 
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 
 /**
  * A timed color effect. Should probably be renamed. See EventColorEffect doc.
  */
-public class TimedColorEffectProducer extends JsonSerializable implements EffectProducer {
+public class TimedEffectProducer extends EffectProducer {
 	private long duration;
 	protected Color color;
 	
-	public TimedColorEffectProducer(long duration_miliseconds, Color color_javafx){
+	public TimedEffectProducer(long duration_miliseconds, Color color_javafx){
 		duration = duration_miliseconds;
 		color = color_javafx;
 	}
 	
-	public TimedColorEffectProducer(JSONObject data) {
+	public TimedEffectProducer(JSONObject data) {
 		this(data.getLong("duration"),Color.valueOf(data.getString("color")));
 	}
 	
