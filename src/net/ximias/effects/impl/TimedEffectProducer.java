@@ -14,13 +14,13 @@ public class TimedEffectProducer extends EffectProducer {
 	private long duration;
 	protected Color color;
 	
-	public TimedEffectProducer(long duration_miliseconds, Color color_javafx){
+	public TimedEffectProducer(Color color_javafx, long duration_miliseconds){
 		duration = duration_miliseconds;
 		color = color_javafx;
 	}
 	
 	public TimedEffectProducer(JSONObject data) {
-		this(data.getLong("duration"),Color.valueOf(data.getString("color")));
+		this(Color.valueOf(data.getString("color")),data.getLong("duration"));
 	}
 	
 	@Override

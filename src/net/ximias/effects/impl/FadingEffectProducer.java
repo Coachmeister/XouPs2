@@ -6,7 +6,8 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 public class FadingEffectProducer extends BlendingEffectProducer {
-	FadingEffectProducer(Color startColor, long duration_milliseconds) {
+	
+	public FadingEffectProducer(Color startColor, long duration_milliseconds) {
 		super(startColor, Color.TRANSPARENT, duration_milliseconds);
 	}
 	

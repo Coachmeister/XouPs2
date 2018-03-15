@@ -39,11 +39,7 @@ public abstract class Ps2EventHandler extends JsonSerializable {
 	
 	protected abstract boolean conditionIsSatisfied(JSONObject payload);
 	
-	protected abstract void register(Ps2EventStreamingConnection con);
+	public abstract void register(Ps2EventStreamingConnection con);
 	
 	public abstract void registerOther(Ps2EventHandler handler, Ps2EventStreamingConnection con);
-}
-enum Ps2EventType{
-	PLAYER,
-	WORLD;
 }

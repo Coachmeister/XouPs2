@@ -1,5 +1,6 @@
 package net.ximias.network;
 
+import net.ximias.psEvent.handler.GlobalHandler;
 import net.ximias.psEvent.handler.Ps2EventHandler;
 import org.json.JSONObject;
 
@@ -15,6 +16,7 @@ import java.util.HashMap;
 public class Ps2EventStreamingConnection {
 	private HashMap<String, ArrayList<Ps2EventHandler>> subscribedEvents = new HashMap<>();
 	private HashMap<String, ArrayList<String>> eventsIds = new HashMap<>();
+	private ArrayList<Ps2EventHandler> globalHandlers = new ArrayList<>(12);
 	private WebsocketClientEndpoint clientEndPoint;
 	
 	private ArrayList<Ps2EventHandler> playerEvents = new ArrayList<>(120);
@@ -32,12 +34,24 @@ public class Ps2EventStreamingConnection {
 				if(!response.has("payload")) return;
 				JSONObject payload = response.getJSONObject("payload");
 				System.out.println(payload);
+				globalListenerActions(payload);
+				globalHandlers.forEach(it->it.eventReceived(payload));
 				subscribedEvents.get(payload.getString("event_name")).forEach(it -> it.eventReceived(payload));
 				System.out.println(subscribedEvents.get(payload.getString("event_name")).size()+" Handlers");
 			});
 			
 		} catch (URISyntaxException ex) {
 			System.err.println("URISyntaxException exception: " + ex.getMessage());
+		}
+	}
+	
+	private void globalListenerActions(JSONObject payload) {
+		if (payload.has("character_id") && payload.has("zone_id")){
+			try{
+				CurrentPlayer.getInstance().setZoneId(Integer.parseInt(payload.getString("zone_id")));
+			}catch (NumberFormatException e){
+				CurrentPlayer.getInstance().setZoneId(-1);
+			}
 		}
 	}
 	
@@ -109,6 +123,10 @@ public class Ps2EventStreamingConnection {
 						"\"eventNames\":[\""+eventName+"\"]" +
 						"}"
 		);
+	}
+	
+	public void registerGlobalEventListener(Ps2EventHandler globalHandler) {
+		globalHandlers.add(globalHandler);
 	}
 }
 

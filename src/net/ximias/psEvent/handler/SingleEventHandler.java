@@ -30,7 +30,7 @@ public class SingleEventHandler extends Ps2EventHandler {
 	EventCondition condition;
 	Ps2EventType type;
 	String eventName;
-	public SingleEventHandler(EffectView view, EffectProducer effect, EventCondition condition, Ps2EventType type, String event ,String name) {
+	public SingleEventHandler(EffectView view, EffectProducer effect, EventCondition condition, Ps2EventType type, String event , String name) {
 		super(effect);
 		this.name = name;
 		this.condition = condition;
@@ -44,7 +44,7 @@ public class SingleEventHandler extends Ps2EventHandler {
 		name = o.getString("name");
 		eventName = o.getString("event");
 		if (o.getString("condition").equals("all")) condition = null;
-		else condition = new EventCondition(o.getJSONObject("condition"));
+		else condition = new SingleCondition(o.getJSONObject("condition"));
 		
 		if (o.getString("type").equals("player")) type = Ps2EventType.PLAYER;
 		else type = Ps2EventType.WORLD;
@@ -68,7 +68,7 @@ public class SingleEventHandler extends Ps2EventHandler {
 	}
 	
 	@Override
-	protected void register(Ps2EventStreamingConnection con) {
+	public void register(Ps2EventStreamingConnection con) {
 		if (effect!=null){
 			if (type == Ps2EventType.PLAYER){
 				con.subscribePlayerEvent(eventName, CurrentPlayer.getInstance().getPlayerID(),this);
@@ -98,8 +98,8 @@ public class SingleEventHandler extends Ps2EventHandler {
 		data.add(new EventData("13", ConditionDataSource.CONSTANT));
 		data.add(new EventData("world_id", ConditionDataSource.EVENT));
 		
-		EventCondition worldIdIs13 = new EventCondition(data,Condition.EQUALS);
-		SingleEventHandler event = new SingleEventHandler(new ConsoleView(), new TimedEffectProducer(1600, Color.WHITE),worldIdIs13, Ps2EventType.WORLD, "PlayerLogin", "aName");
+		SingleCondition worldIdIs13 = new SingleCondition(data,Condition.EQUALS);
+		SingleEventHandler event = new SingleEventHandler(new ConsoleView(), new TimedEffectProducer(Color.WHITE,1600),worldIdIs13, Ps2EventType.WORLD, "PlayerLogin", "aName");
 		
 		Ps2EventStreamingConnection connection = new Ps2EventStreamingConnection();
 		event.register(connection);
@@ -108,11 +108,12 @@ public class SingleEventHandler extends Ps2EventHandler {
 	
 	@Override
 	public HashMap<String, String> toJson() {
-		HashMap<String, String> h = new HashMap<>(15);
+		/*HashMap<String, String> h = new HashMap<>(15);
 		h.put("effect", effect.getName());
 		if (condition != null) {
 			h.put("condition", condition.getJsonObject().toString());
 		}
-		return h;
+		return h;*/
+		throw new UnsupportedOperationException("Later!");
 	}
 }

@@ -52,8 +52,8 @@ public class ConsoleView implements EffectView {
 		EventEffectProducer effect = new EventEffectProducer( Color.BLUE,"blue");
 		view.addEffect(effect.build());
 		
-		Color yellow = Color.color(1.0,1.0,1.0,0.0);
-		TimedEffectProducer effect1 = new TimedEffectProducer(1300, yellow);
+		Color white = Color.color(1.0,1.0,1.0,1.0);
+		TimedEffectProducer effect1 = new TimedEffectProducer(white,1300);
 		view.addEffect(effect1.build());
 	}
 	

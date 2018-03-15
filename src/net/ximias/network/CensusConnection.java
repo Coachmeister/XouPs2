@@ -38,20 +38,6 @@ public class CensusConnection {
 	}
 	
 	/**
-	 * Returns the first player whose name starts with namePrefix parameter.
-	 * Priority goes to in alphabetical order. Inserting ximia will select ximia over ximiaa over ximias
-	 * @param namePrefix the player name to select from.
-	 * @return the JSONObject with player data.
-	 * @throws IOException
-	 */
-	static JSONObject findPlayerByName(String namePrefix) throws IOException {
-		JSONObject players = censusQuery("character_name/?name.first_lower=^"+namePrefix.toLowerCase()+"&c:limit=10");
-		
-		return censusQuery("character/?character_id="+players.getJSONArray("character_name_list").getJSONObject(0).getString("character_id"));
-		
-	}
-	
-	/**
 	 * Lists 10 players with the same prefix as the parameter.
 	 * @param prefix the prefix of the player names.
 	 * @return up to 10 player names and ids with the prefix in their lower name
@@ -87,6 +73,20 @@ public class CensusConnection {
 			}
 			return null;
 		}
+	}
+	
+	/**
+	 * Returns the first player whose name starts with namePrefix parameter.
+	 * Priority goes to in alphabetical order. Inserting ximia will select ximia over ximiaa over ximias
+	 * @param namePrefix the player name to select from.
+	 * @return the JSONObject with player data.
+	 * @throws IOException
+	 */
+	public static JSONObject findPlayerByName(String namePrefix) throws IOException {
+		JSONObject players = censusQuery("character_name/?name.first_lower=^"+namePrefix.toLowerCase()+"&c:limit=10");
+		
+		return censusQuery("character/?character_id="+players.getJSONArray("character_name_list").getJSONObject(0).getString("character_id")).getJSONArray("character_list").getJSONObject(0);
+		
 	}
 	
 	public static void main(String[] args) throws IOException {

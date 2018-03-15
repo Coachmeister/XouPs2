@@ -12,7 +12,7 @@ import net.ximias.network.Ps2EventStreamingConnection;
 import net.ximias.psEvent.condition.Condition;
 import net.ximias.psEvent.condition.ConditionDataSource;
 import net.ximias.psEvent.condition.EventData;
-import net.ximias.psEvent.condition.EventCondition;
+import net.ximias.psEvent.condition.SingleCondition;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -99,7 +99,7 @@ public class MultiEventHandler extends Ps2EventHandler {
 	}
 	
 	@Override
-	protected void register(Ps2EventStreamingConnection con) {
+	public void register(Ps2EventStreamingConnection con) {
 		for (Ps2EventHandler handler : handlers) {
 			handler.registerOther(this, con);
 		}
@@ -145,15 +145,15 @@ public class MultiEventHandler extends Ps2EventHandler {
 	public static void main(String[] args) {
 		CurrentPlayer.getInstance().setPlayerID("8287548916321388337");
 		ConsoleView view = new ConsoleView();
-		TimedEffectProducer white = new TimedEffectProducer(2100, Color.WHITE);
-		TimedEffectProducer red = new TimedEffectProducer(2100, Color.RED);
+		TimedEffectProducer white = new TimedEffectProducer(Color.WHITE,2100);
+		TimedEffectProducer red = new TimedEffectProducer( Color.RED,2100);
 		
 		EventData c13 = new EventData("13", ConditionDataSource.CONSTANT);
 		EventData c1 = new EventData("1", ConditionDataSource.CONSTANT);
 		EventData world = new EventData("world_id", ConditionDataSource.EVENT);
 		
-		EventCondition worldis1 = new EventCondition(Condition.EQUALS, c1, world);
-		EventCondition worldis13 = new EventCondition(Condition.EQUALS, c13, world);
+		SingleCondition worldis1 = new SingleCondition(Condition.EQUALS, c1, world);
+		SingleCondition worldis13 = new SingleCondition(Condition.EQUALS, c13, world);
 		
 		SingleEventHandler world1 = new SingleEventHandler(view, white, worldis1, Ps2EventType.WORLD, "PlayerLogin", "is1");
 		SingleEventHandler world13 = new SingleEventHandler(view, white, worldis13, Ps2EventType.WORLD, "PlayerLogin", "is13");

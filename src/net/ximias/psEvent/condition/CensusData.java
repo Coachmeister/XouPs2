@@ -30,6 +30,17 @@ public class CensusData extends ConditionData {
 	HashMap<String, String> searchTerms;
 	HashMap<String, String> eventSearchTerms;
 	
+	/**
+	 * Example:
+	 * HashMap<String, String> params = new HashMap<>();
+	 * params.put("character_id", "8287548916321388337");
+	 * new CensusData("character", "faction_id", params, new HashMap<>(1));
+	 * @param lookup The subdomain to look up
+	 * @param get The data to get from result.
+	 * @param resolve Any resolve terms.
+	 * @param searchTerms The terms to put in the query.
+	 * @param eventSearchTerms Ther terms to pull from the recieved event when querying
+	 */
 	public CensusData(String lookup, String get, String resolve, HashMap<String, String> searchTerms, HashMap<String, String> eventSearchTerms) {
 		this.lookup = lookup;
 		this.get = get;
@@ -60,7 +71,16 @@ public class CensusData extends ConditionData {
 			new CensusData(data.getString("lookup"),data.getString("get"), resolve ,searchTerms, eventSearchTerms);
 		}
 	}
-	
+	/**
+	 * Example:
+	 * HashMap<String, String> params = new HashMap<>();
+	 * params.put("character_id", "8287548916321388337");
+	 * new CensusData("character", "faction_id", params, new HashMap<>(1));
+	 * @param lookup The subdomain to look up
+	 * @param get The data to get from result.
+	 * @param searchTerms The terms to put in the query.
+	 * @param eventSearchTerms There terms to pull from the recieved event when querying
+	 */
 	public CensusData(String lookup, String get, HashMap<String, String> searchTerms, HashMap<String, String> eventSearchTerms) {
 		this.lookup = lookup;
 		this.get = get;
