@@ -64,12 +64,12 @@ public class PlayStateScene implements EffectScene{
 	private void kill() {
 		
 		
-		FadingEffectProducer killEffect = new FadingEffectProducer(Color.GREY, 500);
+		FadingEffectProducer killEffect = new FadingEffectProducer(Color.WHITE, 500);
 		FadingEffectProducer teamKillEffect = new FadingEffectProducer(Color.HOTPINK,500);
-		FadingEffectProducer VSKillEnd = new FadingEffectProducer(SceneConstants.VS, 500);
-		FadingEffectProducer NCKillEnd = new FadingEffectProducer(SceneConstants.NC, 500);
-		FadingEffectProducer TRKillEnd = new FadingEffectProducer(SceneConstants.TR, 500);
-		TimedEffectProducer blank = new TimedEffectProducer(Color.TRANSPARENT, 480);
+		FadingEffectProducer VSKillEnd = new FadingEffectProducer(SceneConstants.VS, 300);
+		FadingEffectProducer NCKillEnd = new FadingEffectProducer(SceneConstants.NC, 300);
+		FadingEffectProducer TRKillEnd = new FadingEffectProducer(SceneConstants.TR, 300);
+		TimedEffectProducer blank = new TimedEffectProducer(Color.TRANSPARENT, 100);
 		
 		MultiEffectProducer VSKill = new MultiEffectProducer(blank, VSKillEnd);
 		MultiEffectProducer NCKill = new MultiEffectProducer(blank, NCKillEnd);
@@ -82,7 +82,7 @@ public class PlayStateScene implements EffectScene{
 		);
 		
 		HashMap<String, String> eventPlayer = new HashMap<>(4);
-		eventPlayer.put("character_id","other_id");
+		eventPlayer.put("character_id","character_id");
 		
 		SingleCondition isVS = new SingleCondition(Condition.EQUALS,
 				new EventData(String.valueOf(SceneConstants.VS_ID),ConditionDataSource.CONSTANT),
@@ -124,7 +124,7 @@ public class PlayStateScene implements EffectScene{
 	}
 	
 	private void death() {
-		FadingEffectProducer death = new FadingEffectProducer(Color.RED,2000);
+		FadingEffectProducer death = new FadingEffectProducer(Color.BLACK,2500);
 		FadingEffectProducer teamDeathFade = new FadingEffectProducer(CurrentPlayer.getInstance().getFactionColor(),500);
 		MultiEffectProducer teamDeath = new MultiEffectProducer(
 				teamDeathFade,

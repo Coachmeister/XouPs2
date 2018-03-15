@@ -36,7 +36,7 @@ public class Ps2EventStreamingConnection {
 				System.out.println(payload);
 				globalListenerActions(payload);
 				globalHandlers.forEach(it->it.eventReceived(payload));
-				subscribedEvents.get(payload.getString("event_name")).forEach(it -> it.eventReceived(payload));
+				subscribedEvents.get(payload.getString("event_name")).parallelStream().forEach(it -> it.eventReceived(payload));
 				System.out.println(subscribedEvents.get(payload.getString("event_name")).size()+" Handlers");
 			});
 			
@@ -126,6 +126,7 @@ public class Ps2EventStreamingConnection {
 	}
 	
 	public void registerGlobalEventListener(Ps2EventHandler globalHandler) {
+		System.out.println("Global added");
 		globalHandlers.add(globalHandler);
 	}
 }

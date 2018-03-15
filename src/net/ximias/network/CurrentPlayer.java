@@ -57,7 +57,8 @@ public class CurrentPlayer {
 	
 	public void setZoneId(int zoneId) {
 		this.zoneId = zoneId;
-		playerInfo.put("zone_id",zoneId);
+		playerInfo.put("zone_id",String.valueOf(zoneId));
+		System.out.println("Zone id updated: "+zoneId);
 	}
 	
 	public Color getFactionColor(){

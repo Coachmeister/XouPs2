@@ -13,12 +13,12 @@ public class GlobalHandler extends Ps2EventHandler {
 	SingleCondition condition;
 	Ps2EventType type;
 	EffectProducer effect;
-	EffectView view;
 	
 	public GlobalHandler(SingleCondition con, EffectProducer effect, EffectView view){
+		super(effect);
 		condition = con;
 		this.effect = effect;
-		this.view = view;
+		setView(view);
 	}
 	
 	public GlobalHandler(JSONObject o) {

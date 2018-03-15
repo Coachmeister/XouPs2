@@ -13,10 +13,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import net.ximias.effects.Effect;
 import net.ximias.effects.EffectView;
-import net.ximias.effects.EffectViews.Scenes.EffectScene;
-import net.ximias.effects.EffectViews.Scenes.LoginEventsScene;
-import net.ximias.effects.EffectViews.Scenes.PlayStateScene;
-import net.ximias.effects.EffectViews.Scenes.SceneConstants;
+import net.ximias.effects.EffectViews.Scenes.*;
 
 import java.io.IOException;
 
@@ -30,7 +27,7 @@ public class ColorEffectGUIView extends Application implements EffectView {
 	public AnchorPane root;
 	private EffectContainer effectContainer = new EffectContainer();
 	private AnimationTimer animationTimer;
-	private EffectScene scene = new PlayStateScene(this);
+	private EffectScene scene = new DebugScene(this);
 	
 	public static void main(String[] args) {
 		launch(args);
@@ -74,7 +71,7 @@ public class ColorEffectGUIView extends Application implements EffectView {
 	}
 	
 	@Override
-	public void addEffect(Effect effect) {
+	public synchronized void addEffect(Effect effect) {
 		effectContainer.addEffect(effect);
 	}
 }

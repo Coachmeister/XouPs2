@@ -12,7 +12,7 @@ public class BlendingEffectProducer extends EffectProducer {
 	private Color endColor;
 	protected long duration;
 	
-	BlendingEffectProducer(Color startColor, Color endColor, long duration_milliseconds) {
+	public BlendingEffectProducer(Color startColor, Color endColor, long duration_milliseconds) {
 		this.startColor = startColor;
 		this.endColor = endColor;
 		duration = duration_milliseconds;

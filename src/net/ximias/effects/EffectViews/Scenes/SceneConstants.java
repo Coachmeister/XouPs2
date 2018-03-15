@@ -10,7 +10,7 @@ public interface SceneConstants {
 	public static final Color OTHER = new Color(1.0,0.65,0.45,1.0);
 	
 	public static final Color VS = new Color(0.4,0.0,1.0,1.0);
-	public static final Color TR = new Color(0.8,0.0,0.0,1.0);
+	public static final Color TR = new Color(0.7,0.0,0.0,1.0);
 	public static final Color NC = new Color(0.2,0.2,0.9,1.0);
 	public static final Color MISSING = new Color(0.2,1.0,0.2,1.0);
 	
