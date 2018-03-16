@@ -44,10 +44,9 @@ public class PlayStateScene implements EffectScene{
 		reviving();
 		healing();
 		repairing();
-		resupply();
+		amsSpawn();
 		vehicle();
 		level();
-		itemAdded();
 		achievement();
 		facility();
 		// Play test
