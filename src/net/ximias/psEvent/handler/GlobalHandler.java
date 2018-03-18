@@ -4,17 +4,18 @@ import net.ximias.effects.EffectProducer;
 import net.ximias.effects.EffectView;
 import net.ximias.fileParser.Initializer;
 import net.ximias.network.Ps2EventStreamingConnection;
+import net.ximias.psEvent.condition.EventCondition;
 import net.ximias.psEvent.condition.SingleCondition;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 
 public class GlobalHandler extends Ps2EventHandler {
-	SingleCondition condition;
+	EventCondition condition;
 	Ps2EventType type;
 	EffectProducer effect;
 	
-	public GlobalHandler(SingleCondition con, EffectProducer effect, EffectView view){
+	public GlobalHandler(EventCondition con, EffectProducer effect, EffectView view){
 		super(effect);
 		condition = con;
 		this.effect = effect;

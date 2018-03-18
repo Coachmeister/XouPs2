@@ -56,11 +56,13 @@ public class PlayStateScene implements EffectScene{
 		vehicleDied();
 		achievement();
 		facility();
+		
+		//Version 0.0.6
+		logout();
 		/*
-		// Play test
 		
 		// Version 0.0.6
-		logging(); and logging to files
+		logging to files
 		killingXimias();
 		//Pre-Alpha release
 		// Alpha feedback fixes
@@ -83,6 +85,13 @@ public class PlayStateScene implements EffectScene{
 		*/
 		
 	}
+	
+	private void logout(){
+		FadingEffectProducer fade = new FadingEffectProducer(SceneConstants.OTHER.deriveColor(0,0,0.5,1),5000);
+		SingleEventHandler logout = new SingleEventHandler(view, fade, isPlayer, Ps2EventType.PLAYER, "PlayerLogout", "Logout fade");
+		logout.register(connection);
+	}
+	
 	private void facility(){
 		Color mutedFaction = bias(CurrentPlayer.getInstance().getFactionColor(),0.2); // Use faction color
 		
@@ -303,7 +312,7 @@ public class PlayStateScene implements EffectScene{
 	}
 	
 	private void repair(){
-		Color repair = bias(new Color(0.8,1,1,1),0.1);
+		Color repair = bias(new Color(0.8,1,1,1),0.05);
 		TimedEffectProducer repairStart = new TimedEffectProducer(repair, 1000);
 		FadingEffectProducer repairEnd = new FadingEffectProducer(repair, 250);
 		MultiEffectProducer repairing = new MultiEffectProducer(repairStart, repairEnd);
@@ -372,17 +381,19 @@ public class PlayStateScene implements EffectScene{
 		SingleCondition isAmerish = new SingleCondition(Condition.EQUALS, new EventData("zone_id",ConditionDataSource.PLAYER),new EventData(String.valueOf(SceneConstants.AMERISH_ID),ConditionDataSource.CONSTANT));
 		SingleCondition isIndar = new SingleCondition(Condition.EQUALS, new EventData("zone_id",ConditionDataSource.PLAYER),new EventData(String.valueOf(SceneConstants.INDAR_ID),ConditionDataSource.CONSTANT));
 		SingleCondition isHossin = new SingleCondition(Condition.EQUALS, new EventData("zone_id",ConditionDataSource.PLAYER),new EventData(String.valueOf(SceneConstants.HOSSIN_ID),ConditionDataSource.CONSTANT));
-		
+		NoneCondition isNone = new NoneCondition(isEsamir, isAmerish, isHossin, isIndar);
 		
 		GlobalHandler esamirHandler = new GlobalHandler(isEsamir, esamir, view);
 		GlobalHandler amerishHandler = new GlobalHandler(isAmerish, amerish, view);
 		GlobalHandler indarHandler = new GlobalHandler(isIndar, indar, view);
 		GlobalHandler hossinHandler = new GlobalHandler(isHossin, hossin, view);
+		GlobalHandler noneHandler = new GlobalHandler(isNone, other, view);
 		
 		esamirHandler.register(connection);
 		amerishHandler.register(connection);
 		indarHandler.register(connection);
 		hossinHandler.register(connection);
+		noneHandler.register(connection);
 		
 		view.addEffect(other.build());
 	}

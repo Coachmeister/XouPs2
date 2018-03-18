@@ -39,7 +39,6 @@ public class Ps2EventStreamingConnection {
 				subscribedEvents.get(payload.getString("event_name")).parallelStream().forEach(it -> it.eventReceived(payload));
 				System.out.println(subscribedEvents.get(payload.getString("event_name")).size()+" Handlers");
 			});
-			
 		} catch (URISyntaxException ex) {
 			System.err.println("URISyntaxException exception: " + ex.getMessage());
 		}
@@ -48,7 +47,12 @@ public class Ps2EventStreamingConnection {
 	private void globalListenerActions(JSONObject payload) {
 		if (payload.has("character_id") && payload.has("zone_id")){
 			try{
-				CurrentPlayer.getInstance().setZoneId(Integer.parseInt(payload.getString("zone_id")));
+				if (payload.getString("character_id").equals(CurrentPlayer.getInstance().getPlayerID())){
+					CurrentPlayer.getInstance().setZoneId(Integer.parseInt(payload.getString("zone_id")));
+					if (payload.getString("event_name").equals("PlayerLogout")){
+						CurrentPlayer.getInstance().setZoneId(-1);
+					}
+				}
 			}catch (NumberFormatException e){
 				CurrentPlayer.getInstance().setZoneId(-1);
 			}
