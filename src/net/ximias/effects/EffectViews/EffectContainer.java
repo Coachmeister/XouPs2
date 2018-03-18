@@ -14,7 +14,9 @@ public class EffectContainer implements EffectView{
 	}
 	
 	public synchronized void addEffect(Effect effect) {
-		effects.add(effect);
+		if (!effects.contains(effect)){
+			effects.add(effect);
+		}
 		System.out.println("Effect added. current effect size: "+effects.size());
 		System.out.println("Current color: "+getColorAndClearFinishedEffects());
 	}
@@ -37,4 +39,10 @@ public class EffectContainer implements EffectView{
 		return Color.color(r/a,g/a,b/a);
 	}
 	
+	@Override
+	public String toString() {
+		final StringBuilder effectsNames = new StringBuilder();
+		effects.forEach(it-> effectsNames.append(it.getClass().getSimpleName()).append(" color: ").append(it.getColor()).append("\n"));
+		return "Effects: "+effectsNames.toString();
+	}
 }

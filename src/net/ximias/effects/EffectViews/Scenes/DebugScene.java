@@ -18,23 +18,24 @@ public class DebugScene implements EffectScene {
 		this.view = view;
 		System.out.println("debug scene started");
 		
-		Color darkblue = SceneConstants.AMERISH.deriveColor(0.0,1.0,1.0,0.1);
+		Color darkblue = SceneConstants.INDAR.deriveColor(0.0,1.0,1.0,0.1);
 		EventEffectProducer effect = new EventEffectProducer( darkblue,"blue");
 		view.addEffect(effect.build());
 		
 		new Timer(true).scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
-				//death();
 				count++;
+				//heal();
+				//kill();
 				//revive();
 				//death();
-				//vehicleDied();
+				//vehicleKilled();
 				//battleRankUp();
 				//experience();
-				metagame();
+				//metagame();
 			}
-		},2000,4000);
+		},2000,800);
 		
 	}
 	private void achievement(){
@@ -168,6 +169,7 @@ public class DebugScene implements EffectScene {
 	}
 	
 	private void death(){
+		
 		BlendingEffectProducer teamDeathFade = new BlendingEffectProducer(SceneConstants.NC,Color.BLACK,1000);
 		FadingEffectProducer fadeout = new FadingEffectProducer(Color.BLACK, 500);
 		TimedEffectProducer black = new TimedEffectProducer(Color.BLACK, 1000);

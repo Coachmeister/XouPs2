@@ -107,11 +107,11 @@ public class CensusData extends ConditionData {
 			if (response != null) {
 					response = unpackSingleResponseFromArray(response);
 					
-					if (!response.isNull(get)) {
+					if (response.has(get) || !response.isNull(get)) {
 						return response.getString(get);
 					}
 					
-					return response.getString(get);
+					return "";
 			}
 		} else {
 			queryString += "&c:resolve=" + resolve + "(" + get + ")";
@@ -134,10 +134,14 @@ public class CensusData extends ConditionData {
 	}
 	
 	private JSONObject unpackSingleResponseFromArray(JSONObject response) {
+		System.out.println("Census response: "+response);
 		if (response.keySet().stream().anyMatch(it -> it.contains("list"))) {
-			response = response.getJSONArray(response.keySet().stream()
+			JSONArray responseList = response.getJSONArray(response.keySet().stream()
 					.filter(it -> it.contains("list"))
-					.findFirst().get()).getJSONObject(0);
+					.findFirst().get());
+			if (responseList.length() > 0){
+				response = responseList.getJSONObject(0);
+			}else return new JSONObject("{}");
 		}
 		return response;
 	}

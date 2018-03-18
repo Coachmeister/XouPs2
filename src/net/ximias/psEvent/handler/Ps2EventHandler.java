@@ -29,7 +29,6 @@ public abstract class Ps2EventHandler extends JsonSerializable {
 	
 	public void eventReceived(JSONObject payload){
 		if (view!=null && conditionIsSatisfied(payload) && effect != null){
-			System.out.println("Evaluated to true, adding effect...");
 			view.addEffect(effect.build());
 		}
 	}

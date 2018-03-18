@@ -2,10 +2,7 @@ package net.ximias.effects.EffectViews.Scenes;
 
 import javafx.scene.paint.Color;
 import net.ximias.effects.EffectView;
-import net.ximias.effects.impl.EventEffectProducer;
-import net.ximias.effects.impl.FadingEffectProducer;
-import net.ximias.effects.impl.MultiEffectProducer;
-import net.ximias.effects.impl.TimedEffectProducer;
+import net.ximias.effects.impl.*;
 import net.ximias.network.CurrentPlayer;
 import net.ximias.network.Ps2EventStreamingConnection;
 import net.ximias.psEvent.condition.*;
@@ -20,6 +17,10 @@ public class PlayStateScene implements EffectScene{
 	EffectView view;
 	Ps2EventStreamingConnection connection;
 	
+	private SingleCondition isPlayer = new SingleCondition(Condition.EQUALS,
+			new EventData(CurrentPlayer.getInstance().getPlayerID(),ConditionDataSource.CONSTANT),
+			new EventData("character_id", ConditionDataSource.EVENT)
+	);
 	public PlayStateScene(EffectView view) {
 		this.view = view;
 		try {
@@ -34,6 +35,9 @@ public class PlayStateScene implements EffectScene{
 		background();
 		death();
 		kill();
+		
+		repair();
+		experience();
 		//First playtest
 		
 		/*multiKill();
@@ -122,45 +126,83 @@ public class PlayStateScene implements EffectScene{
 		factionTRKill.register(connection);
 	}
 	
+	private void experience(){
+		Color expColor = bias(Color.DARKCYAN, 0.05);
+		BlendingEffectProducer fadein = new BlendingEffectProducer(Color.TRANSPARENT, expColor, 100);
+		FadingEffectProducer fadeout = new FadingEffectProducer(expColor, 200);
+		MultiEffectProducer exp = new MultiEffectProducer(fadein, fadeout);
+		
+		SingleEventHandler expEvent = new SingleEventHandler(view, exp, isPlayer, Ps2EventType.PLAYER, "GainExperience", "experience");
+		expEvent.register(connection);
+	}
+	
+	private void repair(){
+		Color repair = bias(new Color(0.8,1,1,1),0.2);
+		FadingEffectProducer repairing = new FadingEffectProducer(repair, 800);
+		HashMap<String, String> experienceid = new HashMap<>(4);
+		experienceid.put("experience_id", "experience_id");
+		
+		SingleCondition containsRepair = new SingleCondition(Condition.CONTAINS,
+				new CensusData("experience","description", new HashMap<String, String>(0), experienceid),
+				new EventData("repair", ConditionDataSource.CONSTANT));
+		
+		AllCondition isRepair = new AllCondition(isPlayer, containsRepair);
+		SingleEventHandler repairEvent = new SingleEventHandler(view, repairing, isRepair, Ps2EventType.PLAYER, "GainExperience", "repair");
+		repairEvent.register(connection);
+	}
+	
 	private void death() {
-		FadingEffectProducer death = new FadingEffectProducer(Color.BLACK,2500);
-		FadingEffectProducer teamDeathFade = new FadingEffectProducer(CurrentPlayer.getInstance().getFactionColor(),500);
-		MultiEffectProducer teamDeath = new MultiEffectProducer(
-				teamDeathFade,
-				new TimedEffectProducer(Color.rgb(128,0,0), 250),
-				teamDeathFade,
-				new TimedEffectProducer(Color.rgb(64,0,0), 250),
-				teamDeathFade,
-				new FadingEffectProducer(Color.rgb(32,0,0), 250)
+		
+		BlendingEffectProducer VSDeathFade = new BlendingEffectProducer(SceneConstants.VS,Color.BLACK,1000);
+		BlendingEffectProducer NCDeathFade = new BlendingEffectProducer(SceneConstants.NC,Color.BLACK,1000);
+		BlendingEffectProducer TRDeathFade = new BlendingEffectProducer(SceneConstants.TR,Color.BLACK,1000);
+		FadingEffectProducer fadeout = new FadingEffectProducer(Color.BLACK, 500);
+		TimedEffectProducer black = new TimedEffectProducer(Color.BLACK, 1000);
+		
+		MultiEffectProducer VSDeath = new MultiEffectProducer(
+				VSDeathFade,
+				black,
+				fadeout
+		);
+		MultiEffectProducer NCDeath = new MultiEffectProducer(
+				NCDeathFade,
+				black,
+				fadeout
+		);
+		MultiEffectProducer TRDeath = new MultiEffectProducer(
+				TRDeathFade,
+				black,
+				fadeout
 		);
 		
 		HashMap<String, String> eventPlayer = new HashMap<>(4);
 		eventPlayer.put("character_id","attacker_character_id");
 		
-		SingleCondition isDeath = new SingleCondition(Condition.EQUALS,
-				new EventData(CurrentPlayer.getInstance().getPlayerID(),ConditionDataSource.CONSTANT),
-				new EventData("character_id", ConditionDataSource.EVENT)
-		);
 		
-		SingleCondition isTeam = new SingleCondition(Condition.EQUALS, new CensusData("character","faction_id", new HashMap<>(0),eventPlayer),new EventData("faction_id",ConditionDataSource.PLAYER));
-		SingleCondition isNotTeam = new SingleCondition(Condition.NOT_EQUALS, new CensusData("character","faction_id", new HashMap<>(0),eventPlayer),new EventData("faction_id",ConditionDataSource.PLAYER));
 		
-		AllCondition isTeamDeath = new AllCondition(isTeam, isDeath);
-		AllCondition isNonTeamDeath = new AllCondition(isNotTeam, isDeath);
+		SingleCondition isVS = new SingleCondition(Condition.EQUALS, new CensusData("character","faction_id", new HashMap<>(0),eventPlayer),new EventData(String.valueOf(SceneConstants.VS_ID),ConditionDataSource.CONSTANT));
+		SingleCondition isNC = new SingleCondition(Condition.EQUALS, new CensusData("character","faction_id", new HashMap<>(0),eventPlayer),new EventData(String.valueOf(SceneConstants.NC_ID),ConditionDataSource.CONSTANT));
+		SingleCondition isTR = new SingleCondition(Condition.EQUALS, new CensusData("character","faction_id", new HashMap<>(0),eventPlayer),new EventData(String.valueOf(SceneConstants.TR_ID),ConditionDataSource.CONSTANT));
 		
-		SingleEventHandler deathHandler = new SingleEventHandler(view, death, isNonTeamDeath, Ps2EventType.PLAYER, "Death","death");
-		SingleEventHandler factionDeathHandler = new SingleEventHandler(view, teamDeath, isTeamDeath, Ps2EventType.PLAYER, "Death", "teamDeath");
+		AllCondition isVSDeath = new AllCondition(isVS, isPlayer);
+		AllCondition isNCDeath = new AllCondition(isNC, isPlayer);
+		AllCondition isTRDeath = new AllCondition(isTR, isPlayer);
 		
-		deathHandler.register(connection);
-		factionDeathHandler.register(connection);
+		SingleEventHandler VSDeathhandler = new SingleEventHandler(view, VSDeath, isVSDeath, Ps2EventType.PLAYER, "Death", "vsDeath");
+		SingleEventHandler NCDeathhandler = new SingleEventHandler(view, NCDeath, isNCDeath, Ps2EventType.PLAYER, "Death", "ncDeath");
+		SingleEventHandler TRDeathhandler = new SingleEventHandler(view, TRDeath, isTRDeath, Ps2EventType.PLAYER, "Death", "trDeath");
+		
+		VSDeathhandler.register(connection);
+		NCDeathhandler.register(connection);
+		TRDeathhandler.register(connection);
 	}
 	
 	private void background() {
-		EventEffectProducer esamir = new EventEffectProducer(SceneConstants.ESAMIR.deriveColor(0,1,1,0.05),"background");
-		EventEffectProducer amerish = new EventEffectProducer(SceneConstants.AMERISH.deriveColor(0,1,1,0.05),"background");
-		EventEffectProducer indar = new EventEffectProducer(SceneConstants.INDAR.deriveColor(0,1,1,0.05),"background");
-		EventEffectProducer hossin = new EventEffectProducer(SceneConstants.HOSSIN.deriveColor(0,1,1,0.05),"background");
-		EventEffectProducer other = new EventEffectProducer(SceneConstants.OTHER.deriveColor(0,1,1,0.05),"background");
+		EventEffectProducer esamir = new EventEffectProducer(bias(SceneConstants.ESAMIR,0.05),"background");
+		EventEffectProducer amerish = new EventEffectProducer(bias(SceneConstants.AMERISH, 0.05),"background");
+		EventEffectProducer indar = new EventEffectProducer(bias(SceneConstants.INDAR,0.05),"background");
+		EventEffectProducer hossin = new EventEffectProducer(bias(SceneConstants.HOSSIN,0.05),"background");
+		EventEffectProducer other = new EventEffectProducer(bias(SceneConstants.OTHER,0.05),"background");
 		
 		SingleCondition isEsamir = new SingleCondition(Condition.EQUALS, new EventData("zone_id", ConditionDataSource.PLAYER),new EventData(String.valueOf(SceneConstants.ESAMIR_ID),ConditionDataSource.CONSTANT));
 		SingleCondition isAmerish = new SingleCondition(Condition.EQUALS, new EventData("zone_id",ConditionDataSource.PLAYER),new EventData(String.valueOf(SceneConstants.AMERISH_ID),ConditionDataSource.CONSTANT));
@@ -180,5 +222,7 @@ public class PlayStateScene implements EffectScene{
 		
 		view.addEffect(other.build());
 	}
-	
+	private Color bias(Color color,double bias){
+		return color.deriveColor(0,1,1,bias);
+	}
 }

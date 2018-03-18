@@ -4,6 +4,7 @@ import javafx.scene.paint.Color;
 
 public interface SceneConstants {
 	public static final Color INDAR = new Color(1.0,0.75,0.6,1.0);
+	//public static final Color INDAR = new Color(0.0,0.75,0.6,1.0);
 	public static final Color ESAMIR = new Color(0.43,0.57,0.66,1.0);
 	public static final Color AMERISH = new Color(0.6,0.95,0.7,1.0);
 	public static final Color HOSSIN = new Color(0.35,0.5,0.0,1.0);
@@ -24,5 +25,5 @@ public interface SceneConstants {
 	public static final int ESAMIR_ID = 8;
 	
 	public static final String VERSION_NAME = "Experimental";
-	public static final String VERSION = "0.0.2";
+	public static final String VERSION = "0.0.3";
 }
