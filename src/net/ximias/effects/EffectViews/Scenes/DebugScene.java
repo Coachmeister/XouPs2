@@ -69,6 +69,7 @@ public class DebugScene implements EffectScene {
 		TimedEffectProducer middle = new TimedEffectProducer(Color.ORANGE, 1000);
 		FadingEffectProducer end = new FadingEffectProducer(Color.ORANGE, 800);
 		MultiEffectProducer brup = new MultiEffectProducer(start, middle, end);
+		
 		view.addEffect(brup.build());
 	}
 	
@@ -113,11 +114,13 @@ public class DebugScene implements EffectScene {
 	
 	private void multiKill(){
 		TimedEffectProducer delay = new TimedEffectProducer(Color.TRANSPARENT,300);
-		BlendingEffectProducer pent = new BlendingEffectProducer(Color.ORANGE, Color.YELLOW,100);
-		BlendingEffectProducer pentrev = new BlendingEffectProducer(Color.YELLOW, Color.ORANGE,100);
-		
+		BlendingEffectProducer penta = new BlendingEffectProducer(Color.ORANGE, Color.YELLOW,100);
+		BlendingEffectProducer pentaReverse = new BlendingEffectProducer(Color.YELLOW, Color.ORANGE,100);
 		FadingEffectProducer fadeout = new FadingEffectProducer(Color.ORANGE, 200);
-		view.addEffect(new MultiEffectProducer(delay ,pent, pentrev, fadeout).build());
+		
+		MultiEffectProducer pentaKill = new MultiEffectProducer(delay, penta, pentaReverse, fadeout);
+		
+		view.addEffect(pentaKill.build());
 	}
 	
 	private void kill(){
@@ -159,6 +162,7 @@ public class DebugScene implements EffectScene {
 		BlendingEffectProducer fadeing = new BlendingEffectProducer(Color.TRANSPARENT, healGreen, 250);
 		FadingEffectProducer heal = new FadingEffectProducer(healGreen, 250);
 		MultiEffectProducer healingEffect = new MultiEffectProducer(fadeing, heal);
+		
 		view.addEffect(healingEffect.build());
 	}
 	

@@ -64,8 +64,6 @@ public class ColorEffectGUIView extends Application implements EffectView {
 	private void resize() {
 		canvas.setWidth(root.getWidth());
 		canvas.setHeight(root.getHeight());
-		System.out.println(canvas.getWidth());
-		System.out.println(canvas.getHeight());
 	}
 	
 	private void animateFrame() {
