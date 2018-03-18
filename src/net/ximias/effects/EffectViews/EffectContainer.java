@@ -36,7 +36,7 @@ public class EffectContainer implements EffectView{
 			b += effect.getColor().getBlue()*effect.getColor().getOpacity();
 			a += effect.getColor().getOpacity();
 		}
-		return Color.color(r/a,g/a,b/a);
+		return Color.color(Math.min(r/a,1.0),Math.min(g/a,1.0),Math.min(b/a,1.0));
 	}
 	
 	@Override

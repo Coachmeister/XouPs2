@@ -44,22 +44,22 @@ public class PlayStateScene implements EffectScene{
 		repair();
 		experience();
 		
-		//Version 0.0.3
+		//Version 0.0.4
 		multiKill();
 		revive();
 		heal();
 		levelUp();
 		alert();
-		/*
-		
-		// Version 0.0.4
-		amsSpawn();
-		vehicle();
-		achievement();
-		facility();
-		// Play test
 		
 		// Version 0.0.5
+		killVehicle();
+		vehicleDied();
+		achievement();
+		facility();
+		/*
+		// Play test
+		
+		// Version 0.0.6
 		logging(); and logging to files
 		killingXimias();
 		//Pre-Alpha release
@@ -83,6 +83,61 @@ public class PlayStateScene implements EffectScene{
 		*/
 		
 	}
+	private void facility(){
+		Color mutedFaction = bias(CurrentPlayer.getInstance().getFactionColor(),0.2); // Use faction color
+		
+		TimedEffectProducer facilityBegin = new TimedEffectProducer(mutedFaction, 400);
+		FadingEffectProducer facilityfade = new FadingEffectProducer(mutedFaction, 500);
+		MultiEffectProducer facility = new MultiEffectProducer(facilityBegin, facilityfade);
+		
+		SingleEventHandler facilityCap = new SingleEventHandler(view, facility, isPlayer, Ps2EventType.PLAYER, "PlayerFacilityCapture", "Facility capture");
+		SingleEventHandler facilityDef = new SingleEventHandler(view, facility, isPlayer, Ps2EventType.PLAYER, "PlayerFacilityDefend", "Facility capture");
+		facilityCap.register(connection);
+		facilityDef.register(connection);
+	}
+	
+	private void achievement(){
+		TimedEffectProducer start = new TimedEffectProducer(Color.YELLOW,600);
+		FadingEffectProducer end = new FadingEffectProducer(Color.YELLOW,1000);
+		MultiEffectProducer ribbon = new MultiEffectProducer(start, end);
+		
+		SingleEventHandler achievement = new SingleEventHandler(view, ribbon, isPlayer, Ps2EventType.PLAYER, "AchievementEarned", "Ribbon earned");
+		achievement.register(connection);
+	}
+	
+	private void killVehicle(){
+		Color ex1 = new Color(1,1,0.3,1);
+		Color ex2 = new Color(1,0.6,0,1);
+		Color ex3 = new Color(1,0.3,0,1);
+		
+		BlendingEffectProducer e0 = new BlendingEffectProducer(Color.WHITE, ex1,100);
+		BlendingEffectProducer e1 = new BlendingEffectProducer(ex1, ex2, 100);
+		BlendingEffectProducer e2 = new BlendingEffectProducer(ex2,ex3, 100);
+		FadingEffectProducer e3 = new FadingEffectProducer(ex3,1000);
+		
+		MultiEffectProducer explosion = new MultiEffectProducer(e0,e1,e2,e1,e2,e1,e2,e3);
+		SingleCondition isNotDeath = new SingleCondition(Condition.NOT_EQUALS,
+				new EventData("character_id", ConditionDataSource.EVENT),
+				new EventData(CurrentPlayer.getInstance().getPlayerID(), ConditionDataSource.CONSTANT));
+		
+		SingleCondition isKill = new SingleCondition(Condition.EQUALS,
+				new EventData("attacker_character_id", ConditionDataSource.EVENT),
+				new EventData(CurrentPlayer.getInstance().getPlayerID(), ConditionDataSource.CONSTANT));
+		
+		AllCondition isKillAndNotDeath = new AllCondition(isNotDeath, isKill);
+		SingleEventHandler killVehicle = new SingleEventHandler(view, explosion, isKillAndNotDeath, Ps2EventType.PLAYER, "VehicleDestroy","Vehicle kill");
+		killVehicle.register(connection);
+	}
+	
+	private void vehicleDied(){
+		TimedEffectProducer vehicleBegin = new TimedEffectProducer(Color.WHITE, 600);
+		FadingEffectProducer vehicleDestroy = new FadingEffectProducer(Color.WHITE, 1000);
+		MultiEffectProducer vehicleDied = new MultiEffectProducer(vehicleBegin, vehicleDestroy);
+		
+		SingleEventHandler vehicleLost = new SingleEventHandler(view, vehicleDied, isPlayer, Ps2EventType.PLAYER, "VehicleDestroy", "Vehicle Lost");
+		vehicleLost.register(connection);
+	}
+	
 	private void alert(){
 		Color alert = bias(Color.RED,0.1);
 		FadingEffectProducer whoop = new FadingEffectProducer(alert, 300);

@@ -55,8 +55,7 @@ public class DebugScene implements EffectScene {
 	}
 	
 	private void facility(){
-		Color mutedFaction = bias(SceneConstants.VS,0.2); // Use facility faction color
-		//Maybe use the world event.
+		Color mutedFaction = bias(SceneConstants.VS,0.2); // Use faction color
 		
 		TimedEffectProducer facilityBegin = new TimedEffectProducer(mutedFaction, 400);
 		FadingEffectProducer facilityfade = new FadingEffectProducer(mutedFaction, 500);
@@ -102,6 +101,7 @@ public class DebugScene implements EffectScene {
 		FadingEffectProducer e3 = new FadingEffectProducer(ex3,1000);
 		
 		MultiEffectProducer explosion = new MultiEffectProducer(e0,e1,e2,e1,e2,e1,e2,e3);
+		
 		view.addEffect(explosion.build());
 	}
 	
