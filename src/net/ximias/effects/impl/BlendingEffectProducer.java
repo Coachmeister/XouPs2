@@ -28,6 +28,11 @@ public class BlendingEffectProducer extends EffectProducer {
 	}
 	
 	@Override
+	public void setColor(Color color) {
+		startColor = color;
+	}
+	
+	@Override
 	public HashMap<String, String> toJson() {
 		HashMap<String, String> h = new HashMap<>(4);
 		h.put("duration", String.valueOf(duration));
@@ -57,5 +62,10 @@ class TimedColorAnimation implements Effect{
 	@Override
 	public boolean isDone() {
 		return System.currentTimeMillis()>startTime+duration;
+	}
+	
+	@Override
+	public boolean hasIntensity() {
+		return true;
 	}
 }

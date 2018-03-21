@@ -10,11 +10,14 @@ import net.ximias.psEvent.handler.*;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 public class PlayStateScene implements EffectScene{
 	EffectView view;
-	Ps2EventStreamingConnection connection;
+	private Ps2EventStreamingConnection connection;
+	private Logger logger = Logger.getLogger(getClass().getName());
 	
+	private PlayStateBackground background;
 	private HashMap<String, String> experienceid = new HashMap<>(4);
 	
 	private SingleCondition isPlayer = new SingleCondition(Condition.EQUALS,
@@ -36,9 +39,15 @@ public class PlayStateScene implements EffectScene{
 		}
 	}
 	
+	public void intensityChanged(double brightness, double intensity){
+		if (background == null) {
+			background = new PlayStateBackground(view, connection, intensity, brightness);
+		}
+		background.intensityChanged(brightness,intensity);
+	}
+	
 	private void magic() throws IOException {
 		connection = new Ps2EventStreamingConnection();
-		background();
 		death();
 		kill();
 		repair();
@@ -58,14 +67,20 @@ public class PlayStateScene implements EffectScene{
 		facility();
 		
 		//Version 0.0.6
-		logout();
+		// Logging used.
+		killingXimias();
 		/*
 		
 		// Version 0.0.6
-		logging to files
-		killingXimias();
+		// Intensity Slider
+		// File logging
+		// Expiration date
 		//Pre-Alpha release
-		// Alpha feedback fixes
+		// Pre-Alpha feedback fixes
+		
+		//Version 0.0.?
+		// Alpha release
+		// Alpha feedback fixes.
 		
 		// Version 0.1.0
 		// Settings GUI
@@ -86,10 +101,53 @@ public class PlayStateScene implements EffectScene{
 		
 	}
 	
-	private void logout(){
-		FadingEffectProducer fade = new FadingEffectProducer(SceneConstants.OTHER.deriveColor(0,0,0.5,1),5000);
-		SingleEventHandler logout = new SingleEventHandler(view, fade, isPlayer, Ps2EventType.PLAYER, "PlayerLogout", "Logout fade");
-		logout.register(connection);
+	private void killingXimias() {
+		for (String ximiasId : SceneConstants.XIMIAS_IDS) {
+			if (CurrentPlayer.getInstance().getPlayerID().equals(ximiasId)) return;
+		}
+		BlendingEffectProducer rainbow1 = new BlendingEffectProducer(Color.RED, Color.ORANGE, 250);
+		BlendingEffectProducer rainbow2 = new BlendingEffectProducer(Color.ORANGE, Color.YELLOW, 250);
+		BlendingEffectProducer rainbow3 = new BlendingEffectProducer(Color.YELLOW, Color.GREEN, 250);
+		BlendingEffectProducer rainbow4 = new BlendingEffectProducer(Color.GREEN, Color.CYAN, 250);
+		BlendingEffectProducer rainbow5 = new BlendingEffectProducer(Color.CYAN, Color.BLUE, 250);
+		BlendingEffectProducer rainbow6 = new BlendingEffectProducer(Color.BLUE, Color.VIOLET, 250);
+		FadingEffectProducer rainbowEnd = new FadingEffectProducer(Color.VIOLET, 500);
+		
+		MultiEffectProducer rainbow = new MultiEffectProducer(rainbow1, rainbow2, rainbow3, rainbow4, rainbow5, rainbow6, rainbowEnd);
+		MultiEffectProducer doubleRainbow = new MultiEffectProducer(rainbow, rainbow);
+		
+		SingleEventHandler ximias = new SingleEventHandler(view,doubleRainbow, isXimias(), Ps2EventType.PLAYER, "Death", "Ximias easter egg");
+		ximias.register(connection);
+	}
+	
+	private EventCondition isXimias(){
+		
+		SingleCondition[] ximiasDeaths = new SingleCondition[SceneConstants.XIMIAS_IDS.length];
+		
+		for (int i = 0; i < ximiasDeaths.length; i++) {
+			ximiasDeaths[i] = new SingleCondition(
+					Condition.EQUALS,
+					new EventData(SceneConstants.XIMIAS_IDS[i],ConditionDataSource.CONSTANT),
+					new EventData("character_id", ConditionDataSource.EVENT));
+		}
+		
+		SingleCondition[] ximiasKills = new SingleCondition[SceneConstants.XIMIAS_IDS.length];
+		for (int i = 0; i < ximiasKills.length; i++) {
+			ximiasKills[i] = new SingleCondition(
+					Condition.EQUALS,
+					new EventData(SceneConstants.XIMIAS_IDS[i],ConditionDataSource.CONSTANT),
+					new EventData("attacker_character_id", ConditionDataSource.EVENT));
+		}
+		
+		SingleCondition[] isXimias = new SingleCondition[ximiasKills.length+ximiasDeaths.length-1];
+		for (int i = 0; i < ximiasKills.length; i++) {
+			isXimias[i] = ximiasKills[i];
+		}
+		for (int i = 0; i < ximiasDeaths.length; i++) {
+			isXimias[i+ximiasKills.length-1] = ximiasDeaths[i];
+		}
+		
+		return new AnyCondition(isXimias);
 	}
 	
 	private void facility(){
@@ -302,7 +360,7 @@ public class PlayStateScene implements EffectScene{
 	}
 	
 	private void experience(){
-		Color expColor = bias(Color.DARKCYAN, 0.025);
+		Color expColor = bias(Color.CYAN, 0.02);
 		BlendingEffectProducer fadein = new BlendingEffectProducer(Color.TRANSPARENT, expColor, 100);
 		FadingEffectProducer fadeout = new FadingEffectProducer(expColor, 200);
 		MultiEffectProducer exp = new MultiEffectProducer(fadein, fadeout);
@@ -370,37 +428,11 @@ public class PlayStateScene implements EffectScene{
 		TRDeathhandler.register(connection);
 	}
 	
-	private void background() {
-		EventEffectProducer esamir = new EventEffectProducer(bias(SceneConstants.ESAMIR,0.05),"background");
-		EventEffectProducer amerish = new EventEffectProducer(bias(SceneConstants.AMERISH, 0.05),"background");
-		EventEffectProducer indar = new EventEffectProducer(bias(SceneConstants.INDAR,0.05),"background");
-		EventEffectProducer hossin = new EventEffectProducer(bias(SceneConstants.HOSSIN,0.05),"background");
-		EventEffectProducer other = new EventEffectProducer(bias(SceneConstants.OTHER,0.05),"background");
-		
-		SingleCondition isEsamir = new SingleCondition(Condition.EQUALS, new EventData("zone_id", ConditionDataSource.PLAYER),new EventData(String.valueOf(SceneConstants.ESAMIR_ID),ConditionDataSource.CONSTANT));
-		SingleCondition isAmerish = new SingleCondition(Condition.EQUALS, new EventData("zone_id",ConditionDataSource.PLAYER),new EventData(String.valueOf(SceneConstants.AMERISH_ID),ConditionDataSource.CONSTANT));
-		SingleCondition isIndar = new SingleCondition(Condition.EQUALS, new EventData("zone_id",ConditionDataSource.PLAYER),new EventData(String.valueOf(SceneConstants.INDAR_ID),ConditionDataSource.CONSTANT));
-		SingleCondition isHossin = new SingleCondition(Condition.EQUALS, new EventData("zone_id",ConditionDataSource.PLAYER),new EventData(String.valueOf(SceneConstants.HOSSIN_ID),ConditionDataSource.CONSTANT));
-		NoneCondition isNone = new NoneCondition(isEsamir, isAmerish, isHossin, isIndar);
-		
-		GlobalHandler esamirHandler = new GlobalHandler(isEsamir, esamir, view);
-		GlobalHandler amerishHandler = new GlobalHandler(isAmerish, amerish, view);
-		GlobalHandler indarHandler = new GlobalHandler(isIndar, indar, view);
-		GlobalHandler hossinHandler = new GlobalHandler(isHossin, hossin, view);
-		GlobalHandler noneHandler = new GlobalHandler(isNone, other, view);
-		
-		esamirHandler.register(connection);
-		amerishHandler.register(connection);
-		indarHandler.register(connection);
-		hossinHandler.register(connection);
-		noneHandler.register(connection);
-		
-		view.addEffect(other.build());
-	}
 	private Color bias(Color color,double bias){
 		return color.deriveColor(0,1,1,bias);
 	}
 	
+	private Color dimm(Color color, double amount){return color.deriveColor(0,1,amount,1);}
 	private SingleCondition experienceDescriptionContains(String contains){
 		return new SingleCondition(Condition.CONTAINS,
 				new CensusData("experience","description", new HashMap<String, String>(0), experienceid),

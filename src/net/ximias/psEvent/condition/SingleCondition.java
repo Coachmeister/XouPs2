@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 /**
  * Receives an array of Condition data and a Condition to apply to the given data.
@@ -28,6 +29,7 @@ public class SingleCondition extends JsonSerializable implements EventCondition 
 	Return true or false
 	 */
 	ArrayList<ConditionData> data;
+	Logger logger = Logger.getLogger(getClass().getName());
 	
 	Condition condition;
 	
@@ -82,14 +84,19 @@ public class SingleCondition extends JsonSerializable implements EventCondition 
 	
 	public boolean evaluate(JSONObject payload){
 			for (int i = 0; i < data.size()-1; i++) {
+				logger.finer("evaluating: "+data.get(i).get(payload)+" "+condition.name()+" "+data.get(i+1).get(payload));
 				try{
-					if (!condition.eval(data.get(i).get(payload),data.get(i+1).get(payload))) return false;
+					if (!condition.eval(data.get(i).get(payload),data.get(i+1).get(payload))) {
+						logger.finer("Evaluated to false");
+						return false;
+					}
 				}catch (NumberFormatException e){
-					System.out.println("Letters can not be compared using "+condition.name());
-					System.out.println("comparison was: "+data.get(i).get(payload)+" "+condition.name()+" "+data.get(i+1).get(payload));
+					logger.severe("Letters can not be compared using "+condition.name()+
+							"\ncomparison was: "+data.get(i).get(payload)+" "+condition.name()+" "+data.get(i+1).get(payload));
 					return false;
 				}
 			}
+			logger.finer("Evaluated to true");
 			return true;
 	}
 	

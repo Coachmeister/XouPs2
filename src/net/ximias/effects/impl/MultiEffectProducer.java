@@ -21,6 +21,13 @@ public class MultiEffectProducer extends EffectProducer {
 	}
 	
 	@Override
+	public void setColor(Color color) {
+		for (EffectProducer effect : effects) {
+			effect.setColor(color);
+		}
+	}
+	
+	@Override
 	public HashMap<String, String> toJson() {
 		return null;
 	}
@@ -47,5 +54,10 @@ class MultiEffect implements Effect{
 	@Override
 	public boolean isDone() {
 		return count == effects.length-1 && current.isDone();
+	}
+	
+	@Override
+	public boolean hasIntensity() {
+		return true;
 	}
 }

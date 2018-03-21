@@ -29,6 +29,11 @@ public class TimedEffectProducer extends EffectProducer {
 	}
 	
 	@Override
+	public void setColor(Color color) {
+		this.color = color;
+	}
+	
+	@Override
 	public HashMap<String, String> toJson() {
 		HashMap<String, String> h = new HashMap<>(4);
 		h.put("duration", String.valueOf(duration));
@@ -49,6 +54,11 @@ class TimedColorEffect implements Effect{
 	
 	public boolean isDone(){
 		return System.currentTimeMillis()-startTime > duration;
+	}
+	
+	@Override
+	public boolean hasIntensity() {
+		return true;
 	}
 	
 	public Color getColor() {

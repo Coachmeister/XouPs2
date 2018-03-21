@@ -1,6 +1,7 @@
 package net.ximias.network;
 
 import java.net.URI;
+import java.util.logging.Logger;
 import javax.websocket.ClientEndpoint;
 import javax.websocket.CloseReason;
 import javax.websocket.ContainerProvider;
@@ -20,6 +21,7 @@ public class WebsocketClientEndpoint {
 	
 	Session userSession = null;
 	private MessageHandler messageHandler;
+	Logger logger = Logger.getLogger(getClass().getName());
 	
 	public WebsocketClientEndpoint(URI endpointURI) {
 		try {
@@ -37,7 +39,7 @@ public class WebsocketClientEndpoint {
 	 */
 	@OnOpen
 	public void onOpen(Session userSession) {
-		System.out.println("opening websocket");
+		logger.info("Opening websocket");
 		this.userSession = userSession;
 	}
 	
@@ -49,7 +51,7 @@ public class WebsocketClientEndpoint {
 	 */
 	@OnClose
 	public void onClose(Session userSession, CloseReason reason) {
-		System.out.println("closing websocket");
+		logger.info("Closing websocket");
 		this.userSession = null;
 	}
 	

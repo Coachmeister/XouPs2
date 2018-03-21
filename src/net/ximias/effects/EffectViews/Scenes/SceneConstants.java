@@ -3,12 +3,13 @@ package net.ximias.effects.EffectViews.Scenes;
 import javafx.scene.paint.Color;
 
 public interface SceneConstants {
-	public static final Color INDAR = new Color(0.75,0.6,0.4,1.0);
+	public static final Color INDAR = new Color(1,0.8,0.7,1.0);
 	//public static final Color INDAR = new Color(0.0,0.75,0.6,1.0);
-	public static final Color ESAMIR = new Color(0.43,0.57,0.66,1.0);
-	public static final Color AMERISH = new Color(0.4,0.75,0.5,1.0);
-	public static final Color HOSSIN = new Color(0.35,0.5,0.0,1.0);
-	public static final Color OTHER = new Color(1.0,0.8,0.6,1.0);
+	public static final Color ESAMIR = new Color(0.7,0.9,1,1.0);
+	public static final Color AMERISH = new Color(0.0,0.8,0.4,1.0);
+	public static final Color HOSSIN = new Color(0.7,0.9,0.1,1.0);
+	public static final Color OTHER = new Color(1.0,0.85,.75,1.0);
+	//public static final Color OTHER = new Color(1.0,0,0,1.0);
 	
 	public static final Color VS = new Color(0.4,0.0,1.0,1.0);
 	public static final Color TR = new Color(0.8,0.0,0.0,1.0);
@@ -24,6 +25,8 @@ public interface SceneConstants {
 	public static final int AMERISH_ID = 6;
 	public static final int ESAMIR_ID = 8;
 	
+	public static final String[] XIMIAS_IDS = {"8287548916321388337","5428653157989617089"};
+	
 	public static final String VERSION_NAME = "Experimental";
-	public static final String VERSION = "0.0.6";
+	public static final String VERSION = "0.0.7";
 }

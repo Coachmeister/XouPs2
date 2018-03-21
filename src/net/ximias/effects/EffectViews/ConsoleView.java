@@ -32,6 +32,11 @@ public class ConsoleView implements EffectView {
 		System.out.println("Effect added. current effect size: "+effects.size());
 	}
 	
+	@Override
+	public double getEffectIntensity() {
+		return 1;
+	}
+	
 	private synchronized Color getColorAndClearFinishedEffects(){
 		double r, g, b, a;
 		r=g=b=a=0;

@@ -7,6 +7,8 @@ import net.ximias.fileParser.JsonSerializable;
 import net.ximias.network.Ps2EventStreamingConnection;
 import org.json.JSONObject;
 
+import java.util.logging.Logger;
+
 /**
  * Handler for receiving Ps2 events from the EventStreamingConnection.
  */
@@ -15,6 +17,7 @@ public abstract class Ps2EventHandler extends JsonSerializable {
 	private EffectView view;
 	protected EffectProducer effect;
 	protected String name;
+	private Logger logger = Logger.getLogger(getClass().getName());
 	
 	public Ps2EventHandler() {
 	}
@@ -28,7 +31,9 @@ public abstract class Ps2EventHandler extends JsonSerializable {
 	}
 	
 	public void eventReceived(JSONObject payload){
+		logger.finest("Event received: "+payload);
 		if (view!=null && conditionIsSatisfied(payload) && effect != null){
+			logger.finer("Condition evaluated to true.");
 			view.addEffect(effect.build());
 		}
 	}

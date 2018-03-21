@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 /**
  * Modifiable color effect.
@@ -18,13 +19,17 @@ import java.util.HashMap;
  */
 public class EventEffectProducer extends EffectProducer{
 	private static final HashMap<String, WeakReference<EventColorEffect>> eventEffects = new HashMap<>(12);
-	
+	private Logger logger = Logger.getLogger(getClass().getName());
 	private String name;
 	private Color color;
 	
 	public EventEffectProducer(Color color, String name){
 		this.name = name;
 		this.color = color;
+		if (color.getOpacity()==0) {
+			logger.severe("This effect producer is fully transparent!");
+			throw new Error("Event effects are backgrounds and shouldn't be fully transparent");
+		}
 	}
 	
 	public EventEffectProducer(JSONObject data) {
@@ -38,6 +43,10 @@ public class EventEffectProducer extends EffectProducer{
 				ec.setDone();
 			}
 		}
+	}
+	
+	public void setColor(Color color) {
+		this.color = color;
 	}
 	
 	@Override
@@ -84,6 +93,11 @@ class EventColorEffect implements Effect {
 	@Override
 	public boolean isDone() {
 		return done;
+	}
+	
+	@Override
+	public boolean hasIntensity() {
+		return false;
 	}
 	
 	public void setColor(Color color){
