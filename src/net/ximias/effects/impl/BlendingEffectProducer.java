@@ -9,8 +9,8 @@ import java.util.HashMap;
 
 public class BlendingEffectProducer extends EffectProducer {
 	protected Color startColor;
-	private Color endColor;
-	protected long duration;
+	private final Color endColor;
+	protected final long duration;
 	
 	public BlendingEffectProducer(Color startColor, Color endColor, long duration_milliseconds) {
 		this.startColor = startColor;
@@ -42,10 +42,10 @@ public class BlendingEffectProducer extends EffectProducer {
 	}
 }
 class TimedColorAnimation implements Effect{
-	private Color startColor;
-	private Color endColor;
-	private long duration;
-	private long startTime;
+	private final Color startColor;
+	private final Color endColor;
+	private final long duration;
+	private final long startTime;
 	
 	TimedColorAnimation(Color startColor, Color endColor, long duration_milliseconds) {
 		this.startColor = startColor;

@@ -12,10 +12,10 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 
 public class GlobalHandler extends Ps2EventHandler {
-	EventCondition condition;
-	Ps2EventType type;
-	EffectProducer effect;
-	private Logger logger = Logger.getLogger(getClass().getName());
+	private final EventCondition condition;
+	private Ps2EventType type;
+	private EffectProducer effect;
+	private final Logger logger = Logger.getLogger(getClass().getName());
 	
 	public GlobalHandler(EventCondition con, EffectProducer effect, EffectView view){
 		super(effect);
@@ -43,7 +43,7 @@ public class GlobalHandler extends Ps2EventHandler {
 	protected boolean conditionIsSatisfied(JSONObject payload) {
 		boolean evaluate = condition.evaluate(payload);
 		if (evaluate){
-			logger.info("Condition is true. Source: "+payload.get("event_name"));
+			logger.info("Condition is true. Source: "+payload.optString("event_name","Not an event"));
 		}
 		return evaluate;
 	}

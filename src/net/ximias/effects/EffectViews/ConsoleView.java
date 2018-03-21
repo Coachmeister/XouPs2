@@ -14,7 +14,7 @@ import java.util.TimerTask;
  * Debug view. Used for displaying the colors in the console.
  */
 public class ConsoleView implements EffectView {
-	private ArrayList<Effect> effects;
+	private final ArrayList<Effect> effects;
 	
 	public ConsoleView(){
 		effects = new ArrayList<>(60);

@@ -19,8 +19,8 @@ import java.util.logging.Logger;
  */
 public class EventEffectProducer extends EffectProducer{
 	private static final HashMap<String, WeakReference<EventColorEffect>> eventEffects = new HashMap<>(12);
-	private Logger logger = Logger.getLogger(getClass().getName());
-	private String name;
+	private final Logger logger = Logger.getLogger(getClass().getName());
+	private final String name;
 	private Color color;
 	
 	public EventEffectProducer(Color color, String name){

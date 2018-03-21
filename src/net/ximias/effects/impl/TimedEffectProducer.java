@@ -11,11 +11,11 @@ import java.util.HashMap;
  * A timed color effect. Should probably be renamed. See EventColorEffect doc.
  */
 public class TimedEffectProducer extends EffectProducer {
-	private long duration;
-	protected Color color;
+	private final long duration;
+	private Color color;
 	
-	public TimedEffectProducer(Color color_javafx, long duration_miliseconds){
-		duration = duration_miliseconds;
+	public TimedEffectProducer(Color color_javafx, long duration_milliseconds){
+		duration = duration_milliseconds;
 		color = color_javafx;
 	}
 	
@@ -42,13 +42,13 @@ public class TimedEffectProducer extends EffectProducer {
 	}
 }
 class TimedColorEffect implements Effect{
-	private long startTime;
-	private long duration;
-	protected Color color;
+	private final long startTime;
+	private final long duration;
+	protected final Color color;
 	
-	TimedColorEffect(long duration_miliseconds, Color color_javafx){
+	TimedColorEffect(long duration_milliseconds, Color color_javafx){
 		startTime = System.currentTimeMillis();
-		duration = duration_miliseconds;
+		duration = duration_milliseconds;
 		color = color_javafx;
 	}
 	

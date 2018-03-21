@@ -2,12 +2,11 @@ package net.ximias.psEvent.condition;
 
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class AnyCondition implements EventCondition {
-	ArrayList<EventCondition> data;
+	private final ArrayList<EventCondition> data;
 	
 	public AnyCondition(EventCondition... conditions) {
 		data = new ArrayList<>(24);

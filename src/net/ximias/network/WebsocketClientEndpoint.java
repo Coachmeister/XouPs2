@@ -19,9 +19,9 @@ import javax.websocket.WebSocketContainer;
 @ClientEndpoint
 public class WebsocketClientEndpoint {
 	
-	Session userSession = null;
+	private Session userSession = null;
 	private MessageHandler messageHandler;
-	Logger logger = Logger.getLogger(getClass().getName());
+	private final Logger logger = Logger.getLogger(getClass().getName());
 	
 	public WebsocketClientEndpoint(URI endpointURI) {
 		try {
@@ -90,8 +90,8 @@ public class WebsocketClientEndpoint {
 	 *
 	 * @author Jiji_Sasidharan
 	 */
-	public static interface MessageHandler {
+	public interface MessageHandler {
 		
-		public void handleMessage(String message);
+		void handleMessage(String message);
 	}
 }

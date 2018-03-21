@@ -25,10 +25,10 @@ public enum Condition {
 		return getClass().getSimpleName();
 	}
 	
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		for (int i = 0; i < Condition.values().length; i++) {
 			Condition condition = Condition.values()[i];
 			System.out.println(condition.toString());
 		}
-	}
+	}*/
 }

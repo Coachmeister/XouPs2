@@ -4,12 +4,10 @@ import javafx.scene.paint.Color;
 import net.ximias.effects.Effect;
 import net.ximias.effects.EffectProducer;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class MultiEffectProducer extends EffectProducer {
-	private EffectProducer[] effects;
+	private final EffectProducer[] effects;
 	
 	public MultiEffectProducer(EffectProducer... effects) {
 		this.effects = effects;
@@ -33,7 +31,7 @@ public class MultiEffectProducer extends EffectProducer {
 	}
 }
 class MultiEffect implements Effect{
-	private EffectProducer[] effects;
+	private final EffectProducer[] effects;
 	private Effect current;
 	private int count;
 	

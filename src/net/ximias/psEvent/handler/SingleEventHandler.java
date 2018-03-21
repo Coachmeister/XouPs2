@@ -27,9 +27,9 @@ public class SingleEventHandler extends Ps2EventHandler {
 	 */
 	
 	
-	EventCondition condition;
-	Ps2EventType type;
-	String eventName;
+	private final EventCondition condition;
+	private final Ps2EventType type;
+	private final String eventName;
 	public SingleEventHandler(EffectView view, EffectProducer effect, EventCondition condition, Ps2EventType type, String event , String name) {
 		super(effect);
 		this.name = name;
@@ -92,7 +92,7 @@ public class SingleEventHandler extends Ps2EventHandler {
 		return type;
 	}
 	
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		CurrentPlayer.getInstance().setPlayerID("8287548916321388337");
 		ArrayList<ConditionData> data= new ArrayList<>(5);
 		data.add(new EventData("13", ConditionDataSource.CONSTANT));
@@ -104,7 +104,7 @@ public class SingleEventHandler extends Ps2EventHandler {
 		Ps2EventStreamingConnection connection = new Ps2EventStreamingConnection();
 		event.register(connection);
 		
-	}
+	}*/
 	
 	@Override
 	public HashMap<String, String> toJson() {

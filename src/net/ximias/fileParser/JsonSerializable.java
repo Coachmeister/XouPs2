@@ -4,7 +4,6 @@ import javafx.scene.paint.Color;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.List;
 
 public abstract class JsonSerializable {
 	protected Color getColor(JSONObject data, String key) {

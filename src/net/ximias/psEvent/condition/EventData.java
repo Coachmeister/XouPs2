@@ -1,14 +1,13 @@
 package net.ximias.psEvent.condition;
 
-import net.ximias.fileParser.JsonSerializable;
 import net.ximias.network.CurrentPlayer;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 
 public class EventData extends ConditionData {
-	String value;
-	ConditionDataSource source;
+	private String value;
+	private ConditionDataSource source;
 	
 	public EventData(String value, ConditionDataSource source) {
 		this.value = value;
@@ -36,6 +35,7 @@ public class EventData extends ConditionData {
 			case CONSTANT:
 				return value;
 			case EVENT:
+				if (!payload.has(value)) return "";
 				return payload.getString(value);
 			case PLAYER:
 				return CurrentPlayer.getInstance().getValue(value);

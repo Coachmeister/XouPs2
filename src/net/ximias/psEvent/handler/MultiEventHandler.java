@@ -28,9 +28,9 @@ public class MultiEventHandler extends Ps2EventHandler {
 	Effect to apply.
 	 */
 	private boolean[] eventsHasBeenSatisfied;
-	private Ps2EventHandler[] handlers;
-	private Ps2EventHandler[] resetters;
-	private boolean eventsInOrder;
+	private final Ps2EventHandler[] handlers;
+	private final Ps2EventHandler[] resetters;
+	private final boolean eventsInOrder;
 	private boolean shouldFire = true;
 	private boolean repeat;
 	
@@ -140,31 +140,6 @@ public class MultiEventHandler extends Ps2EventHandler {
 		}
 		shouldFire = false;
 		return true;
-	}
-	
-	public static void main(String[] args) {
-		CurrentPlayer.getInstance().setPlayerID("8287548916321388337");
-		ConsoleView view = new ConsoleView();
-		TimedEffectProducer white = new TimedEffectProducer(Color.WHITE,2100);
-		TimedEffectProducer red = new TimedEffectProducer( Color.RED,2100);
-		
-		EventData c13 = new EventData("13", ConditionDataSource.CONSTANT);
-		EventData c1 = new EventData("1", ConditionDataSource.CONSTANT);
-		EventData world = new EventData("world_id", ConditionDataSource.EVENT);
-		
-		SingleCondition worldis1 = new SingleCondition(Condition.EQUALS, c1, world);
-		SingleCondition worldis13 = new SingleCondition(Condition.EQUALS, c13, world);
-		
-		SingleEventHandler world1 = new SingleEventHandler(view, white, worldis1, Ps2EventType.WORLD, "PlayerLogin", "is1");
-		SingleEventHandler world13 = new SingleEventHandler(view, white, worldis13, Ps2EventType.WORLD, "PlayerLogin", "is13");
-		
-		Ps2EventHandler[] handlers = new Ps2EventHandler[] {world13, world13};
-		Ps2EventHandler[] resetters = new Ps2EventHandler[] {world1};
-		
-		MultiEventHandler multiLogin = new MultiEventHandler(handlers, resetters, true,false, red, view, "two13");
-		
-		Ps2EventStreamingConnection connection = new Ps2EventStreamingConnection();
-		multiLogin.register(connection);
 	}
 	
 	@Override

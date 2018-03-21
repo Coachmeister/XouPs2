@@ -3,7 +3,7 @@ package net.ximias.psEvent.condition;
 import org.json.JSONObject;
 
 public class NotCondition implements EventCondition {
-	EventCondition condition;
+	private final EventCondition condition;
 	
 	public NotCondition(EventCondition condition) {
 		this.condition = condition;

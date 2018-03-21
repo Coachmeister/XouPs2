@@ -10,28 +10,16 @@ import net.ximias.psEvent.condition.*;
 import net.ximias.psEvent.handler.GlobalHandler;
 import net.ximias.psEvent.handler.Ps2EventType;
 import net.ximias.psEvent.handler.SingleEventHandler;
+import org.json.JSONObject;
 
 import java.util.logging.Logger;
 
-public class PlayStateBackground {
-	private Logger logger = Logger.getLogger(getClass().getName());
-	private EffectView view;
-	private Ps2EventStreamingConnection connection;
+class PlayStateBackground {
+	private final Logger logger = Logger.getLogger(getClass().getName());
+	private final EffectView view;
+	private final Ps2EventStreamingConnection connection;
 	private double backgroundBrightness;
 	private double backgroundIntensity;
-	
-	private EventEffectProducer esamir;
-	private EventEffectProducer amerish;
-	private EventEffectProducer indar;
-	private EventEffectProducer hossin;
-	private EventEffectProducer other;
-	private FadingEffectProducer logoutFade;
-	
-	private SingleCondition isEsamir;
-	private SingleCondition isAmerish;
-	private SingleCondition isIndar;
-	private SingleCondition isHossin;
-	private EventCondition isNone;
 	
 	private GlobalHandler esamirHandler;
 	private GlobalHandler amerishHandler;
@@ -39,7 +27,14 @@ public class PlayStateBackground {
 	private GlobalHandler hossinHandler;
 	private GlobalHandler noneHandler;
 	
-	private SingleCondition isPlayer = new SingleCondition(Condition.EQUALS,
+	
+	private EventEffectProducer esamir;
+	private EventEffectProducer amerish;
+	private EventEffectProducer indar;
+	private EventEffectProducer hossin;
+	private FadingEffectProducer logoutFade;
+	
+	private final SingleCondition isPlayer = new SingleCondition(Condition.EQUALS,
 			new EventData(CurrentPlayer.getInstance().getPlayerID(),ConditionDataSource.CONSTANT),
 			new EventData("character_id", ConditionDataSource.EVENT)
 	);
@@ -57,26 +52,20 @@ public class PlayStateBackground {
 		amerish = new EventEffectProducer(background(SceneConstants.AMERISH),"background");
 		indar = new EventEffectProducer(background(SceneConstants.INDAR),"background");
 		hossin = new EventEffectProducer(background(SceneConstants.HOSSIN),"background");
-		other = new EventEffectProducer(SceneConstants.OTHER,"background");
+		EventEffectProducer other = new EventEffectProducer(SceneConstants.OTHER, "background");
 		
-		isEsamir = new SingleCondition(Condition.EQUALS, new EventData("zone_id", ConditionDataSource.PLAYER),new EventData(String.valueOf(SceneConstants.ESAMIR_ID),ConditionDataSource.CONSTANT));
-		isAmerish = new SingleCondition(Condition.EQUALS, new EventData("zone_id",ConditionDataSource.PLAYER),new EventData(String.valueOf(SceneConstants.AMERISH_ID),ConditionDataSource.CONSTANT));
-		isIndar = new SingleCondition(Condition.EQUALS, new EventData("zone_id",ConditionDataSource.PLAYER),new EventData(String.valueOf(SceneConstants.INDAR_ID),ConditionDataSource.CONSTANT));
-		isHossin = new SingleCondition(Condition.EQUALS, new EventData("zone_id",ConditionDataSource.PLAYER),new EventData(String.valueOf(SceneConstants.HOSSIN_ID),ConditionDataSource.CONSTANT));
+		SingleCondition isEsamir = new SingleCondition(Condition.EQUALS, new EventData("zone_id", ConditionDataSource.PLAYER), new EventData(String.valueOf(SceneConstants.ESAMIR_ID), ConditionDataSource.CONSTANT));
+		SingleCondition isAmerish = new SingleCondition(Condition.EQUALS, new EventData("zone_id", ConditionDataSource.PLAYER), new EventData(String.valueOf(SceneConstants.AMERISH_ID), ConditionDataSource.CONSTANT));
+		SingleCondition isIndar = new SingleCondition(Condition.EQUALS, new EventData("zone_id", ConditionDataSource.PLAYER), new EventData(String.valueOf(SceneConstants.INDAR_ID), ConditionDataSource.CONSTANT));
+		SingleCondition isHossin = new SingleCondition(Condition.EQUALS, new EventData("zone_id", ConditionDataSource.PLAYER), new EventData(String.valueOf(SceneConstants.HOSSIN_ID), ConditionDataSource.CONSTANT));
 		
 		// if                            all(not any continents), (isPlayer)
-		isNone = new AllCondition(new NotCondition(new AnyCondition(isEsamir, isAmerish, isHossin, isIndar)), isPlayer);
+		EventCondition isNone = new AllCondition(new NotCondition(new AnyCondition(isEsamir, isAmerish, isHossin, isIndar)), isPlayer);
 		
-		
-		AllCondition isPlayerInEsamir = new AllCondition(isPlayer, isEsamir);
-		AllCondition isPlayerInAmerish = new AllCondition(isPlayer, isAmerish);
-		AllCondition isPlayerInIndar = new AllCondition(isPlayer, isIndar);
-		AllCondition isPlayerInHossin = new AllCondition(isPlayer, isHossin);
-		
-		esamirHandler = new GlobalHandler(isPlayerInEsamir, esamir, view);
-		amerishHandler = new GlobalHandler(isPlayerInAmerish, amerish, view);
-		indarHandler = new GlobalHandler(isPlayerInIndar, indar, view);
-		hossinHandler = new GlobalHandler(isPlayerInHossin, hossin, view);
+		esamirHandler = new GlobalHandler(isEsamir, esamir, view);
+		amerishHandler = new GlobalHandler(isAmerish, amerish, view);
+		indarHandler = new GlobalHandler(isIndar, indar, view);
+		hossinHandler = new GlobalHandler(isHossin, hossin, view);
 		noneHandler = new GlobalHandler(isNone, other, view);
 		
 		esamirHandler.register(connection);
@@ -90,12 +79,20 @@ public class PlayStateBackground {
 	}
 	
 	
-	private void background() {
+	private void recalculateBackground() {
 		esamir.setColor(background(SceneConstants.ESAMIR));
 		amerish.setColor(background(SceneConstants.AMERISH));
 		indar.setColor(background(SceneConstants.INDAR));
 		hossin.setColor(background(SceneConstants.HOSSIN));
 		logoutFade.setColor(Color.BLACK.deriveColor(0,1,1,1.0-backgroundBrightness));
+		updateHandlers();
+	}
+	
+	private void updateHandlers(){
+		esamirHandler.eventReceived(SceneConstants.EMPTY_JSON);
+		amerishHandler.eventReceived(SceneConstants.EMPTY_JSON);
+		indarHandler.eventReceived(SceneConstants.EMPTY_JSON);
+		hossinHandler.eventReceived(SceneConstants.EMPTY_JSON);
 	}
 	
 	private void logout(){
@@ -109,7 +106,7 @@ public class PlayStateBackground {
 		logger.info("Intensity changed");
 		this.backgroundBrightness = backgroundBrightness;
 		this.backgroundIntensity = backgroundIntensity;
-		background();
+		recalculateBackground();
 	}
 	
 	private Color background(Color color){

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class AllCondition implements EventCondition {
-	ArrayList<EventCondition> data;
+	private final ArrayList<EventCondition> data;
 	
 	public AllCondition(EventCondition... conditions) {
 		data = new ArrayList<>(24);

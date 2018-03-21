@@ -1,6 +1,5 @@
 package net.ximias.effects.EffectViews;
 
-import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import javafx.scene.paint.Color;
 import net.ximias.effects.Effect;
 import net.ximias.effects.EffectView;
@@ -9,11 +8,11 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 
 public class EffectContainer implements EffectView{
-	private ArrayList<Effect> effects;
-	private Logger logger = Logger.getLogger(getClass().getName());
+	private final ArrayList<Effect> effects;
+	private final Logger logger = Logger.getLogger(getClass().getName());
 	private double effectIntensity;
 	
-	public EffectContainer() {
+	private EffectContainer() {
 		effects = new ArrayList<>(80);
 	}
 	

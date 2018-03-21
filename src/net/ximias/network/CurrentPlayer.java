@@ -4,19 +4,17 @@ import javafx.scene.paint.Color;
 import net.ximias.effects.EffectViews.Scenes.SceneConstants;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import sun.rmi.server.InactiveGroupException;
 
 import javax.swing.*;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.logging.Logger;
 
 public class CurrentPlayer {
-	private static CurrentPlayer ourInstance = new CurrentPlayer();
-	private Logger logger = Logger.getLogger(getClass().getName());
+	private static final CurrentPlayer ourInstance = new CurrentPlayer();
+	private final Logger logger = Logger.getLogger(getClass().getName());
 	public static CurrentPlayer getInstance() {
 		return ourInstance;
 	}
@@ -76,13 +74,13 @@ public class CurrentPlayer {
 		
 	}
 	
-	public void initialize() {
+	private void initialize() {
 		try {
-			String partlyPlayername = JOptionPane.showInputDialog(null, "Input (start of) character name", "ximias");
-			if (partlyPlayername == null) {
+			String partlyPlayerName = JOptionPane.showInputDialog(null, "Input (start of) character name", "ximias");
+			if (partlyPlayerName == null) {
 				cancelled();
 			}
-			JSONArray playerNameList = CensusConnection.listPlayersStartsWith(partlyPlayername);
+			JSONArray playerNameList = CensusConnection.listPlayersStartsWith(partlyPlayerName);
 			
 			String selectedCharacterId = performCharacterSelection(playerNameList);
 			setPlayerID(selectedCharacterId);
@@ -135,12 +133,7 @@ public class CurrentPlayer {
 		for (int i = 0; i < results.length(); i++) {
 			fullOptions.add(results.getJSONObject(i));
 		}
-		Collections.sort(fullOptions, new Comparator<JSONObject>() {
-			@Override
-			public int compare(JSONObject o1, JSONObject o2) {
-				return o1.getJSONObject("name").getString("first").compareTo(o2.getJSONObject("name").getString("first"));
-			}
-		});
+		fullOptions.sort(Comparator.comparing(o -> o.getJSONObject("name").getString("first")));
 		
 		JSONObject[] options = new JSONObject[Math.min(results.length(), 8)];
 		for (int i = 0; i < options.length; i++) {

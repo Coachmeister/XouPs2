@@ -13,30 +13,26 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 
 public class PlayStateScene implements EffectScene{
-	EffectView view;
+	private final EffectView view;
 	private Ps2EventStreamingConnection connection;
 	private Logger logger = Logger.getLogger(getClass().getName());
 	
 	private PlayStateBackground background;
-	private HashMap<String, String> experienceid = new HashMap<>(4);
+	private final HashMap<String, String> experienceid = new HashMap<>(4);
 	
-	private SingleCondition isPlayer = new SingleCondition(Condition.EQUALS,
+	private final SingleCondition isPlayer = new SingleCondition(Condition.EQUALS,
 			new EventData(CurrentPlayer.getInstance().getPlayerID(),ConditionDataSource.CONSTANT),
 			new EventData("character_id", ConditionDataSource.EVENT)
 	);
 	
-	private SingleCondition isNotHive = new SingleCondition(Condition.NOT_CONTAINS,
-			new CensusData("experience","description", new HashMap<String, String>(0), experienceid),
+	private final SingleCondition isNotHive = new SingleCondition(Condition.NOT_CONTAINS,
+			new CensusData("experience","description", new HashMap<>(0), experienceid),
 			new EventData(" hive", ConditionDataSource.CONSTANT));
 	
 	public PlayStateScene(EffectView view) {
 		experienceid.put("experience_id", "experience_id");
 		this.view = view;
-		try {
 			magic();
-		} catch (IOException e) {
-			throw new Error("Error in setting up playstate");
-		}
 	}
 	
 	public void intensityChanged(double brightness, double intensity){
@@ -46,7 +42,7 @@ public class PlayStateScene implements EffectScene{
 		background.intensityChanged(brightness,intensity);
 	}
 	
-	private void magic() throws IOException {
+	private void magic() {
 		connection = new Ps2EventStreamingConnection();
 		death();
 		kill();
@@ -140,12 +136,8 @@ public class PlayStateScene implements EffectScene{
 		}
 		
 		SingleCondition[] isXimias = new SingleCondition[ximiasKills.length+ximiasDeaths.length-1];
-		for (int i = 0; i < ximiasKills.length; i++) {
-			isXimias[i] = ximiasKills[i];
-		}
-		for (int i = 0; i < ximiasDeaths.length; i++) {
-			isXimias[i+ximiasKills.length-1] = ximiasDeaths[i];
-		}
+		System.arraycopy(ximiasKills, 0, isXimias, 0, ximiasKills.length);
+		System.arraycopy(ximiasDeaths, 0, isXimias, 0 + ximiasKills.length - 1, ximiasDeaths.length);
 		
 		return new AnyCondition(isXimias);
 	}
@@ -435,7 +427,7 @@ public class PlayStateScene implements EffectScene{
 	private Color dimm(Color color, double amount){return color.deriveColor(0,1,amount,1);}
 	private SingleCondition experienceDescriptionContains(String contains){
 		return new SingleCondition(Condition.CONTAINS,
-				new CensusData("experience","description", new HashMap<String, String>(0), experienceid),
+				new CensusData("experience","description", new HashMap<>(0), experienceid),
 				new EventData(contains, ConditionDataSource.CONSTANT));
 	}
 }

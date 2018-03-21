@@ -1,0 +1,48 @@
+.root{
+    -fx-border-color: lightgray;
+    -fx-border-style: none solid solid solid;
+    -fx-border-width: 2px;
+    -fx-text-fill: lightgray;
+    -fx-focus-color: orange;
+    -fx-faint-focus-color: rgba(255,180,0,0.1);
+}
+
+.label{
+    -fx-text-fill: lightgray;
+}
+
+.tab-pane{
+    -fx-background-color: dimgray;
+    -fx-base: gray;
+}
+.tab:selected .tab-label{
+    -fx-text-fill: orange;
+}
+
+.tab:selected{
+    -fx-background-color: dimgray;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.tab-label{
+    -fx-text-fill: lightgray;
+}
+
+.slider{
+    -fx-color: orange;
+    -fx-base: black;
+}
+
+#previewContainer{
+    -fx-border-color: lightgray;
+    -fx-border-style: solid;
+    -fx-border-radius: 5px;
+    -fx-border-width: 2px;
+}
+
+.button{
+    -fx-color: gray;
+    -fx-background-radius: 20;
+    -fx-text-fill: lightgray;
+}

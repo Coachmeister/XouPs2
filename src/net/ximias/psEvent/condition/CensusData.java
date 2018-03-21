@@ -1,6 +1,5 @@
 package net.ximias.psEvent.condition;
 
-import net.ximias.fileParser.JsonSerializable;
 import net.ximias.network.CensusConnection;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -24,11 +23,11 @@ public class CensusData extends ConditionData {
 	 get
 	 resolve
 	   */
-	String lookup;
-	String get;
-	String resolve;
-	HashMap<String, String> searchTerms;
-	HashMap<String, String> eventSearchTerms;
+	private String lookup;
+	private String get;
+	private String resolve;
+	private HashMap<String, String> searchTerms;
+	private HashMap<String, String> eventSearchTerms;
 	
 	/**
 	 * Example:
@@ -39,9 +38,9 @@ public class CensusData extends ConditionData {
 	 * @param get The data to get from result.
 	 * @param resolve Any resolve terms.
 	 * @param searchTerms The terms to put in the query.
-	 * @param eventSearchTerms Ther terms to pull from the recieved event when querying
+	 * @param eventSearchTerms Ther terms to pull from the received event when querying
 	 */
-	public CensusData(String lookup, String get, String resolve, HashMap<String, String> searchTerms, HashMap<String, String> eventSearchTerms) {
+	private CensusData(String lookup, String get, String resolve, HashMap<String, String> searchTerms, HashMap<String, String> eventSearchTerms) {
 		this.lookup = lookup;
 		this.get = get;
 		this.resolve = resolve;
@@ -79,7 +78,7 @@ public class CensusData extends ConditionData {
 	 * @param lookup The subdomain to look up
 	 * @param get The data to get from result.
 	 * @param searchTerms The terms to put in the query.
-	 * @param eventSearchTerms There terms to pull from the recieved event when querying
+	 * @param eventSearchTerms There terms to pull from the received event when querying
 	 */
 	public CensusData(String lookup, String get, HashMap<String, String> searchTerms, HashMap<String, String> eventSearchTerms) {
 		this.lookup = lookup;
@@ -146,13 +145,6 @@ public class CensusData extends ConditionData {
 		return response;
 	}
 	
-	public static void main(String[] args) {
-		HashMap<String, String> params = new HashMap<>();
-		params.put("character_id", "8287548916321388337");
-		CensusData query = new CensusData("character", "faction_id", params, new HashMap<>(1));
-		System.out.println(query.get(new JSONObject("{}")));
-	}
-	
 	@Override
 	public HashMap<String, String> toJson() {
 		HashMap<String, String> h = new HashMap<>(15);
@@ -161,15 +153,15 @@ public class CensusData extends ConditionData {
 		if (resolve != null) {
 			h.put("resolve",resolve);
 		}
-		
+
 		JSONArray jsonSearchTerms = mapToJsonArray(searchTerms);
 		JSONArray jsonEventSearchTerms = mapToJsonArray(eventSearchTerms);
-		
+
 		h.put("searchTerms",jsonSearchTerms.toString());
 		h.put("eventSearchTerms", jsonEventSearchTerms.toString());
 		return h;
 	}
-	
+
 	private JSONArray mapToJsonArray(HashMap<String, String> map) {
 		JSONArray jsonSearchTerms = new JSONArray();
 		for (Map.Entry<String, String> stringStringEntry : map.entrySet()) {
@@ -180,4 +172,11 @@ public class CensusData extends ConditionData {
 		}
 		return jsonSearchTerms;
 	}
+
+	/*public static void main(String[] args) {
+		HashMap<String, String> params = new HashMap<>();
+		params.put("character_id", "8287548916321388337");
+		CensusData query = new CensusData("character", "faction_id", params, new HashMap<>(1));
+		System.out.println(query.get(new JSONObject("{}")));
+	}*/
 }

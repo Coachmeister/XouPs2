@@ -1,6 +1,5 @@
 package net.ximias.network;
 
-import net.ximias.psEvent.handler.GlobalHandler;
 import net.ximias.psEvent.handler.Ps2EventHandler;
 import org.json.JSONObject;
 
@@ -15,12 +14,12 @@ import java.util.logging.Logger;
  * Events can be subscribed to by calling subscribePlayerEvent or subscribeWorldEvent.
  */
 public class Ps2EventStreamingConnection {
-	private HashMap<String, ArrayList<Ps2EventHandler>> subscribedEvents = new HashMap<>();
-	private HashMap<String, ArrayList<String>> eventsIds = new HashMap<>();
-	private ArrayList<Ps2EventHandler> globalHandlers = new ArrayList<>(12);
+	private final HashMap<String, ArrayList<Ps2EventHandler>> subscribedEvents = new HashMap<>();
+	private final HashMap<String, ArrayList<String>> eventsIds = new HashMap<>();
+	private final ArrayList<Ps2EventHandler> globalHandlers = new ArrayList<>(12);
 	private WebsocketClientEndpoint clientEndPoint;
 	
-	private Logger logger = Logger.getLogger(getClass().getName());
+	private final Logger logger = Logger.getLogger(getClass().getName());
 	
 	public Ps2EventStreamingConnection() {
 		try {

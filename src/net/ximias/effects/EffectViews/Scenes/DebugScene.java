@@ -3,16 +3,13 @@ package net.ximias.effects.EffectViews.Scenes;
 import javafx.scene.paint.Color;
 import net.ximias.effects.EffectView;
 import net.ximias.effects.impl.*;
-import net.ximias.network.CurrentPlayer;
-import net.ximias.psEvent.handler.MultiEventHandler;
 
-import java.sql.Time;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class DebugScene implements EffectScene {
-	EffectView view;
-	int count =0;
+	private final EffectView view;
+	private int count =0;
 	
 	public DebugScene(EffectView view) {
 		this.view = view;
@@ -159,9 +156,9 @@ public class DebugScene implements EffectScene {
 	
 	private void heal(){
 		Color healGreen = bias(new Color(0,0.95,0.1,1),0.1);
-		BlendingEffectProducer fadeing = new BlendingEffectProducer(Color.TRANSPARENT, healGreen, 250);
+		BlendingEffectProducer fading = new BlendingEffectProducer(Color.TRANSPARENT, healGreen, 250);
 		FadingEffectProducer heal = new FadingEffectProducer(healGreen, 250);
-		MultiEffectProducer healingEffect = new MultiEffectProducer(fadeing, heal);
+		MultiEffectProducer healingEffect = new MultiEffectProducer(fading, heal);
 		
 		view.addEffect(healingEffect.build());
 	}

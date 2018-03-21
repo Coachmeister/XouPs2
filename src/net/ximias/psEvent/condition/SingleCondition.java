@@ -28,10 +28,10 @@ public class SingleCondition extends JsonSerializable implements EventCondition 
 	Process payload
 	Return true or false
 	 */
-	ArrayList<ConditionData> data;
-	Logger logger = Logger.getLogger(getClass().getName());
+	private ArrayList<ConditionData> data;
+	private final Logger logger = Logger.getLogger(getClass().getName());
 	
-	Condition condition;
+	private Condition condition;
 	
 	public SingleCondition(ArrayList<ConditionData> data, Condition condition) {
 		this.data = data;
@@ -100,11 +100,11 @@ public class SingleCondition extends JsonSerializable implements EventCondition 
 			return true;
 	}
 	
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		ArrayList<ConditionData> data = new ArrayList<>();
 		data.add(new EventData("a", ConditionDataSource.EVENT));
 		data.add(new EventData("1", ConditionDataSource.CONSTANT));
 		SingleCondition econ = new SingleCondition(data, Condition.GREATER_OR_EQUALS);
 		System.out.println(econ.evaluate(new JSONObject("{\"a\":\"1\"}")));
-	}
+	}*/
 }

@@ -1,6 +1,5 @@
 package net.ximias.psEvent.handler;
 
-import net.ximias.effects.Effect;
 import net.ximias.effects.EffectProducer;
 import net.ximias.effects.EffectView;
 import net.ximias.fileParser.JsonSerializable;
@@ -17,7 +16,7 @@ public abstract class Ps2EventHandler extends JsonSerializable {
 	private EffectView view;
 	protected EffectProducer effect;
 	protected String name;
-	private Logger logger = Logger.getLogger(getClass().getName());
+	private final Logger logger = Logger.getLogger(getClass().getName());
 	
 	public Ps2EventHandler() {
 	}
