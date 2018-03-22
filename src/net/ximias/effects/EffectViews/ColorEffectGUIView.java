@@ -12,15 +12,19 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import net.ximias.effects.Effect;
 import net.ximias.effects.EffectView;
 import net.ximias.effects.EffectViews.Scenes.*;
+import net.ximias.effects.impl.FadingEffectProducer;
+import net.ximias.logging.WebLogAppender;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -37,7 +41,11 @@ public class ColorEffectGUIView extends Application implements EffectView {
 	private static final double DEFAULT_BACKGROUND_INTENSITY = 0.1;
 	private static final double DEFAULT_BACKGROUND_BRIGHTENS = 0.5;
 	private static final Logger PROJECT_LEVEL_LOGGER = Logger.getLogger("net.ximias");
-	
+	private static final WebLogAppender webLogAppender = new WebLogAppender();
+	@FXML
+	public WebView logView;
+	@FXML
+	private ToggleButton debugTextToggle;
 	@FXML
 	private TabPane tabPane;
 	@FXML
@@ -57,14 +65,15 @@ public class ColorEffectGUIView extends Application implements EffectView {
 	private final EffectContainer effectContainer = new EffectContainer(DEFAULT_EFFECT_INTENSITY);
 	private AnimationTimer animationTimer;
 	private final EffectScene scene = new PlayStateScene(this);
+	private FadingEffectProducer exampleEffect = new FadingEffectProducer(Color.LIME,1500);
 	
 	public static void main(String[] args) {
+		initLogger();
 		launch(args);
 	}
 	
 	@Override
 	public void start(Stage primaryStage) throws IOException {
-		initLogger();
 		Parent hue = FXMLLoader.load(getClass().getResource("monogui.fxml"));
 		primaryStage.setTitle("Xou "+ SceneConstants.VERSION_NAME +" v"+SceneConstants.VERSION);
 		Scene scene = new Scene(hue);
@@ -78,6 +87,8 @@ public class ColorEffectGUIView extends Application implements EffectView {
 	@FXML
 	public void initialize() {
 		Platform.runLater(() -> {
+			PROJECT_LEVEL_LOGGER.warning("GUI initializing...");
+			setupWebLogger();
 			resize();
 			animationTimer = new AnimationTimer() {
 				@Override
@@ -93,6 +104,10 @@ public class ColorEffectGUIView extends Application implements EffectView {
 			addPropertyChangeListener(effectIntensitySlider);*/
 			propertiesChanged();
 		});
+	}
+	
+	private void setupWebLogger() {
+		webLogAppender.addEngine(logView.getEngine());
 	}
 	
 	private void addPropertyChangeListener(Slider slider){
@@ -112,7 +127,7 @@ public class ColorEffectGUIView extends Application implements EffectView {
 		GraphicsContext ctx = activeCanvas.getGraphicsContext2D();
 		ctx.setFill(effectContainer.getColor());
 		ctx.fillRect(0, 0, activeCanvas.getWidth(), activeCanvas.getHeight());
-		if(activeCanvas == canvas){
+		if(debugTextToggle.isSelected()){
 			String effects = effectContainer.toString();
 			ctx.setFill(Color.MAGENTA);
 			ctx.setFont(Font.font("monospaced",12));
@@ -164,10 +179,16 @@ public class ColorEffectGUIView extends Application implements EffectView {
 		}
 	}
 	
-	private void initLogger() {
+	@FXML
+	private void addExampleEffect(ActionEvent e){
+		addEffect(exampleEffect.build());
+	}
+	
+	private static void initLogger() {
 		try(FileInputStream fis = new FileInputStream("logging.properties")) {
 			LogManager logManager = LogManager.getLogManager();
 			logManager.readConfiguration(fis);
+			PROJECT_LEVEL_LOGGER.addHandler(webLogAppender);
 		} catch (IOException e) {
 			System.err.println("Logging config file not readable: "+e);
 		}

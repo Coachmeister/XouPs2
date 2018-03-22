@@ -31,5 +31,5 @@ public interface SceneConstants {
 	JSONObject EMPTY_JSON = new JSONObject("{}");
 	
 	String VERSION_NAME = "Experimental";
-	String VERSION = "0.0.8";
+	String VERSION = "0.0.9";
 }
