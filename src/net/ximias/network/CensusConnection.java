@@ -8,18 +8,19 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
+import java.util.logging.Logger;
 
 /**
  * Used to look up information via the census API
  */
 public class CensusConnection {
+	private static final Logger staticLogger = Logger.getLogger(CensusConnection.class.getName());
 	
 	private static JSONObject censusQuery(String urlParameters) throws IOException {
 		HttpURLConnection connection = (HttpURLConnection) new URL("http://census.daybreakgames.com/s:XouPs2/get/ps2/"+urlParameters).openConnection();
 		connection.setRequestMethod("GET");
 		if (connection.getResponseCode() != 200){
-			System.out.println("Unexpected response code: "+connection.getResponseCode());
+			staticLogger.severe("Unexpected response code: "+connection.getResponseCode());
 			if (connection.getResponseCode()-200>=100) throw new Error("server error response ("+connection.getResponseCode()+") to request: ...get/ps2/"+urlParameters);
 		}
 
@@ -53,18 +54,18 @@ public class CensusConnection {
 		try {
 			return censusQuery(query);
 		} catch (IOException e) {
-			System.out.println("Query failed: "+e);
-			System.out.println("retrying...");
+			staticLogger.warning("Query failed: "+e);
+			staticLogger.warning("retrying...");
 			try{
 				return censusQuery(query);
 			}catch (IOException e1){
-				System.out.println("Second query attempt failed: "+e);
-				System.out.println("retrying..");
+				staticLogger.severe("Second query attempt failed: "+e);
+				staticLogger.warning("retrying..");
 				try {
 					return censusQuery(query);
 				}catch (IOException e2){
-					System.out.println("Third attempt failed: "+e);
-					System.out.println("I'll assume trying any more times won't fix the issue. I hope the rest of the program can cope with an empty response");
+					staticLogger.severe("Third attempt failed: "+e);
+					staticLogger.severe("I'll assume trying any more times won't fix the issue. I hope the rest of the program can cope with an empty response");
 				}
 			}
 			return null;
@@ -83,11 +84,6 @@ public class CensusConnection {
 		
 		return censusQuery("character/?character_id="+players.getJSONArray("character_name_list").getJSONObject(0).getString("character_id")).getJSONArray("character_list").getJSONObject(0);
 		
-	}
-	
-	public static void main(String[] args) throws IOException {
-		listPlayersStartsWith("ximias").forEach(System.out::println);
-		System.out.println(findPlayerByName("ximias"));
 	}
 	
 	

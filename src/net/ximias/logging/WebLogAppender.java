@@ -38,7 +38,6 @@ public class WebLogAppender extends Handler{
 			}
 			root.appendChild(doc.createElement("hr"));
 			engine.executeScript("window.scrollTo(0, document.body.scrollHeight);");
-			System.out.println(engine.executeScript("document.documentElement.innerHTML"));
 		}else{
 			buffer.add(record);
 		}
