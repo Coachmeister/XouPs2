@@ -88,11 +88,14 @@ class PlayStateBackground {
 		updateHandlers();
 	}
 	
-	private void updateHandlers(){
+	public void updateHandlers(){
+		JSONObject characterJson = SceneConstants.EMPTY_JSON;
+		characterJson.put("character_id", CurrentPlayer.getInstance().getPlayerID());
 		esamirHandler.eventReceived(SceneConstants.EMPTY_JSON);
 		amerishHandler.eventReceived(SceneConstants.EMPTY_JSON);
 		indarHandler.eventReceived(SceneConstants.EMPTY_JSON);
 		hossinHandler.eventReceived(SceneConstants.EMPTY_JSON);
+		noneHandler.eventReceived(characterJson);
 	}
 	
 	private void logout(){

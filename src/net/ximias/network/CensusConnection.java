@@ -42,7 +42,11 @@ public class CensusConnection {
 	 */
 	public static JSONArray listPlayersStartsWith(String prefix) throws IOException {
 		JSONObject players = censusQuery("character_name/?name.first_lower=^"+prefix.toLowerCase()+"&c:limit=10");
-		return players.getJSONArray("character_name_list");
+		if (players.has("character_name_list")){
+			return players.getJSONArray("character_name_list");
+		}else{
+			throw new IOException("PlanetSide server responded with: "+players);
+		}
 	}
 	
 	public static JSONArray listPlayersContains(String contains) throws IOException {

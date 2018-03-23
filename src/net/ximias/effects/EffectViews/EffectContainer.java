@@ -47,9 +47,9 @@ public class EffectContainer implements EffectView{
 		effects.removeIf(Effect::isDone);
 		for (Effect effect : effects) {
 			
-			r += effect.getColor().getRed()*effect.getColor().getOpacity();
-			g += effect.getColor().getGreen()*effect.getColor().getOpacity();
-			b += effect.getColor().getBlue()*effect.getColor().getOpacity();
+			r += effect.getColor().getRed()*effect.getColor().getOpacity() * (effect.hasIntensity() ? effectIntensity : 1);
+			g += effect.getColor().getGreen()*effect.getColor().getOpacity() * (effect.hasIntensity() ? effectIntensity : 1);
+			b += effect.getColor().getBlue()*effect.getColor().getOpacity() * (effect.hasIntensity() ? effectIntensity : 1);
 			a += effect.getColor().getOpacity() * (effect.hasIntensity() ? effectIntensity : 1);
 		}
 		

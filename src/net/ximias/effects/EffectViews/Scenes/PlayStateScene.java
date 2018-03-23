@@ -42,6 +42,10 @@ public class PlayStateScene implements EffectScene{
 		background.intensityChanged(brightness,intensity);
 	}
 	
+	public void updateBackground(){
+		background.updateHandlers();
+	}
+	
 	private void magic() {
 		connection = new Ps2EventStreamingConnection();
 		death();
