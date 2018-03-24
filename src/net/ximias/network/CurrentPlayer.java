@@ -2,6 +2,7 @@ package net.ximias.network;
 
 import javafx.scene.paint.Color;
 import net.ximias.effects.EffectViews.Scenes.SceneConstants;
+import net.ximias.persistence.Persisted;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -76,7 +77,7 @@ public class CurrentPlayer {
 	
 	private void initialize() {
 		try {
-			String partlyPlayerName = JOptionPane.showInputDialog(null, "Input (start of) character name", "ximias");
+			String partlyPlayerName = JOptionPane.showInputDialog(null, "Input (start of) character name", Persisted.getInstance().LAST_LOGIN);
 			if (partlyPlayerName == null) {
 				cancelled();
 			}
@@ -100,7 +101,9 @@ public class CurrentPlayer {
 		}
 		JComboBox<String> selection = new JComboBox<>(names);
 		
-		return options[(showComboDialog(selection))].getString("character_id");
+		int selectedIndex = showComboDialog(selection);
+		Persisted.getInstance().LAST_LOGIN = names[selectedIndex];
+		return options[selectedIndex].getString("character_id");
 	}
 	
 	private int showComboDialog(JComboBox<String> selection) {

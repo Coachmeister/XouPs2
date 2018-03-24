@@ -1,4 +1,4 @@
-package net.ximias.effects.EffectViews;
+package net.ximias.effects.EffectViews.gui;
 
 import javafx.scene.paint.Color;
 import net.ximias.effects.Effect;
@@ -24,12 +24,12 @@ public class EffectContainer implements EffectView{
 	public synchronized void addEffect(Effect effect) {
 		if (!effects.contains(effect)){
 			effects.add(effect);
+			logger.info(effect.getClass().getName()+" added. current effect size: "+effects.size());
+			logger.fine("Current color: "+getColorAndClearFinishedEffects());
 		}
 		if (effect.getColor().getOpacity()==0){
 			logger.info("Added effect is fully transparent");
 		}
-		logger.info(effect.getClass().getName()+" added. current effect size: "+effects.size());
-		logger.fine("Current color: "+getColorAndClearFinishedEffects());
 	}
 	
 	@Override

@@ -1,4 +1,4 @@
-package net.ximias.effects.EffectViews;
+package net.ximias.effects.EffectViews.gui;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -13,7 +13,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
@@ -25,10 +24,10 @@ import net.ximias.effects.EffectViews.Scenes.*;
 import net.ximias.effects.impl.FadingEffectProducer;
 import net.ximias.logging.WebLogAppender;
 import net.ximias.network.CurrentPlayer;
+import net.ximias.persistence.Persisted;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.LogManager;
@@ -47,6 +46,8 @@ public class ColorEffectGUIView extends Application implements EffectView {
 	private static final WebLogAppender webLogAppender = new WebLogAppender();
 	private int oldZone;
 	private boolean worldWasModified = false;
+	private Logger logger = Logger.getLogger(getClass().getName());
+	
 	@FXML
 	public WebView logView;
 	public ChoiceBox<String> previewBackgroundSelector;
@@ -55,9 +56,9 @@ public class ColorEffectGUIView extends Application implements EffectView {
 	@FXML
 	private TabPane tabPane;
 	@FXML
-	private Canvas propertiesPreview;
+	private Canvas propertiesPreview = new ResizableCanvas();
 	@FXML
-	private HBox propertiesPreviewContainer;
+	private AnchorPane propertiesPreviewContainer;
 	@FXML
 	private Canvas canvas;
 	@FXML
@@ -72,6 +73,7 @@ public class ColorEffectGUIView extends Application implements EffectView {
 	private AnimationTimer animationTimer;
 	private final PlayStateScene scene = new PlayStateScene(this);
 	private FadingEffectProducer exampleEffect = new FadingEffectProducer(Color.LIME,1500);
+	private FadingEffectProducer exampleDarkEffect = new FadingEffectProducer(Color.BLACK,1500);
 	
 	public static void main(String[] args) {
 		initLogger();
@@ -80,12 +82,16 @@ public class ColorEffectGUIView extends Application implements EffectView {
 	
 	@Override
 	public void start(Stage primaryStage) throws IOException {
-		Parent hue = FXMLLoader.load(getClass().getResource("monogui.fxml"));
+		Parent gui = FXMLLoader.load(getClass().getResource("monogui.fxml"));
 		primaryStage.setTitle("Xou "+ SceneConstants.VERSION_NAME +" v"+SceneConstants.VERSION);
-		Scene scene = new Scene(hue);
+		primaryStage.setWidth(Persisted.getInstance().APPLICATION_WIDTH);
+		primaryStage.setHeight(Persisted.getInstance().APPLICATION_HEIGHT);
+		primaryStage.heightProperty().addListener((observable, oldValue, newValue) -> Persisted.getInstance().APPLICATION_HEIGHT = newValue.doubleValue());
+		primaryStage.widthProperty().addListener((observable, oldValue, newValue) -> Persisted.getInstance().APPLICATION_WIDTH = newValue.doubleValue());
+		Scene scene = new Scene(gui);
 		scene.getStylesheets().clear();
 		scene.getStylesheets().add("style.css");
-		System.out.println(scene.getStylesheets().size());
+		logger.fine("Stylesheets: " +scene.getStylesheets().size());
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
@@ -95,7 +101,7 @@ public class ColorEffectGUIView extends Application implements EffectView {
 		Platform.runLater(() -> {
 			PROJECT_LEVEL_LOGGER.warning("GUI initializing...");
 			setupWebLogger();
-			resize();
+			setupResize();
 			animationTimer = new AnimationTimer() {
 				@Override
 				public void handle(long now) {
@@ -103,19 +109,14 @@ public class ColorEffectGUIView extends Application implements EffectView {
 				}
 			};
 			animationTimer.start();
-			effectViewRoot.widthProperty().addListener((observable, oldValue, newValue) -> resize());
-			effectViewRoot.heightProperty().addListener((observable, oldValue, newValue) -> resize());
-			/*addPropertyChangeListener(backgroundBrightnessSlider);
-			addPropertyChangeListener(backgroundIntensitySlider);
-			addPropertyChangeListener(effectIntensitySlider);*/
-			propertiesChanged();
 			setupPreviewTab();
 		});
 	}
 	
 	private void setupPreviewTab() {
+		propertiesPreviewContainer.getChildren().add(propertiesPreview);
 		TreeMap<String, Integer> selections = new TreeMap<>();
-		selections.put("None", -1);
+		selections.put("Not ingame", -1);
 		selections.put("Amerish", SceneConstants.AMERISH_ID);
 		selections.put("Esamir", SceneConstants.ESAMIR_ID);
 		selections.put("Indar", SceneConstants.INDAR_ID);
@@ -124,6 +125,7 @@ public class ColorEffectGUIView extends Application implements EffectView {
 		setSelectionToCurrentZone(selections);
 		previewBackgroundSelector.valueProperty().addListener((observable, oldValue, newValue) -> {
 			if (!worldWasModified){
+				worldWasModified = true;
 				oldZone = Integer.valueOf(CurrentPlayer.getInstance().getValue("zone_id"));
 			}
 			CurrentPlayer.getInstance().setZoneId(selections.get(newValue));
@@ -131,14 +133,21 @@ public class ColorEffectGUIView extends Application implements EffectView {
 		});
 		
 		tabPane.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
-			System.out.println("Tab changed to: "+newValue);
-			if (newValue.intValue() != 1) {
+			logger.info("Tab changed to: "+newValue);
+			if (newValue.intValue() != 1 && worldWasModified) {
 				worldWasModified = false;
 				CurrentPlayer.getInstance().setZoneId(oldZone);
 				scene.updateBackground();
 				setSelectionToCurrentZone(selections);
 			}
 		});
+		backgroundIntensitySlider.setValue(Persisted.getInstance().BACKGROUND_TRANSPARENCY_SLIDER);
+		backgroundBrightnessSlider.setValue(Persisted.getInstance().BACKGROUND_BRIGHTNESS_SLIDER);
+		effectIntensitySlider.setValue(Persisted.getInstance().EFFECT_TRANSPARENCY_SLIDER);
+		propertiesChanged();
+		addPropertyChangeListener(backgroundBrightnessSlider);
+		addPropertyChangeListener(backgroundIntensitySlider);
+		addPropertyChangeListener(effectIntensitySlider);
 	}
 	
 	private void setSelectionToCurrentZone(TreeMap<String, Integer> selections) {
@@ -161,11 +170,11 @@ public class ColorEffectGUIView extends Application implements EffectView {
 	}
 	
 	@FXML
-	private void resize() {
-		propertiesPreview.setWidth(propertiesPreviewContainer.getWidth());
-		propertiesPreview.setHeight(propertiesPreviewContainer.getHeight());
-		canvas.setWidth(effectViewRoot.getWidth());
-		canvas.setHeight(effectViewRoot.getHeight());
+	private void setupResize() {
+		propertiesPreview.widthProperty().bind(propertiesPreviewContainer.widthProperty());
+		propertiesPreview.heightProperty().bind(propertiesPreviewContainer.heightProperty());
+		canvas.widthProperty().bind(effectViewRoot.widthProperty());
+		canvas.heightProperty().bind(effectViewRoot.heightProperty());
 	}
 	
 	private void animateFrame() {
@@ -209,15 +218,15 @@ public class ColorEffectGUIView extends Application implements EffectView {
 		effectIntensitySlider.setValue(DEFAULT_EFFECT_INTENSITY);
 		backgroundIntensitySlider.setValue(DEFAULT_BACKGROUND_INTENSITY);
 		backgroundBrightnessSlider.setValue(DEFAULT_BACKGROUND_BRIGHTENS);
-	}
-	
-	@FXML
-	public void applyChanges(ActionEvent event){
 		propertiesChanged();
 	}
 	
 	@FXML
 	private void propertiesChanged(){
+		Persisted persisted = Persisted.getInstance();
+		persisted.EFFECT_TRANSPARENCY_SLIDER = effectIntensitySlider.getValue();
+		persisted.BACKGROUND_TRANSPARENCY_SLIDER = backgroundIntensitySlider.getValue();
+		persisted.BACKGROUND_BRIGHTNESS_SLIDER = backgroundBrightnessSlider.getValue();
 		effectContainer.setEffectIntensity(effectIntensitySlider.getValue());
 		(scene).intensityChanged(backgroundBrightnessSlider.getValue(),backgroundIntensitySlider.getValue());
 	}
@@ -225,6 +234,11 @@ public class ColorEffectGUIView extends Application implements EffectView {
 	@FXML
 	private void addExampleEffect(ActionEvent e){
 		addEffect(exampleEffect.build());
+	}
+	
+	@FXML
+	private void addExampleDarkEffect(ActionEvent e){
+		addEffect(exampleDarkEffect.build());
 	}
 	
 	private static void initLogger() {

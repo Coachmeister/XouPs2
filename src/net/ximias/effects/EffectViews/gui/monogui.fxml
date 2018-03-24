@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.web.WebView?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" styleClass="root" stylesheets="@../../../../style.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.ximias.effects.EffectViews.ColorEffectGUIView">
+<AnchorPane prefHeight="450.0" prefWidth="600.0" styleClass="root" stylesheets="@../../../../../style.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.ximias.effects.EffectViews.gui.ColorEffectGUIView">
    <children>
       <TabPane fx:id="tabPane" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <tabs>
@@ -41,31 +41,24 @@
                                           <Label text="Background brightness" textFill="#d9d9d9" />
                                           <Label text="Background transparency" textFill="#d9d9d9" />
                                           <Label text="Effect transparency" textFill="#d9d9d9" />
-                                          <HBox />
+                                          <HBox>
+                                             <children>
+                                                <Button id="defaults" alignment="TOP_LEFT" centerShape="false" mnemonicParsing="false" onAction="#restoreDefaults" text="Defaults" />
+                                             </children>
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin></HBox>
                                        </children>
                                     </VBox>
                                     <VBox spacing="10.0" HBox.hgrow="ALWAYS">
                                        <children>
-                                          <Slider fx:id="backgroundBrightnessSlider" blockIncrement="0.01" majorTickUnit="0.499" max="1.0" min="0.001" minorTickCount="4" onMouseReleased="#propertiesChanged" showTickLabels="true" showTickMarks="true" value="0.6" />
-                                          <Slider fx:id="backgroundIntensitySlider" blockIncrement="0.001" majorTickUnit="0.499" max="1.0" min="0.001" minorTickCount="4" nodeOrientation="LEFT_TO_RIGHT" onMouseReleased="#propertiesChanged" showTickLabels="true" showTickMarks="true" value="0.1" />
-                                          <Slider fx:id="effectIntensitySlider" blockIncrement="0.001" majorTickUnit="0.499" max="1.0" min="0.001" minorTickCount="4" onMouseDragReleased="#propertiesChanged" onMouseReleased="#propertiesChanged" prefHeight="14.0" prefWidth="140.0" showTickLabels="true" showTickMarks="true" value="1.0" />
+                                          <Slider fx:id="backgroundBrightnessSlider" blockIncrement="0.01" majorTickUnit="0.499" max="1.0" min="0.001" minorTickCount="4" showTickLabels="true" showTickMarks="true" value="0.6" />
+                                          <Slider fx:id="backgroundIntensitySlider" blockIncrement="0.001" majorTickUnit="0.499" max="1.0" min="0.001" minorTickCount="4" nodeOrientation="LEFT_TO_RIGHT" showTickLabels="true" showTickMarks="true" value="0.1" />
+                                          <Slider fx:id="effectIntensitySlider" blockIncrement="0.001" majorTickUnit="0.499" max="1.0" min="0.001" minorTickCount="4" onMouseDragReleased="#propertiesChanged" prefHeight="14.0" prefWidth="140.0" showTickLabels="true" showTickMarks="true" value="1.0" />
                                        </children>
                                     </VBox>
                                  </children>
                                     </HBox>
-                              <HBox spacing="5.0" VBox.vgrow="NEVER">
-                                 <children>
-                                    <Button id="defaults" alignment="TOP_LEFT" centerShape="false" mnemonicParsing="false" onAction="#restoreDefaults" text="Defaults" HBox.hgrow="ALWAYS" />
-                                    <ToggleButton fx:id="debugTextToggle" mnemonicParsing="false" text="Draw Debug" />
-                                    <Button mnemonicParsing="false" onAction="#addExampleEffect" text="Effect preview" />
-                                    <Label alignment="CENTER" text="Background:">
-                                       <HBox.margin>
-                                          <Insets top="4.0" />
-                                       </HBox.margin>
-                                    </Label>
-                                    <ChoiceBox fx:id="previewBackgroundSelector" prefWidth="150.0" />
-                                 </children>
-                              </HBox>
                               <HBox fillHeight="false" spacing="5.0">
                                  <children>
                                     <Label contentDisplay="RIGHT" nodeOrientation="LEFT_TO_RIGHT" text="Preview" />
@@ -76,9 +69,22 @@
                                     </Separator>
                                  </children>
                               </HBox>
-                              <HBox id="previewContainer" fx:id="propertiesPreviewContainer" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                              <HBox spacing="5.0">
                                  <children>
-                                    <Canvas fx:id="propertiesPreview" height="61.0" width="333.0" />
+                                    <ToggleButton fx:id="debugTextToggle" mnemonicParsing="false" text="Debug info" />
+                                    <Button mnemonicParsing="false" onAction="#addExampleEffect" text="Green effect" />
+                                    <Button mnemonicParsing="false" onAction="#addExampleDarkEffect" text="Black effect" />
+                                    <Label alignment="CENTER" text="Background:">
+                                       <HBox.margin>
+                                          <Insets top="4.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                    <ChoiceBox fx:id="previewBackgroundSelector" />
+                                 </children>
+                              </HBox>
+                              <HBox id="previewContainer" prefHeight="0.0" prefWidth="0.0" VBox.vgrow="ALWAYS">
+                                 <children>
+                                    <AnchorPane fx:id="propertiesPreviewContainer" HBox.hgrow="ALWAYS" />
                                  </children>
                               </HBox>
                            </children>
@@ -90,7 +96,7 @@
                   </AnchorPane>
             </content>
           </Tab>
-            <Tab text="Debug Log [WIP]">
+            <Tab text="Debug Log">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>

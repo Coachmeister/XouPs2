@@ -43,7 +43,7 @@ public class GlobalHandler extends Ps2EventHandler {
 	protected boolean conditionIsSatisfied(JSONObject payload) {
 		boolean evaluate = condition.evaluate(payload);
 		if (evaluate){
-			logger.info("Condition is true. Source: "+payload.optString("event_name","Not an event"));
+			logger.fine("Condition is true. Source: "+payload.optString("event_name","Not an event"));
 		}
 		return evaluate;
 	}

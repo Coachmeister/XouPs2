@@ -106,7 +106,7 @@ class PlayStateBackground {
 	
 	
 	public synchronized void intensityChanged(double backgroundBrightness, double backgroundIntensity){
-		logger.info("Intensity changed");
+		logger.finer("Intensity changed");
 		this.backgroundBrightness = backgroundBrightness;
 		this.backgroundIntensity = backgroundIntensity;
 		recalculateBackground();

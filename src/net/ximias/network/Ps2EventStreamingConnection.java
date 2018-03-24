@@ -35,7 +35,7 @@ public class Ps2EventStreamingConnection {
 				globalListenerActions(payload);
 				globalHandlers.forEach(it -> it.eventReceived(payload));
 				subscribedEvents.get(payload.getString("event_name")).parallelStream().forEach(it -> it.eventReceived(payload));
-				logger.info( "Affected: "+subscribedEvents.get(payload.getString("event_name")).size() + " Handlers");
+				logger.fine( "Affected: "+subscribedEvents.get(payload.getString("event_name")).size() + " Handlers");
 			});
 		} catch (URISyntaxException ex) {
 			System.err.println("URISyntaxException exception: " + ex.getMessage());
