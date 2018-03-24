@@ -8,7 +8,7 @@
     -fx-border-style: none solid solid solid;
     -fx-border-width: 2px;
     -fx-text-fill: text;
-    -fx-focus-color: orange;
+    -fx-focus-color: accent;
     -fx-faint-focus-color: faint-accent;
 }
 
@@ -65,4 +65,29 @@
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
     -fx-text-fill: accent;
+}
+.list-view{
+    -fx-focus-color: transparent;
+}
+
+.list-cell{
+    -fx-text-fill: text;
+    -fx-selection-bar: accent;
+}
+
+.list-cell:even{
+    -fx-background: background;
+}
+
+.list-cell:odd{
+    -fx-background: foreground;
+}
+
+.dialog{
+    -fx-background-color: background;
+}
+
+.dialog:header *.header-panel{
+    -fx-fill: background;
+    -fx-background-color: background;
 }

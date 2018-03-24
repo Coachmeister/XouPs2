@@ -4,6 +4,7 @@ import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -30,7 +31,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.logging.Level;
 import java.util.logging.LogManager;
+import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 /**
@@ -47,7 +50,10 @@ public class ColorEffectGUIView extends Application implements EffectView {
 	private int oldZone;
 	private boolean worldWasModified = false;
 	private Logger logger = Logger.getLogger(getClass().getName());
-	
+	@FXML
+	private ListView featuresList;
+	@FXML
+	private ChoiceBox<String> featuresChoice;
 	@FXML
 	public WebView logView;
 	public ChoiceBox<String> previewBackgroundSelector;
@@ -80,8 +86,21 @@ public class ColorEffectGUIView extends Application implements EffectView {
 		launch(args);
 	}
 	
+	private static void displayWelcome() {
+			Alert welcome = new Alert(Alert.AlertType.INFORMATION, System.currentTimeMillis() < SceneConstants.EXP_DATE ? SceneConstants.INTRO_TEXT : SceneConstants.EXP_MESSAGE, ButtonType.CLOSE);
+			welcome.setTitle("Before we start:");
+			welcome.setHeaderText("Some would call this a disclaimer");
+			welcome.getDialogPane().getStylesheets().clear();
+			welcome.getDialogPane().getStyleClass().add("dialog");
+			welcome.getDialogPane().getStylesheets().add("style.css");
+			welcome.showAndWait();
+		
+		//JOptionPane.showMessageDialog(null, System.currentTimeMillis() < SceneConstants.EXP_DATE ? SceneConstants.INTRO_TEXT : SceneConstants.EXP_MESSAGE);
+	}
+	
 	@Override
 	public void start(Stage primaryStage) throws IOException {
+		displayWelcome();
 		Parent gui = FXMLLoader.load(getClass().getResource("monogui.fxml"));
 		primaryStage.setTitle("Xou "+ SceneConstants.VERSION_NAME +" v"+SceneConstants.VERSION);
 		primaryStage.setWidth(Persisted.getInstance().APPLICATION_WIDTH);
@@ -110,7 +129,17 @@ public class ColorEffectGUIView extends Application implements EffectView {
 			};
 			animationTimer.start();
 			setupPreviewTab();
+			setupFeaturesTab();
 		});
+	}
+	
+	private void setupFeaturesTab() {
+		featuresChoice.setItems(FXCollections.observableArrayList("planned", "discarded"));
+		ObservableList<String> planned = FXCollections.observableArrayList(SceneConstants.PLANNED_FEATURES);
+		ObservableList<String> rejected = FXCollections.observableArrayList(SceneConstants.REJECTED_FEATURES);
+		
+		featuresChoice.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> featuresList.setItems(newValue.intValue() == 0 ? planned : rejected));
+		featuresChoice.getSelectionModel().selectFirst();
 	}
 	
 	private void setupPreviewTab() {
@@ -247,7 +276,9 @@ public class ColorEffectGUIView extends Application implements EffectView {
 			logManager.readConfiguration(fis);
 			PROJECT_LEVEL_LOGGER.addHandler(webLogAppender);
 		} catch (IOException e) {
-			System.err.println("Logging config file not readable: "+e);
+			System.err.println("Logging config file not readable: "+e+
+			"\n Disabling output to Logging tab.");
+			webLogAppender.append(new LogRecord(Level.SEVERE,"Logging tab is disabled on account of missing logging.properties file."));
 		}
 	}
 }
