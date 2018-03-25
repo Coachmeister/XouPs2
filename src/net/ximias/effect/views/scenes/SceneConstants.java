@@ -43,7 +43,7 @@ public interface SceneConstants {
 	                    "\n" +
 	                    "Have fun on the continents of Auraxis. Now with ambient lighting.\n" +
 	                    "~Ximias.";
-	long EXP_DATE = 1_527_717_540_000L;
+	long EXP_DATE = 1_527_717_540_000L;//TODO: change before release.
 	String EXP_MESSAGE = "This is a friendly reminder that this alpha test is long over.\n" +
 	                     "Updates and fixes has been made, so there is no longer a reason to run this archaic monstrosity.\n" +
 	                     "Me being me, I'm not going to stop you.. I'll assume you have your reasons.\n" +

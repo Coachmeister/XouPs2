@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.ximias.gui.tabs.Features">
+   <children>
+      <VBox layoutX="28.0" layoutY="55.0" prefHeight="417.0" prefWidth="596.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <ListView fx:id="featuresList" VBox.vgrow="ALWAYS" />
+            <HBox spacing="5.0" VBox.vgrow="NEVER">
+               <children>
+                  <ChoiceBox fx:id="featuresChoice" prefWidth="150.0" />
+                  <Hyperlink onAction="#openDiscordServer" text="&gt;&gt;Open Discord server for feedback and discussion&lt;&lt;" underline="true" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

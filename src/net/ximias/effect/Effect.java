@@ -6,4 +6,7 @@ public interface Effect {
 	Color getColor();
 	boolean isDone();
 	boolean hasIntensity();
+	default String getName(){
+		return getClass().getSimpleName();
+	}
 }

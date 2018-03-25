@@ -28,7 +28,7 @@ public class EventEffectProducer extends EffectProducer{
 		this.color = color;
 		if (color.getOpacity()==0) {
 			logger.severe("This effect producer is fully transparent!");
-			throw new Error("Event effects are backgrounds and shouldn't be fully transparent");
+			//throw new Error("Event effects are backgrounds and shouldn't be fully transparent");
 		}
 	}
 	
@@ -59,7 +59,7 @@ public class EventEffectProducer extends EffectProducer{
 		}
 		
 		if (ec == null) {
-			ec = new EventColorEffect(color);
+			ec = new EventColorEffect(color, name);
 			eventEffects.put(name,new WeakReference<>(ec));
 		}else{
 			ec.setColor(color);
@@ -80,9 +80,11 @@ public class EventEffectProducer extends EffectProducer{
 class EventColorEffect implements Effect {
 	private boolean done = false;
 	private Color color;
+	private String name;
 
-	EventColorEffect(Color color_javafx) {
+	EventColorEffect(Color color_javafx, String name) {
 		color = color_javafx;
+		this.name = name;
 	}
 	
 	@Override
@@ -106,5 +108,10 @@ class EventColorEffect implements Effect {
 	
 	public void setDone() {
 		this.done= true;
+	}
+	
+	@Override
+	public String getName() {
+		return "Constant color. Name: "+name;
 	}
 }

@@ -1,4 +1,4 @@
-package net.ximias.effect.views.gui;
+package net.ximias.effect.views;
 
 import javafx.scene.paint.Color;
 import net.ximias.effect.Effect;
@@ -63,7 +63,7 @@ public class EffectContainer implements EffectView{
 	@Override
 	public String toString() {
 		final StringBuilder effectsNames = new StringBuilder();
-		effects.forEach(it-> effectsNames.append(it.getClass().getSimpleName()).append(" color: ").append(it.getColor()).append("\n"));
+		effects.forEach(it-> effectsNames.append(it.getName()).append(" color: ").append(it.getColor()).append("\n"));
 		return "Effects: "+effectsNames.toString();
 	}
 	
