@@ -1,4 +1,4 @@
-package net.ximias.effects.EffectViews.gui;
+package net.ximias.effect.views.gui;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -19,10 +19,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
-import net.ximias.effects.Effect;
-import net.ximias.effects.EffectView;
-import net.ximias.effects.EffectViews.Scenes.*;
-import net.ximias.effects.impl.FadingEffectProducer;
+import net.ximias.effect.views.scenes.*;
+import net.ximias.effect.producers.FadingEffectProducer;
 import net.ximias.logging.WebLogAppender;
 import net.ximias.network.CurrentPlayer;
 import net.ximias.persistence.Persisted;
@@ -40,7 +38,7 @@ import java.util.logging.Logger;
  * Debug gui view
  * Displays the overall effect color
  */
-public class ColorEffectGUIView extends Application implements EffectView {
+public class GUIView extends Application {
 	
 	private static final double DEFAULT_EFFECT_INTENSITY = 1;
 	private static final double DEFAULT_BACKGROUND_INTENSITY = 0.1;
@@ -77,7 +75,7 @@ public class ColorEffectGUIView extends Application implements EffectView {
 	private AnchorPane effectViewRoot;
 	private final EffectContainer effectContainer = new EffectContainer(DEFAULT_EFFECT_INTENSITY);
 	private AnimationTimer animationTimer;
-	private final PlayStateScene scene = new PlayStateScene(this);
+	private final PlayStateScene scene = new PlayStateScene(effectContainer);
 	private FadingEffectProducer exampleEffect = new FadingEffectProducer(Color.LIME,1500);
 	private FadingEffectProducer exampleDarkEffect = new FadingEffectProducer(Color.BLACK,1500);
 	
@@ -233,16 +231,6 @@ public class ColorEffectGUIView extends Application implements EffectView {
 		return tabPane.getSelectionModel().getSelectedIndex() == 0 ? canvas : propertiesPreview;
 	}
 	
-	@Override
-	public synchronized void addEffect(Effect effect) {
-		effectContainer.addEffect(effect);
-	}
-	
-	@Override
-	public double getEffectIntensity() {
-		return effectContainer.getEffectIntensity();
-	}
-	
 	public void restoreDefaults(ActionEvent actionEvent) {
 		effectIntensitySlider.setValue(DEFAULT_EFFECT_INTENSITY);
 		backgroundIntensitySlider.setValue(DEFAULT_BACKGROUND_INTENSITY);
@@ -262,12 +250,17 @@ public class ColorEffectGUIView extends Application implements EffectView {
 	
 	@FXML
 	private void addExampleEffect(ActionEvent e){
-		addEffect(exampleEffect.build());
+		effectContainer.addEffect(exampleEffect.build());
 	}
 	
 	@FXML
 	private void addExampleDarkEffect(ActionEvent e){
-		addEffect(exampleDarkEffect.build());
+		effectContainer.addEffect(exampleDarkEffect.build());
+	}
+	
+	@FXML
+	private void openDiscordServer(ActionEvent e){
+		getHostServices().showDocument("https://discord.gg/WyRYbsw");
 	}
 	
 	private static void initLogger() {

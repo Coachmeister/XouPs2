@@ -1,6 +1,6 @@
 package net.ximias.fileParser;
 
-import net.ximias.effects.EffectProducer;
+import net.ximias.effect.EffectProducer;
 import net.ximias.psEvent.handler.MultiEventHandler;
 import net.ximias.psEvent.handler.Ps2EventHandler;
 import net.ximias.psEvent.handler.SingleEventHandler;

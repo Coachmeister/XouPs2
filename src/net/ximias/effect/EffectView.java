@@ -1,4 +1,4 @@
-package net.ximias.effects;
+package net.ximias.effect;
 
 /**
  * Interface needed to display Effects.

@@ -1,4 +1,4 @@
-package net.ximias.effects.EffectViews.Scenes;
+package net.ximias.effect.views.scenes;
 
 import javafx.scene.paint.Color;
 import org.json.JSONObject;
@@ -31,11 +31,12 @@ public interface SceneConstants {
 	JSONObject EMPTY_JSON = new JSONObject("{}");
 	
 	String VERSION_NAME = "Alpha";
-	String VERSION = "0.0.12";
+	String VERSION = "0.0.13";
 	
 	String INTRO_TEXT = "Welcome to Xou "+VERSION_NAME+".\n" +
 	                    "This is a (very) early version of the application. A sort of proof of concept.\n" +
 	                    "Any and all feedback is welcome, be it bug reports, feature requests, critique, or downright complaints.\n" +
+	                    "You can find a link to open a Discord server in the \"Planned features\" tab, if you want to reach out to me. \n" +
 	                    "Just know that I am a single developer, and thus progress might be slow, sluggish or halting.\n" +
 	                    "\n" +
 	                    "That out of the way, I hope you like what you see. Or rather the potential of what you see.\n" +

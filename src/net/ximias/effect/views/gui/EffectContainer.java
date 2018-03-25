@@ -1,8 +1,8 @@
-package net.ximias.effects.EffectViews.gui;
+package net.ximias.effect.views.gui;
 
 import javafx.scene.paint.Color;
-import net.ximias.effects.Effect;
-import net.ximias.effects.EffectView;
+import net.ximias.effect.Effect;
+import net.ximias.effect.EffectView;
 
 import java.util.ArrayList;
 import java.util.logging.Logger;

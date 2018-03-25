@@ -1,5 +1,6 @@
 package net.ximias.network;
 
+import net.ximias.effect.views.scenes.SceneConstants;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -8,6 +9,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
 
 /**
@@ -15,15 +18,44 @@ import java.util.logging.Logger;
  */
 public class CensusConnection {
 	private static final Logger staticLogger = Logger.getLogger(CensusConnection.class.getName());
+	private static final LeastRecentlyUsedCache<String, CompletableFuture<JSONObject>> recentQueries = new LeastRecentlyUsedCache<>(512); // Guesstimated to be large enough to contain the common queries and experience id name mappings.
 	
 	private static JSONObject censusQuery(String urlParameters) throws IOException {
-		HttpURLConnection connection = (HttpURLConnection) new URL("http://census.daybreakgames.com/s:XouPs2/get/ps2/"+urlParameters).openConnection();
-		connection.setRequestMethod("GET");
-		if (connection.getResponseCode() != 200){
-			staticLogger.severe("Unexpected response code: "+connection.getResponseCode());
-			if (connection.getResponseCode()-200>=100) throw new Error("server error response ("+connection.getResponseCode()+") to request: ...get/ps2/"+urlParameters);
+		CompletableFuture<JSONObject> cached;
+		synchronized (recentQueries) {
+			cached = recentQueries.get(urlParameters);
+			
+			if (cached == null) {
+				recentQueries.put(urlParameters, new CompletableFuture<>());
+			}
 		}
-
+		
+		if (cached != null) {
+			try {
+				staticLogger.warning("Getting query response from cache: "+urlParameters);
+				return cached.get();
+			} catch (InterruptedException e) {
+				staticLogger.severe("Waiting census request interrupted: " + e);
+				return SceneConstants.EMPTY_JSON;
+			} catch (ExecutionException e) {
+				staticLogger.severe("Exception in census request: " + e);
+				return SceneConstants.EMPTY_JSON;
+			}
+		}
+		staticLogger.severe("Looking up response to cache: "+urlParameters);
+		cached = recentQueries.get(urlParameters);
+		
+		HttpURLConnection connection = (HttpURLConnection) new URL("http://census.daybreakgames.com/s:XouPs2/get/ps2/" + urlParameters).openConnection();
+		connection.setRequestMethod("GET");
+		if (connection.getResponseCode() != 200) {
+			staticLogger.severe("Unexpected response code: " + connection.getResponseCode());
+			if (connection.getResponseCode() - 200 >= 100) {
+				Error error = new Error("server error response (" + connection.getResponseCode() + ") to request: ...get/ps2/" + urlParameters);
+				cached.completeExceptionally(error);
+				throw error;
+			}
+		}
+		
 		BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 		String inputLine;
 		StringBuilder response = new StringBuilder();
@@ -31,44 +63,42 @@ public class CensusConnection {
 			response.append(inputLine);
 		}
 		
-		return new JSONObject(response.toString());
+		JSONObject result = new JSONObject(response.toString());
+		cached.complete(result);
+		return result;
 	}
 	
 	/**
 	 * Lists 10 players with the same prefix as the parameter.
+	 *
 	 * @param prefix the prefix of the player names.
 	 * @return up to 10 player names and ids with the prefix in their lower name
 	 * @throws IOException
 	 */
 	public static JSONArray listPlayersStartsWith(String prefix) throws IOException {
-		JSONObject players = censusQuery("character_name/?name.first_lower=^"+prefix.toLowerCase()+"&c:limit=10");
-		if (players.has("character_name_list")){
+		JSONObject players = censusQuery("character_name/?name.first_lower=^" + prefix.toLowerCase() + "&c:limit=10");
+		if (players.has("character_name_list")) {
 			return players.getJSONArray("character_name_list");
-		}else{
-			throw new IOException("PlanetSide server responded with: "+players);
+		} else {
+			throw new IOException("PlanetSide server responded with: " + players);
 		}
 	}
 	
-	public static JSONArray listPlayersContains(String contains) throws IOException {
-		JSONObject players = censusQuery("character_name/?name.first_lower=*"+contains.toLowerCase()+"&c:limit=10");
-		return players.getJSONArray("character_name_list");
-	}
-	
-	public static JSONObject sendQuery(String query){
+	public static JSONObject sendQuery(String query) {
 		try {
 			return censusQuery(query);
 		} catch (IOException e) {
-			staticLogger.warning("Query failed: "+e);
+			staticLogger.warning("Query failed: " + e);
 			staticLogger.warning("retrying...");
-			try{
+			try {
 				return censusQuery(query);
-			}catch (IOException e1){
-				staticLogger.severe("Second query attempt failed: "+e);
+			} catch (IOException e1) {
+				staticLogger.severe("Second query attempt failed: " + e);
 				staticLogger.warning("retrying..");
 				try {
 					return censusQuery(query);
-				}catch (IOException e2){
-					staticLogger.severe("Third attempt failed: "+e);
+				} catch (IOException e2) {
+					staticLogger.severe("Third attempt failed: " + e);
 					staticLogger.severe("I'll assume trying any more times won't fix the issue. I hope the rest of the program can cope with an empty response");
 				}
 			}
@@ -79,14 +109,15 @@ public class CensusConnection {
 	/**
 	 * Returns the first player whose name starts with namePrefix parameter.
 	 * Priority goes to in alphabetical order. Inserting ximia will select ximia over ximiaa over ximias
+	 *
 	 * @param namePrefix the player name to select from.
 	 * @return the JSONObject with player data.
 	 * @throws IOException
 	 */
 	public static JSONObject findPlayerByName(String namePrefix) throws IOException {
-		JSONObject players = censusQuery("character_name/?name.first_lower=^"+namePrefix.toLowerCase()+"&c:limit=10");
+		JSONObject players = censusQuery("character_name/?name.first_lower=^" + namePrefix.toLowerCase() + "&c:limit=10");
 		
-		return censusQuery("character/?character_id="+players.getJSONArray("character_name_list").getJSONObject(0).getString("character_id")).getJSONArray("character_list").getJSONObject(0);
+		return censusQuery("character/?character_id=" + players.getJSONArray("character_name_list").getJSONObject(0).getString("character_id")).getJSONArray("character_list").getJSONObject(0);
 		
 	}
 	

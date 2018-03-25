@@ -1,8 +1,8 @@
-package net.ximias.effects.EffectViews.Scenes;
+package net.ximias.effect.views.scenes;
 
 import javafx.scene.paint.Color;
-import net.ximias.effects.EffectView;
-import net.ximias.effects.impl.*;
+import net.ximias.effect.EffectView;
+import net.ximias.effect.producers.*;
 
 import java.util.Timer;
 import java.util.TimerTask;

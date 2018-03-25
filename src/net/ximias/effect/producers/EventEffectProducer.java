@@ -1,9 +1,9 @@
-package net.ximias.effects.impl;
+package net.ximias.effect.producers;
 
 
 import javafx.scene.paint.Color;
-import net.ximias.effects.Effect;
-import net.ximias.effects.EffectProducer;
+import net.ximias.effect.Effect;
+import net.ximias.effect.EffectProducer;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;

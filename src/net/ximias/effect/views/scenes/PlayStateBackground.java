@@ -1,9 +1,9 @@
-package net.ximias.effects.EffectViews.Scenes;
+package net.ximias.effect.views.scenes;
 
 import javafx.scene.paint.Color;
-import net.ximias.effects.EffectView;
-import net.ximias.effects.impl.EventEffectProducer;
-import net.ximias.effects.impl.FadingEffectProducer;
+import net.ximias.effect.EffectView;
+import net.ximias.effect.producers.EventEffectProducer;
+import net.ximias.effect.producers.FadingEffectProducer;
 import net.ximias.network.CurrentPlayer;
 import net.ximias.network.Ps2EventStreamingConnection;
 import net.ximias.psEvent.condition.*;

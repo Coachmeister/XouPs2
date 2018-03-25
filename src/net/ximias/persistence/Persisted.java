@@ -15,7 +15,7 @@ public class Persisted implements Serializable {
 		APPLICATION_WIDTH = 600;
 		APPLICATION_HEIGHT = 450;
 		return this;
-	}// TODO: Idea: Per-continent properties. And colors.
+	}
 	
 	public String LAST_LOGIN;
 	public double BACKGROUND_BRIGHTNESS_SLIDER;

@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.web.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Button?>
@@ -16,7 +22,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.web.WebView?>
 
-<AnchorPane prefHeight="450.0" prefWidth="600.0" styleClass="root" stylesheets="@../../../../../style.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.ximias.effects.EffectViews.gui.ColorEffectGUIView">
+<AnchorPane prefHeight="450.0" prefWidth="600.0" styleClass="root" stylesheets="@../../../../../style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.ximias.effect.views.gui.GUIView">
    <children>
       <TabPane fx:id="tabPane" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <tabs>
@@ -113,7 +119,12 @@
                         <VBox layoutX="28.0" layoutY="55.0" prefHeight="417.0" prefWidth="596.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
                               <ListView fx:id="featuresList" VBox.vgrow="ALWAYS" />
-                              <ChoiceBox fx:id="featuresChoice" prefWidth="150.0" />
+                              <HBox spacing="5.0" VBox.vgrow="NEVER">
+                                 <children>
+                                    <ChoiceBox fx:id="featuresChoice" prefWidth="150.0" />
+                                    <Hyperlink onAction="#openDiscordServer" text="&gt;&gt;Open Discord server for feedback and discussion&lt;&lt;" underline="true" />
+                                 </children>
+                              </HBox>
                            </children>
                         </VBox>
                      </children>

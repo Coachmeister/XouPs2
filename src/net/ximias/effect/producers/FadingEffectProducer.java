@@ -1,4 +1,4 @@
-package net.ximias.effects.impl;
+package net.ximias.effect.producers;
 
 import javafx.scene.paint.Color;
 import org.json.JSONObject;

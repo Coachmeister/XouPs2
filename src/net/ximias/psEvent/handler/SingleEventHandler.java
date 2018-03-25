@@ -1,10 +1,7 @@
 package net.ximias.psEvent.handler;
 
-import javafx.scene.paint.Color;
-import net.ximias.effects.EffectProducer;
-import net.ximias.effects.impl.TimedEffectProducer;
-import net.ximias.effects.EffectView;
-import net.ximias.effects.EffectViews.ConsoleView;
+import net.ximias.effect.EffectProducer;
+import net.ximias.effect.EffectView;
 import net.ximias.fileParser.InitializationException;
 import net.ximias.fileParser.Initializer;
 import net.ximias.network.CurrentPlayer;
@@ -12,7 +9,6 @@ import net.ximias.network.Ps2EventStreamingConnection;
 import net.ximias.psEvent.condition.*;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class SingleEventHandler extends Ps2EventHandler {

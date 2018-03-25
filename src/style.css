@@ -66,6 +66,14 @@
     -fx-faint-focus-color: transparent;
     -fx-text-fill: accent;
 }
+
+.hyperlink{
+    -fx-text-fill: accent;
+}
+
+.hyperlink:visited{
+    -fx-text-fill: text;
+}
 .list-view{
     -fx-focus-color: transparent;
 }

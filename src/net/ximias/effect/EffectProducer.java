@@ -1,4 +1,4 @@
-package net.ximias.effects;
+package net.ximias.effect;
 
 import javafx.scene.paint.Color;
 import net.ximias.fileParser.JsonSerializable;

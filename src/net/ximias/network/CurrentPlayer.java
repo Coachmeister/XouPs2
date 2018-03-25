@@ -1,7 +1,7 @@
 package net.ximias.network;
 
 import javafx.scene.paint.Color;
-import net.ximias.effects.EffectViews.Scenes.SceneConstants;
+import net.ximias.effect.views.scenes.SceneConstants;
 import net.ximias.persistence.Persisted;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -9,7 +9,6 @@ import org.json.JSONObject;
 import javax.swing.*;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.logging.Logger;
 
@@ -138,7 +137,7 @@ public class CurrentPlayer {
 		}
 		fullOptions.sort(Comparator.comparing(o -> o.getJSONObject("name").getString("first")));
 		
-		JSONObject[] options = new JSONObject[Math.min(results.length(), 8)];
+		JSONObject[] options = new JSONObject[Math.min(results.length(), 10)];
 		for (int i = 0; i < options.length; i++) {
 			options[i] = fullOptions.get(i);
 		}

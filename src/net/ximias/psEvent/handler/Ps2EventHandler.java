@@ -1,7 +1,7 @@
 package net.ximias.psEvent.handler;
 
-import net.ximias.effects.EffectProducer;
-import net.ximias.effects.EffectView;
+import net.ximias.effect.EffectProducer;
+import net.ximias.effect.EffectView;
 import net.ximias.fileParser.JsonSerializable;
 import net.ximias.network.Ps2EventStreamingConnection;
 import org.json.JSONObject;
