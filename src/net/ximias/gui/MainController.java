@@ -14,6 +14,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import net.ximias.effect.Renderer;
 import net.ximias.effect.views.EffectContainer;
 import net.ximias.gui.tabs.Features;
 import net.ximias.gui.tabs.Log;
@@ -31,12 +32,12 @@ import java.util.logging.*;
  * Debug gui view
  * Displays the overall effect color
  */
-public class MainController extends Application {
+public class MainController extends Application implements Renderer{
 	
 	private static final double DEFAULT_EFFECT_INTENSITY = 1;
 	private static final Logger PROJECT_LEVEL_LOGGER = Logger.getLogger("net.ximias");
 	private static final WebLogAppender webLogAppender = new WebLogAppender();
-	private final EffectContainer effectContainer = new EffectContainer(DEFAULT_EFFECT_INTENSITY);
+	private final EffectContainer effectContainer = new EffectContainer(DEFAULT_EFFECT_INTENSITY, this);
 	private final PlayStateScene scene = new PlayStateScene(effectContainer);
 	private AnimationTimer animationTimer;
 	private Logger logger = Logger.getLogger(getClass().getName());
@@ -99,6 +100,7 @@ public class MainController extends Application {
 			setupPreviewTab();
 			setupFeaturesTab();
 			setupLogTab();
+			setupTabListener();
 			animationTimer.start();
 		});
 	}
@@ -109,9 +111,13 @@ public class MainController extends Application {
 	
 	private void setupPreviewTab() {
 		propertiesTabController.injectMainController(this);
+	}
+	
+	private void setupTabListener() {
 		tabPane.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
 			logger.info("Tab changed to: " + newValue);
 			propertiesTabController.onTabChange(newValue.intValue());
+			resumeRendering();
 		});
 	}
 	
@@ -124,6 +130,10 @@ public class MainController extends Application {
 	}
 	
 	private void animateFrame() {
+		if (effectContainer.canPauseRendering()){
+			animationTimer.stop();
+			logger.warning("Rendering has been paused.");
+		}
 		Canvas activeCanvas = getActiveCanvas();
 		GraphicsContext ctx = activeCanvas.getGraphicsContext2D();
 		ctx.setFill(effectContainer.getColor());
@@ -168,5 +178,11 @@ public class MainController extends Application {
 	
 	public PlayStateScene getEffectScene() {
 		return scene;
+	}
+	
+	@Override
+	public void resumeRendering() {
+		animationTimer.start();
+		logger.warning("Rendering resumed.");
 	}
 }

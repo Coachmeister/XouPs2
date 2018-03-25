@@ -4,6 +4,7 @@ package net.ximias.effect.producers;
 import javafx.scene.paint.Color;
 import net.ximias.effect.Effect;
 import net.ximias.effect.EffectProducer;
+import net.ximias.effect.FixedEffect;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
@@ -77,7 +78,7 @@ public class EventEffectProducer extends EffectProducer{
 	}
 }
 
-class EventColorEffect implements Effect {
+class EventColorEffect implements FixedEffect {
 	private boolean done = false;
 	private Color color;
 	private String name;
@@ -113,5 +114,10 @@ class EventColorEffect implements Effect {
 	@Override
 	public String getName() {
 		return "Constant color. Name: "+name;
+	}
+	
+	@Override
+	public long getRemainingTime() {
+		return Long.MAX_VALUE;
 	}
 }

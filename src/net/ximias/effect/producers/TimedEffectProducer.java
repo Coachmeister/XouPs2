@@ -3,6 +3,7 @@ package net.ximias.effect.producers;
 import javafx.scene.paint.Color;
 import net.ximias.effect.Effect;
 import net.ximias.effect.EffectProducer;
+import net.ximias.effect.FixedEffect;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -41,7 +42,7 @@ public class TimedEffectProducer extends EffectProducer {
 		return h;
 	}
 }
-class TimedColorEffect implements Effect{
+class TimedColorEffect implements FixedEffect{
 	private final long startTime;
 	private final long duration;
 	protected final Color color;
@@ -63,5 +64,10 @@ class TimedColorEffect implements Effect{
 	
 	public Color getColor() {
 		return color;
+	}
+	
+	@Override
+	public long getRemainingTime() {
+		return System.currentTimeMillis()-startTime;
 	}
 }
