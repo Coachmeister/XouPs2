@@ -66,14 +66,19 @@ public class MainController extends Application implements Renderer{
 		primaryStage.setTitle("Xou " + SceneConstants.VERSION_NAME + " v" + SceneConstants.VERSION);
 		primaryStage.setWidth(Persisted.getInstance().APPLICATION_WIDTH);
 		primaryStage.setHeight(Persisted.getInstance().APPLICATION_HEIGHT);
-		primaryStage.heightProperty().addListener((observable, oldValue, newValue) -> Persisted.getInstance().APPLICATION_HEIGHT = newValue.doubleValue());
-		primaryStage.widthProperty().addListener((observable, oldValue, newValue) -> Persisted.getInstance().APPLICATION_WIDTH = newValue.doubleValue());
+		primaryStage.heightProperty().addListener((observable, oldValue, newValue) -> onResize(newValue.intValue()));
+		primaryStage.widthProperty().addListener((observable, oldValue, newValue) -> onResize(newValue.intValue()));
 		Scene scene = new Scene(gui);
 		scene.getStylesheets().clear();
 		scene.getStylesheets().add("style.css");
 		logger.finer("Stylesheets: " + scene.getStylesheets().size());
 		primaryStage.setScene(scene);
 		primaryStage.show();
+	}
+	
+	private void onResize(int newValue){
+		Persisted.getInstance().APPLICATION_HEIGHT = newValue;
+		Persisted.getInstance().APPLICATION_WIDTH = newValue;
 	}
 	
 	private static void displayWelcome() {

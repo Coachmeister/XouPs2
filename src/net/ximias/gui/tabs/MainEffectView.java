@@ -15,16 +15,19 @@ public class MainEffectView {
 	
 	@FXML
 	private void initialize(){
-		setupResize();
+	
 	}
 	
 	private void setupResize(){
 		canvas.widthProperty().bind(effectViewRoot.widthProperty());
 		canvas.heightProperty().bind(effectViewRoot.heightProperty());
+		effectViewRoot.widthProperty().addListener(observable -> mainController.resumeRendering());
+		effectViewRoot.heightProperty().addListener(observable -> mainController.resumeRendering());
 	}
 	
 	public void injectMainController(MainController mainController) {
 		this.mainController = mainController;
+		setupResize();
 	}
 	
 	public Canvas getCanvas() {

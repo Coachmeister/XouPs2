@@ -24,7 +24,7 @@ public class EffectContainer implements EffectView {
 	private final Logger logger = Logger.getLogger(getClass().getName());
 	private double effectIntensity;
 	private ArrayList<Renderer> renderers = new ArrayList<>(9);
-	private final Timer resumeTimer = new Timer(true);
+	private final Timer resumeTimer = new Timer("Resume rendering timer", true);
 	private TimerTask resumeTask = resumeTask();
 	private static final long STANDARD_DELAY_TIME = 60_000L;
 	

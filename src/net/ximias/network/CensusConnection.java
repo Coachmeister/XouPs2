@@ -20,12 +20,13 @@ public class CensusConnection {
 	private static final Logger staticLogger = Logger.getLogger(CensusConnection.class.getName());
 	private static final LeastRecentlyUsedCache<String, CompletableFuture<JSONObject>> recentQueries = new LeastRecentlyUsedCache<>(512); // Guesstimated to be large enough to contain the common queries and experience id name mappings.
 	
-	private static JSONObject censusQuery(String urlParameters) throws IOException {
+	private static JSONObject sendCensusQuery(String urlParameters) throws IOException {
 		CompletableFuture<JSONObject> cached;
 		synchronized (recentQueries) {
 			cached = recentQueries.get(urlParameters);
 			
-			if (cached == null) {
+			if (cached == null ||cached.isCompletedExceptionally()) {
+				cached = null;
 				recentQueries.put(urlParameters, new CompletableFuture<>());
 			}
 		}
@@ -76,7 +77,7 @@ public class CensusConnection {
 	 * @throws IOException
 	 */
 	public static JSONArray listPlayersStartsWith(String prefix) throws IOException {
-		JSONObject players = censusQuery("character_name/?name.first_lower=^" + prefix.toLowerCase() + "&c:limit=10");
+		JSONObject players = sendCensusQuery("character_name/?name.first_lower=^" + prefix.toLowerCase() + "&c:limit=10");
 		if (players.has("character_name_list")) {
 			return players.getJSONArray("character_name_list");
 		} else {
@@ -86,17 +87,17 @@ public class CensusConnection {
 	
 	public static JSONObject sendQuery(String query) {
 		try {
-			return censusQuery(query);
+			return sendCensusQuery(query);
 		} catch (IOException e) {
 			staticLogger.warning("Query failed: " + e);
 			staticLogger.warning("retrying...");
 			try {
-				return censusQuery(query);
+				return sendCensusQuery(query);
 			} catch (IOException e1) {
 				staticLogger.severe("Second query attempt failed: " + e);
 				staticLogger.warning("retrying..");
 				try {
-					return censusQuery(query);
+					return sendCensusQuery(query);
 				} catch (IOException e2) {
 					staticLogger.severe("Third attempt failed: " + e);
 					staticLogger.severe("I'll assume trying any more times won't fix the issue. I hope the rest of the program can cope with an empty response");
@@ -115,9 +116,9 @@ public class CensusConnection {
 	 * @throws IOException
 	 */
 	public static JSONObject findPlayerByName(String namePrefix) throws IOException {
-		JSONObject players = censusQuery("character_name/?name.first_lower=^" + namePrefix.toLowerCase() + "&c:limit=10");
+		JSONObject players = sendCensusQuery("character_name/?name.first_lower=^" + namePrefix.toLowerCase() + "&c:limit=10");
 		
-		return censusQuery("character/?character_id=" + players.getJSONArray("character_name_list").getJSONObject(0).getString("character_id")).getJSONArray("character_list").getJSONObject(0);
+		return sendCensusQuery("character/?character_id=" + players.getJSONArray("character_name_list").getJSONObject(0).getString("character_id")).getJSONArray("character_list").getJSONObject(0);
 		
 	}
 	
