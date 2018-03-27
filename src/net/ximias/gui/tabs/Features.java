@@ -7,7 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
 import net.ximias.gui.MainController;
-import net.ximias.effect.views.scenes.SceneConstants;
+import net.ximias.effect.views.scenes.ApplicationConstants;
 
 public class Features {
 	private MainController mainController;
@@ -30,8 +30,8 @@ public class Features {
 	
 	private void setupFeaturesTab() {
 		featuresChoice.setItems(FXCollections.observableArrayList("planned", "discarded"));
-		ObservableList<String> planned = FXCollections.observableArrayList(SceneConstants.PLANNED_FEATURES);
-		ObservableList<String> rejected = FXCollections.observableArrayList(SceneConstants.REJECTED_FEATURES);
+		ObservableList<String> planned = FXCollections.observableArrayList(ApplicationConstants.PLANNED_FEATURES);
+		ObservableList<String> rejected = FXCollections.observableArrayList(ApplicationConstants.REJECTED_FEATURES);
 		
 		featuresChoice.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> featuresList.setItems(newValue.intValue() == 0 ? planned : rejected));
 		featuresChoice.getSelectionModel().selectFirst();

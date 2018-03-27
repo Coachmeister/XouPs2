@@ -3,7 +3,7 @@ package net.ximias.effect.views.scenes;
 import javafx.scene.paint.Color;
 import org.json.JSONObject;
 
-public interface SceneConstants {
+public interface ApplicationConstants {
 	Color INDAR = new Color(1,0.8,0.7,1.0);
 	//public static final Color INDAR = new Color(0.0,0.75,0.6,1.0);
 	Color ESAMIR = new Color(0.7,0.9,1,1.0);
@@ -26,6 +26,10 @@ public interface SceneConstants {
 	int AMERISH_ID = 6;
 	int ESAMIR_ID = 8;
 	
+	double DEFAULT_EFFECT_INTENSITY = 1;
+	double DEFAULT_BACKGROUND_INTENSITY = 0.1;
+	double DEFAULT_BACKGROUND_BRIGHTENS = 0.5;
+	
 	String[] XIMIAS_IDS = {"8287548916321388337","5428653157989617089"};
 	
 	JSONObject EMPTY_JSON = new JSONObject("{}");
@@ -43,7 +47,7 @@ public interface SceneConstants {
 	                    "\n" +
 	                    "Have fun on the continents of Auraxis. Now with ambient lighting.\n" +
 	                    "~Ximias.";
-	long EXP_DATE = 1_527_717_540_000L;//TODO: change before release.
+	long EXP_DATE = 1_530_396_060_000L;//new GregorianCalendar(2018,6,1,0,1).getTime().getTime()
 	String EXP_MESSAGE = "This is a friendly reminder that this alpha test is long over.\n" +
 	                     "Updates and fixes has been made, so there is no longer a reason to run this archaic monstrosity.\n" +
 	                     "Me being me, I'm not going to stop you.. I'll assume you have your reasons.\n" +

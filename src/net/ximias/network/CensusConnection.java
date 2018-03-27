@@ -1,6 +1,6 @@
 package net.ximias.network;
 
-import net.ximias.effect.views.scenes.SceneConstants;
+import net.ximias.effect.views.scenes.ApplicationConstants;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -33,17 +33,16 @@ public class CensusConnection {
 		
 		if (cached != null) {
 			try {
-				staticLogger.warning("Getting query response from cache: "+urlParameters);
 				return cached.get();
 			} catch (InterruptedException e) {
 				staticLogger.severe("Waiting census request interrupted: " + e);
-				return SceneConstants.EMPTY_JSON;
+				return ApplicationConstants.EMPTY_JSON;
 			} catch (ExecutionException e) {
 				staticLogger.severe("Exception in census request: " + e);
-				return SceneConstants.EMPTY_JSON;
+				return ApplicationConstants.EMPTY_JSON;
 			}
 		}
-		staticLogger.severe("Looking up response to cache: "+urlParameters);
+		staticLogger.info("Looking up data in census: "+urlParameters);
 		cached = recentQueries.get(urlParameters);
 		
 		HttpURLConnection connection = (HttpURLConnection) new URL("http://census.daybreakgames.com/s:XouPs2/get/ps2/" + urlParameters).openConnection();

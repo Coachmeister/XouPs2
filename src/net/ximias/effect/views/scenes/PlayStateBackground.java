@@ -48,16 +48,16 @@ class PlayStateBackground {
 	}
 	
 	private void init(){
-		esamir = new EventEffectProducer(background(SceneConstants.ESAMIR),"background");
-		amerish = new EventEffectProducer(background(SceneConstants.AMERISH),"background");
-		indar = new EventEffectProducer(background(SceneConstants.INDAR),"background");
-		hossin = new EventEffectProducer(background(SceneConstants.HOSSIN),"background");
-		EventEffectProducer other = new EventEffectProducer(SceneConstants.OTHER, "background");
+		esamir = new EventEffectProducer(background(ApplicationConstants.ESAMIR),"background");
+		amerish = new EventEffectProducer(background(ApplicationConstants.AMERISH),"background");
+		indar = new EventEffectProducer(background(ApplicationConstants.INDAR),"background");
+		hossin = new EventEffectProducer(background(ApplicationConstants.HOSSIN),"background");
+		EventEffectProducer other = new EventEffectProducer(ApplicationConstants.OTHER, "background");
 		
-		SingleCondition isEsamir = new SingleCondition(Condition.EQUALS, new EventData("zone_id", ConditionDataSource.PLAYER), new EventData(String.valueOf(SceneConstants.ESAMIR_ID), ConditionDataSource.CONSTANT));
-		SingleCondition isAmerish = new SingleCondition(Condition.EQUALS, new EventData("zone_id", ConditionDataSource.PLAYER), new EventData(String.valueOf(SceneConstants.AMERISH_ID), ConditionDataSource.CONSTANT));
-		SingleCondition isIndar = new SingleCondition(Condition.EQUALS, new EventData("zone_id", ConditionDataSource.PLAYER), new EventData(String.valueOf(SceneConstants.INDAR_ID), ConditionDataSource.CONSTANT));
-		SingleCondition isHossin = new SingleCondition(Condition.EQUALS, new EventData("zone_id", ConditionDataSource.PLAYER), new EventData(String.valueOf(SceneConstants.HOSSIN_ID), ConditionDataSource.CONSTANT));
+		SingleCondition isEsamir = new SingleCondition(Condition.EQUALS, new EventData("zone_id", ConditionDataSource.PLAYER), new EventData(String.valueOf(ApplicationConstants.ESAMIR_ID), ConditionDataSource.CONSTANT));
+		SingleCondition isAmerish = new SingleCondition(Condition.EQUALS, new EventData("zone_id", ConditionDataSource.PLAYER), new EventData(String.valueOf(ApplicationConstants.AMERISH_ID), ConditionDataSource.CONSTANT));
+		SingleCondition isIndar = new SingleCondition(Condition.EQUALS, new EventData("zone_id", ConditionDataSource.PLAYER), new EventData(String.valueOf(ApplicationConstants.INDAR_ID), ConditionDataSource.CONSTANT));
+		SingleCondition isHossin = new SingleCondition(Condition.EQUALS, new EventData("zone_id", ConditionDataSource.PLAYER), new EventData(String.valueOf(ApplicationConstants.HOSSIN_ID), ConditionDataSource.CONSTANT));
 		
 		// if                            all(not any continents), (isPlayer)
 		EventCondition isNone = new AllCondition(new NotCondition(new AnyCondition(isEsamir, isAmerish, isHossin, isIndar)), isPlayer);
@@ -80,21 +80,21 @@ class PlayStateBackground {
 	
 	
 	private void recalculateBackground() {
-		esamir.setColor(background(SceneConstants.ESAMIR));
-		amerish.setColor(background(SceneConstants.AMERISH));
-		indar.setColor(background(SceneConstants.INDAR));
-		hossin.setColor(background(SceneConstants.HOSSIN));
+		esamir.setColor(background(ApplicationConstants.ESAMIR));
+		amerish.setColor(background(ApplicationConstants.AMERISH));
+		indar.setColor(background(ApplicationConstants.INDAR));
+		hossin.setColor(background(ApplicationConstants.HOSSIN));
 		logoutFade.setColor(Color.BLACK.deriveColor(0,1,1,1.0-backgroundBrightness));
 		updateHandlers();
 	}
 	
 	public void updateHandlers(){
-		JSONObject characterJson = SceneConstants.EMPTY_JSON;
+		JSONObject characterJson = ApplicationConstants.EMPTY_JSON;
 		characterJson.put("character_id", CurrentPlayer.getInstance().getPlayerID());
-		esamirHandler.eventReceived(SceneConstants.EMPTY_JSON);
-		amerishHandler.eventReceived(SceneConstants.EMPTY_JSON);
-		indarHandler.eventReceived(SceneConstants.EMPTY_JSON);
-		hossinHandler.eventReceived(SceneConstants.EMPTY_JSON);
+		esamirHandler.eventReceived(ApplicationConstants.EMPTY_JSON);
+		amerishHandler.eventReceived(ApplicationConstants.EMPTY_JSON);
+		indarHandler.eventReceived(ApplicationConstants.EMPTY_JSON);
+		hossinHandler.eventReceived(ApplicationConstants.EMPTY_JSON);
 		noneHandler.eventReceived(characterJson);
 	}
 	

@@ -1,5 +1,7 @@
 package net.ximias.persistence;
 
+import net.ximias.effect.views.scenes.ApplicationConstants;
+
 import java.io.Serializable;
 
 public class Persisted implements Serializable {
@@ -9,9 +11,9 @@ public class Persisted implements Serializable {
 	
 	public Persisted defaults() {
 		LAST_LOGIN = "ximias";
-		BACKGROUND_BRIGHTNESS_SLIDER = 0.5;
-		BACKGROUND_TRANSPARENCY_SLIDER = 0.1;
-		EFFECT_TRANSPARENCY_SLIDER = 1;
+		BACKGROUND_BRIGHTNESS_SLIDER = ApplicationConstants.DEFAULT_BACKGROUND_BRIGHTENS;
+		BACKGROUND_TRANSPARENCY_SLIDER = ApplicationConstants.DEFAULT_BACKGROUND_INTENSITY;
+		EFFECT_TRANSPARENCY_SLIDER = ApplicationConstants.DEFAULT_EFFECT_INTENSITY;
 		APPLICATION_WIDTH = 600;
 		APPLICATION_HEIGHT = 450;
 		return this;

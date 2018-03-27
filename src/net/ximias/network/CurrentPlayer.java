@@ -1,7 +1,7 @@
 package net.ximias.network;
 
 import javafx.scene.paint.Color;
-import net.ximias.effect.views.scenes.SceneConstants;
+import net.ximias.effect.views.scenes.ApplicationConstants;
 import net.ximias.persistence.Persisted;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -66,10 +66,10 @@ public class CurrentPlayer {
 	}
 	
 	public Color getFactionColor(){
-		if (getValue("faction_id").equals(String.valueOf(SceneConstants.VS_ID))) return SceneConstants.VS;
-		if (getValue("faction_id").equals(String.valueOf(SceneConstants.NC_ID))) return SceneConstants.NC;
-		if (getValue("faction_id").equals(String.valueOf(SceneConstants.TR_ID))) return SceneConstants.TR;
-		return SceneConstants.MISSING;
+		if (getValue("faction_id").equals(String.valueOf(ApplicationConstants.VS_ID))) return ApplicationConstants.VS;
+		if (getValue("faction_id").equals(String.valueOf(ApplicationConstants.NC_ID))) return ApplicationConstants.NC;
+		if (getValue("faction_id").equals(String.valueOf(ApplicationConstants.TR_ID))) return ApplicationConstants.TR;
+		return ApplicationConstants.MISSING;
 		
 		
 	}

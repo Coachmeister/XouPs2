@@ -15,7 +15,7 @@ public class DebugScene implements EffectScene {
 		this.view = view;
 		System.out.println("debug scene started");
 		
-		Color darkblue = SceneConstants.INDAR.deriveColor(0.0,1.0,1.0,0.1);
+		Color darkblue = ApplicationConstants.INDAR.deriveColor(0.0,1.0,1.0,0.1);
 		EventEffectProducer effect = new EventEffectProducer( darkblue,"blue");
 		view.addEffect(effect.build());
 		
@@ -52,7 +52,7 @@ public class DebugScene implements EffectScene {
 	}
 	
 	private void facility(){
-		Color mutedFaction = bias(SceneConstants.VS,0.2); // Use faction color
+		Color mutedFaction = bias(ApplicationConstants.VS,0.2); // Use faction color
 		
 		TimedEffectProducer facilityBegin = new TimedEffectProducer(mutedFaction, 400);
 		FadingEffectProducer facilityfade = new FadingEffectProducer(mutedFaction, 500);
@@ -124,9 +124,9 @@ public class DebugScene implements EffectScene {
 		FadingEffectProducer killEffect = new FadingEffectProducer(Color.WHITE, 500);
 		FadingEffectProducer headEffect = new FadingEffectProducer(Color.LIGHTYELLOW, 500);
 		FadingEffectProducer teamKillEffect = new FadingEffectProducer(Color.HOTPINK,500);
-		FadingEffectProducer VSKillEnd = new FadingEffectProducer(SceneConstants.VS, 300);
-		FadingEffectProducer NCKillEnd = new FadingEffectProducer(SceneConstants.NC, 300);
-		FadingEffectProducer TRKillEnd = new FadingEffectProducer(SceneConstants.TR, 300);
+		FadingEffectProducer VSKillEnd = new FadingEffectProducer(ApplicationConstants.VS, 300);
+		FadingEffectProducer NCKillEnd = new FadingEffectProducer(ApplicationConstants.NC, 300);
+		FadingEffectProducer TRKillEnd = new FadingEffectProducer(ApplicationConstants.TR, 300);
 		TimedEffectProducer blank = new TimedEffectProducer(Color.TRANSPARENT, 100);
 		
 		MultiEffectProducer VSKill = new MultiEffectProducer(blank, VSKillEnd);
@@ -140,7 +140,7 @@ public class DebugScene implements EffectScene {
 	private void headshot(){
 		Color lightOrange = new Color(1,0.8,0.5,1);
 		FadingEffectProducer headEffect = new FadingEffectProducer(lightOrange, 500);
-		FadingEffectProducer NCKillEnd = new FadingEffectProducer(SceneConstants.NC, 300);
+		FadingEffectProducer NCKillEnd = new FadingEffectProducer(ApplicationConstants.NC, 300);
 		TimedEffectProducer blank = new TimedEffectProducer(Color.TRANSPARENT, 100);
 		MultiEffectProducer NCKill = new MultiEffectProducer(blank, NCKillEnd);
 		
@@ -171,7 +171,7 @@ public class DebugScene implements EffectScene {
 	
 	private void death(){
 		
-		BlendingEffectProducer teamDeathFade = new BlendingEffectProducer(SceneConstants.NC,Color.BLACK,1000);
+		BlendingEffectProducer teamDeathFade = new BlendingEffectProducer(ApplicationConstants.NC,Color.BLACK,1000);
 		FadingEffectProducer fadeout = new FadingEffectProducer(Color.BLACK, 500);
 		TimedEffectProducer black = new TimedEffectProducer(Color.BLACK, 1000);
 		MultiEffectProducer teamDeath = new MultiEffectProducer(

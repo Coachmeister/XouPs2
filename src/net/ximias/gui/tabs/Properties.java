@@ -13,7 +13,7 @@ import javafx.scene.paint.Color;
 import net.ximias.effect.producers.FadingEffectProducer;
 import net.ximias.gui.MainController;
 import net.ximias.gui.ResizableCanvas;
-import net.ximias.effect.views.scenes.SceneConstants;
+import net.ximias.effect.views.scenes.ApplicationConstants;
 import net.ximias.network.CurrentPlayer;
 import net.ximias.persistence.Persisted;
 
@@ -27,9 +27,6 @@ public class Properties {
 	private int oldZone;
 	private boolean worldWasModified = false;
 	private TreeMap<String, Integer> selections;
-	private static final double DEFAULT_EFFECT_INTENSITY = 1; // TODO Move to scene constants.
-	private static final double DEFAULT_BACKGROUND_INTENSITY = 0.1;
-	private static final double DEFAULT_BACKGROUND_BRIGHTENS = 0.5;
 	private FadingEffectProducer exampleEffect = new FadingEffectProducer(Color.LIME,1500);
 	private FadingEffectProducer exampleDarkEffect = new FadingEffectProducer(Color.BLACK,1500);
 	
@@ -61,9 +58,9 @@ public class Properties {
 	
 	@FXML
 	public void restoreDefaults(ActionEvent actionEvent) {
-		effectIntensitySlider.setValue(DEFAULT_EFFECT_INTENSITY);
-		backgroundIntensitySlider.setValue(DEFAULT_BACKGROUND_INTENSITY);
-		backgroundBrightnessSlider.setValue(DEFAULT_BACKGROUND_BRIGHTENS);
+		effectIntensitySlider.setValue(ApplicationConstants.DEFAULT_EFFECT_INTENSITY);
+		backgroundIntensitySlider.setValue(ApplicationConstants.DEFAULT_BACKGROUND_INTENSITY);
+		backgroundBrightnessSlider.setValue(ApplicationConstants.DEFAULT_BACKGROUND_BRIGHTENS);
 		propertiesChanged();
 	}
 	
@@ -82,10 +79,10 @@ public class Properties {
 		propertiesPreviewContainer.getChildren().add(propertiesPreview);
 		selections = new TreeMap<>();
 		selections.put("Not ingame", -1);
-		selections.put("Amerish", SceneConstants.AMERISH_ID);
-		selections.put("Esamir", SceneConstants.ESAMIR_ID);
-		selections.put("Indar", SceneConstants.INDAR_ID);
-		selections.put("Hossin", SceneConstants.HOSSIN_ID);
+		selections.put("Amerish", ApplicationConstants.AMERISH_ID);
+		selections.put("Esamir", ApplicationConstants.ESAMIR_ID);
+		selections.put("Indar", ApplicationConstants.INDAR_ID);
+		selections.put("Hossin", ApplicationConstants.HOSSIN_ID);
 		previewBackgroundSelector.setItems(FXCollections.observableArrayList(selections.keySet()));
 		setSelectionToCurrentZone(selections);
 		previewBackgroundSelector.valueProperty().addListener((observable, oldValue, newValue) -> {

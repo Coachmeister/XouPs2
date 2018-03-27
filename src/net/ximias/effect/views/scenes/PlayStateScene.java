@@ -101,7 +101,7 @@ public class PlayStateScene implements EffectScene{
 	}
 	
 	private void killingXimias() {
-		for (String ximiasId : SceneConstants.XIMIAS_IDS) {
+		for (String ximiasId : ApplicationConstants.XIMIAS_IDS) {
 			if (CurrentPlayer.getInstance().getPlayerID().equals(ximiasId)) return;
 		}
 		BlendingEffectProducer rainbow1 = new BlendingEffectProducer(Color.RED, Color.ORANGE, 250);
@@ -121,20 +121,20 @@ public class PlayStateScene implements EffectScene{
 	
 	private EventCondition isXimias(){
 		
-		SingleCondition[] ximiasDeaths = new SingleCondition[SceneConstants.XIMIAS_IDS.length];
+		SingleCondition[] ximiasDeaths = new SingleCondition[ApplicationConstants.XIMIAS_IDS.length];
 		
 		for (int i = 0; i < ximiasDeaths.length; i++) {
 			ximiasDeaths[i] = new SingleCondition(
 					Condition.EQUALS,
-					new EventData(SceneConstants.XIMIAS_IDS[i],ConditionDataSource.CONSTANT),
+					new EventData(ApplicationConstants.XIMIAS_IDS[i],ConditionDataSource.CONSTANT),
 					new EventData("character_id", ConditionDataSource.EVENT));
 		}
 		
-		SingleCondition[] ximiasKills = new SingleCondition[SceneConstants.XIMIAS_IDS.length];
+		SingleCondition[] ximiasKills = new SingleCondition[ApplicationConstants.XIMIAS_IDS.length];
 		for (int i = 0; i < ximiasKills.length; i++) {
 			ximiasKills[i] = new SingleCondition(
 					Condition.EQUALS,
-					new EventData(SceneConstants.XIMIAS_IDS[i],ConditionDataSource.CONSTANT),
+					new EventData(ApplicationConstants.XIMIAS_IDS[i],ConditionDataSource.CONSTANT),
 					new EventData("attacker_character_id", ConditionDataSource.EVENT));
 		}
 		
@@ -284,9 +284,9 @@ public class PlayStateScene implements EffectScene{
 		FadingEffectProducer killEffect = new FadingEffectProducer(Color.WHITE, 500);
 		FadingEffectProducer headShotEffect = new FadingEffectProducer(lightOrange, 500);
 		FadingEffectProducer teamKillEffect = new FadingEffectProducer(Color.HOTPINK,500);
-		FadingEffectProducer VSKillEnd = new FadingEffectProducer(SceneConstants.VS, 300);
-		FadingEffectProducer NCKillEnd = new FadingEffectProducer(SceneConstants.NC, 300);
-		FadingEffectProducer TRKillEnd = new FadingEffectProducer(SceneConstants.TR, 300);
+		FadingEffectProducer VSKillEnd = new FadingEffectProducer(ApplicationConstants.VS, 300);
+		FadingEffectProducer NCKillEnd = new FadingEffectProducer(ApplicationConstants.NC, 300);
+		FadingEffectProducer TRKillEnd = new FadingEffectProducer(ApplicationConstants.TR, 300);
 		TimedEffectProducer blank = new TimedEffectProducer(Color.TRANSPARENT, 100);
 		
 		
@@ -313,15 +313,15 @@ public class PlayStateScene implements EffectScene{
 		eventPlayer.put("character_id","character_id");
 		
 		SingleCondition isVS = new SingleCondition(Condition.EQUALS,
-				new EventData(String.valueOf(SceneConstants.VS_ID),ConditionDataSource.CONSTANT),
+				new EventData(String.valueOf(ApplicationConstants.VS_ID),ConditionDataSource.CONSTANT),
 				new CensusData("character", "faction_id", new HashMap<>(0),eventPlayer));
 		
 		SingleCondition isNC = new SingleCondition(Condition.EQUALS,
-				new EventData(String.valueOf(SceneConstants.NC_ID),ConditionDataSource.CONSTANT),
+				new EventData(String.valueOf(ApplicationConstants.NC_ID),ConditionDataSource.CONSTANT),
 				new CensusData("character", "faction_id", new HashMap<>(0),eventPlayer));
 		
 		SingleCondition isTR = new SingleCondition(Condition.EQUALS,
-				new EventData(String.valueOf(SceneConstants.TR_ID),ConditionDataSource.CONSTANT),
+				new EventData(String.valueOf(ApplicationConstants.TR_ID),ConditionDataSource.CONSTANT),
 				new CensusData("character", "faction_id", new HashMap<>(0),eventPlayer));
 		
 		SingleCondition isSame = new SingleCondition(Condition.EQUALS,
@@ -379,9 +379,9 @@ public class PlayStateScene implements EffectScene{
 	
 	private void death() {
 		
-		BlendingEffectProducer VSDeathFade = new BlendingEffectProducer(SceneConstants.VS,Color.BLACK,1000);
-		BlendingEffectProducer NCDeathFade = new BlendingEffectProducer(SceneConstants.NC,Color.BLACK,1000);
-		BlendingEffectProducer TRDeathFade = new BlendingEffectProducer(SceneConstants.TR,Color.BLACK,1000);
+		BlendingEffectProducer VSDeathFade = new BlendingEffectProducer(ApplicationConstants.VS,Color.BLACK,1000);
+		BlendingEffectProducer NCDeathFade = new BlendingEffectProducer(ApplicationConstants.NC,Color.BLACK,1000);
+		BlendingEffectProducer TRDeathFade = new BlendingEffectProducer(ApplicationConstants.TR,Color.BLACK,1000);
 		FadingEffectProducer fadeout = new FadingEffectProducer(Color.BLACK, 500);
 		TimedEffectProducer black = new TimedEffectProducer(Color.BLACK, 1000);
 		
@@ -406,9 +406,9 @@ public class PlayStateScene implements EffectScene{
 		
 		
 		
-		SingleCondition isVS = new SingleCondition(Condition.EQUALS, new CensusData("character","faction_id", new HashMap<>(0),eventPlayer),new EventData(String.valueOf(SceneConstants.VS_ID),ConditionDataSource.CONSTANT));
-		SingleCondition isNC = new SingleCondition(Condition.EQUALS, new CensusData("character","faction_id", new HashMap<>(0),eventPlayer),new EventData(String.valueOf(SceneConstants.NC_ID),ConditionDataSource.CONSTANT));
-		SingleCondition isTR = new SingleCondition(Condition.EQUALS, new CensusData("character","faction_id", new HashMap<>(0),eventPlayer),new EventData(String.valueOf(SceneConstants.TR_ID),ConditionDataSource.CONSTANT));
+		SingleCondition isVS = new SingleCondition(Condition.EQUALS, new CensusData("character","faction_id", new HashMap<>(0),eventPlayer),new EventData(String.valueOf(ApplicationConstants.VS_ID),ConditionDataSource.CONSTANT));
+		SingleCondition isNC = new SingleCondition(Condition.EQUALS, new CensusData("character","faction_id", new HashMap<>(0),eventPlayer),new EventData(String.valueOf(ApplicationConstants.NC_ID),ConditionDataSource.CONSTANT));
+		SingleCondition isTR = new SingleCondition(Condition.EQUALS, new CensusData("character","faction_id", new HashMap<>(0),eventPlayer),new EventData(String.valueOf(ApplicationConstants.TR_ID),ConditionDataSource.CONSTANT));
 		
 		AllCondition isVSDeath = new AllCondition(isVS, isPlayer);
 		AllCondition isNCDeath = new AllCondition(isNC, isPlayer);

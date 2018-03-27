@@ -34,10 +34,9 @@ import java.util.logging.*;
  */
 public class MainController extends Application implements Renderer{
 	
-	private static final double DEFAULT_EFFECT_INTENSITY = 1;
 	private static final Logger PROJECT_LEVEL_LOGGER = Logger.getLogger("net.ximias");
 	private static final WebLogAppender webLogAppender = new WebLogAppender();
-	private final EffectContainer effectContainer = new EffectContainer(DEFAULT_EFFECT_INTENSITY, this);
+	private final EffectContainer effectContainer = new EffectContainer(ApplicationConstants.DEFAULT_EFFECT_INTENSITY, this);
 	private final PlayStateScene scene = new PlayStateScene(effectContainer);
 	private AnimationTimer animationTimer;
 	private Logger logger = Logger.getLogger(getClass().getName());
@@ -63,11 +62,14 @@ public class MainController extends Application implements Renderer{
 	public void start(Stage primaryStage) throws IOException {
 		displayWelcome();
 		Parent gui = FXMLLoader.load(getClass().getResource("monogui.fxml"));
-		primaryStage.setTitle("Xou " + SceneConstants.VERSION_NAME + " v" + SceneConstants.VERSION);
+		primaryStage.setTitle("Xou " + ApplicationConstants.VERSION_NAME + " v" + ApplicationConstants.VERSION);
 		primaryStage.setWidth(Persisted.getInstance().APPLICATION_WIDTH);
 		primaryStage.setHeight(Persisted.getInstance().APPLICATION_HEIGHT);
 		primaryStage.heightProperty().addListener((observable, oldValue, newValue) -> onResize(newValue.intValue()));
 		primaryStage.widthProperty().addListener((observable, oldValue, newValue) -> onResize(newValue.intValue()));
+		primaryStage.centerOnScreen();
+		primaryStage.setX(primaryStage.getX() >=0? primaryStage.getX() : 0);
+		primaryStage.setY(primaryStage.getY() >=0? primaryStage.getY() : 0);
 		Scene scene = new Scene(gui);
 		scene.getStylesheets().clear();
 		scene.getStylesheets().add("style.css");
@@ -82,7 +84,7 @@ public class MainController extends Application implements Renderer{
 	}
 	
 	private static void displayWelcome() {
-		Alert welcome = new Alert(Alert.AlertType.INFORMATION, System.currentTimeMillis() < SceneConstants.EXP_DATE ? SceneConstants.INTRO_TEXT : SceneConstants.EXP_MESSAGE, ButtonType.CLOSE);
+		Alert welcome = new Alert(Alert.AlertType.INFORMATION, System.currentTimeMillis() < ApplicationConstants.EXP_DATE ? ApplicationConstants.INTRO_TEXT : ApplicationConstants.EXP_MESSAGE, ButtonType.CLOSE);
 		welcome.setTitle("Before we start:");
 		welcome.setHeaderText("Some would call this a disclaimer");
 		welcome.getDialogPane().getStylesheets().clear();
@@ -137,7 +139,7 @@ public class MainController extends Application implements Renderer{
 	private void animateFrame() {
 		if (effectContainer.canPauseRendering()){
 			animationTimer.stop();
-			logger.warning("Rendering has been paused.");
+			logger.fine("Rendering has been paused.");
 		}
 		Canvas activeCanvas = getActiveCanvas();
 		GraphicsContext ctx = activeCanvas.getGraphicsContext2D();
@@ -188,6 +190,6 @@ public class MainController extends Application implements Renderer{
 	@Override
 	public void resumeRendering() {
 		animationTimer.start();
-		logger.warning("Rendering resumed.");
+		logger.fine("Rendering resumed.");
 	}
 }
