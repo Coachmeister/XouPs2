@@ -55,18 +55,8 @@ public class EffectContainer implements EffectView {
 	 * Where the color blending happens.
 	 */
 	private synchronized Color getColorAndClearFinishedEffects() {
-		double r, g, b, a;
-		r = g = b = a = 0;
 		effects.removeIf(Effect::isDone);
-		for (Effect effect : effects) {
-			
-			r += effect.getColor().getRed() * effect.getColor().getOpacity() * (effect.hasIntensity() ? effectIntensity : 1);
-			g += effect.getColor().getGreen() * effect.getColor().getOpacity() * (effect.hasIntensity() ? effectIntensity : 1);
-			b += effect.getColor().getBlue() * effect.getColor().getOpacity() * (effect.hasIntensity() ? effectIntensity : 1);
-			a += effect.getColor().getOpacity() * (effect.hasIntensity() ? effectIntensity : 1);
-		}
-		
-		Color result = Color.color(Math.min(r / a, 1.0), Math.min(g / a, 1.0), Math.min(b / a, 1.0));
+		Color result = Effect.blend(effectIntensity, effects.toArray(new Effect[0]));
 		if (result.equals(Color.BLACK) || result.getOpacity() == 0) {
 			logger.warning("Color is fully black or transparent");
 		}

@@ -10,22 +10,21 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import net.ximias.effect.Renderer;
 import net.ximias.effect.views.EffectContainer;
-import net.ximias.gui.tabs.Features;
-import net.ximias.gui.tabs.Log;
-import net.ximias.gui.tabs.MainEffectView;
-import net.ximias.gui.tabs.Properties;
+import net.ximias.gui.tabs.*;
 import net.ximias.effect.views.scenes.*;
 import net.ximias.logging.WebLogAppender;
 import net.ximias.persistence.Persisted;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.*;
 
 /**
@@ -49,6 +48,8 @@ public class MainController extends Application implements Renderer{
 	private Log logTabController;
 	@FXML
 	private Features featuresTabController;
+	@FXML
+	private Keyboard keyboardTabController;
 	
 	@FXML
 	private TabPane tabPane;
@@ -65,11 +66,11 @@ public class MainController extends Application implements Renderer{
 		primaryStage.setTitle("Xou " + ApplicationConstants.VERSION_NAME + " v" + ApplicationConstants.VERSION);
 		primaryStage.setWidth(Persisted.getInstance().APPLICATION_WIDTH);
 		primaryStage.setHeight(Persisted.getInstance().APPLICATION_HEIGHT);
-		primaryStage.heightProperty().addListener((observable, oldValue, newValue) -> onResize(newValue.intValue()));
-		primaryStage.widthProperty().addListener((observable, oldValue, newValue) -> onResize(newValue.intValue()));
+		primaryStage.heightProperty().addListener((observable, oldValue, newValue) -> onResizeHeight(newValue.intValue()));
+		primaryStage.widthProperty().addListener((observable, oldValue, newValue) -> onResizeWidth(newValue.intValue()));
 		primaryStage.centerOnScreen();
-		primaryStage.setX(primaryStage.getX() >=0? primaryStage.getX() : 0);
-		primaryStage.setY(primaryStage.getY() >=0? primaryStage.getY() : 0);
+		primaryStage.setX(primaryStage.getX() >=0 ? primaryStage.getX() : 0);
+		primaryStage.setY(primaryStage.getY() >=0 ? primaryStage.getY() : 0);
 		Scene scene = new Scene(gui);
 		scene.getStylesheets().clear();
 		scene.getStylesheets().add("style.css");
@@ -78,8 +79,11 @@ public class MainController extends Application implements Renderer{
 		primaryStage.show();
 	}
 	
-	private void onResize(int newValue){
+	private void onResizeHeight(int newValue){
+		logger.info("Height updated!");
 		Persisted.getInstance().APPLICATION_HEIGHT = newValue;
+	}
+	private void onResizeWidth(int newValue){
 		Persisted.getInstance().APPLICATION_WIDTH = newValue;
 	}
 	
@@ -108,8 +112,13 @@ public class MainController extends Application implements Renderer{
 			setupFeaturesTab();
 			setupLogTab();
 			setupTabListener();
+			setupKeyboardTab();
 			animationTimer.start();
 		});
+	}
+	
+	private void setupKeyboardTab() {
+		keyboardTabController.injectMainController(this);
 	}
 	
 	private void setupEffectViewTab() {

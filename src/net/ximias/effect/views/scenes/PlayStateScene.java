@@ -83,7 +83,7 @@ public class PlayStateScene implements EffectScene{
 		
 		// Version 0.1.0
 		// Settings GUI
-		// Abstract keyboard integration
+		// Abstract net.ximias.keyboard integration
 		// Logitech implementation
 		// Persistence
 		// Keymap import? from InputProfile_User.xml
