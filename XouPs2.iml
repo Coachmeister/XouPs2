@@ -11,5 +11,6 @@
     <orderEntry type="library" name="org.json:json:20180130" level="project" />
     <orderEntry type="library" name="javax.websocket:javax.websocket-api:1.1" level="project" />
     <orderEntry type="library" name="org.glassfish.tyrus.bundles:tyrus-standalone-client-jdk:1.12" level="project" />
+    <orderEntry type="library" name="logiled" level="project" />
   </component>
 </module>

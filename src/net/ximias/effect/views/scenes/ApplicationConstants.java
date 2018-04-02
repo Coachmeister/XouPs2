@@ -35,7 +35,7 @@ public interface ApplicationConstants {
 	JSONObject EMPTY_JSON = new JSONObject("{}");
 	
 	String VERSION_NAME = "Beta";
-	String VERSION = "0.1.0";
+	String VERSION = "0.1.1";
 	
 	String INTRO_TEXT = "Welcome to Xou "+VERSION_NAME+".\n" +
 	                    "This is an early version of the application. Expect kinks, bugs and sharp edges.\n" +
@@ -55,7 +55,7 @@ public interface ApplicationConstants {
 	
 	String PLANNED_FEATURES[] = new String[] {
 			"Development has been started on the following:",
-			"Keyboard effects. Planned support for Logitech, probably Razer chroma, and maybe Steelseries.",
+			"KeyboardTab effects. Planned support for Logitech, probably Razer chroma, and maybe Steelseries.",
 			"Possibly keyboard-specific effects, like ripple or waves. Though those would not render correctly on the Hue",
 			"On the to-do:",
 			"Finding a name that is not the working title of the project (Feel free to send in ideas)",

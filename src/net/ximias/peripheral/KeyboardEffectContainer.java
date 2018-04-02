@@ -13,10 +13,10 @@ public class KeyboardEffectContainer {
 	private final ArrayList<KeyEffect> effects = new ArrayList<>(16);
 	private int rows,columns;
 	
-	public KeyboardEffectContainer(EffectContainer globalContainer, int rows, int columns) {
+	public KeyboardEffectContainer(EffectContainer globalContainer, int columns, int rows) {
 		this.globalContainer = globalContainer;
-		this.rows = rows;
 		this.columns = columns;
+		this.rows = rows;
 	}
 	
 	public Color getGlobalColor(){

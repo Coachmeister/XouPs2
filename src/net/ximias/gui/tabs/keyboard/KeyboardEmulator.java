@@ -78,9 +78,7 @@ public class KeyboardEmulator implements Renderer {
 		start();
 	}
 	
-	public void addWave() {
-		if (!isEnabled) return;
-		Color rnd = new Color(Math.random() > 0.5 ? 0.0 : 1.0,Math.random() > 0.5 ? 0.0 : 1.0,Math.random() > 0.5 ? 0.0 : 1.0,1);
-		effectContainer.addEffect(new WaveEffectProducer(rnd, 10_000L,4, WaveEffectDirection.LEFT_TO_RIGHT).build());
+	public KeyboardEffectContainer getEffectContainer() {
+		return effectContainer;
 	}
 }
