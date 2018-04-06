@@ -13,7 +13,7 @@ import javafx.scene.paint.Color;
 import net.ximias.effect.producers.FadingEffectProducer;
 import net.ximias.gui.MainController;
 import net.ximias.gui.ResizableCanvas;
-import net.ximias.effect.views.scenes.ApplicationConstants;
+import net.ximias.persistence.ApplicationConstants;
 import net.ximias.network.CurrentPlayer;
 import net.ximias.persistence.Persisted;
 

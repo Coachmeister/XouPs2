@@ -1,7 +1,7 @@
 package net.ximias.network;
 
 import javafx.scene.paint.Color;
-import net.ximias.effect.views.scenes.ApplicationConstants;
+import net.ximias.persistence.ApplicationConstants;
 import net.ximias.persistence.Persisted;
 import org.json.JSONArray;
 import org.json.JSONObject;

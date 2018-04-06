@@ -19,6 +19,7 @@ import net.ximias.effect.views.EffectContainer;
 import net.ximias.gui.tabs.*;
 import net.ximias.effect.views.scenes.*;
 import net.ximias.logging.WebLogAppender;
+import net.ximias.persistence.ApplicationConstants;
 import net.ximias.persistence.Persisted;
 
 import java.io.FileInputStream;

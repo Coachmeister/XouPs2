@@ -28,10 +28,10 @@ public class Ps2EventStreamingConnection {
 			
 			clientEndPoint.addMessageHandler(message -> {
 				JSONObject response = new JSONObject(message);
-				logger.fine(response.toString());
+				logger.info(response.toString());
 				if (!response.has("payload")) return;
 				JSONObject payload = response.getJSONObject("payload");
-				logger.info(payload.toString());
+				logger.fine(payload.toString());
 				globalListenerActions(payload);
 				globalHandlers.forEach(it -> it.eventReceived(payload));
 				subscribedEvents.get(payload.getString("event_name")).parallelStream().forEach(it -> it.eventReceived(payload));

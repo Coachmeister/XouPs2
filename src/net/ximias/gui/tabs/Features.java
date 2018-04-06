@@ -7,7 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
 import net.ximias.gui.MainController;
-import net.ximias.effect.views.scenes.ApplicationConstants;
+import net.ximias.persistence.ApplicationConstants;
 
 public class Features {
 	private MainController mainController;

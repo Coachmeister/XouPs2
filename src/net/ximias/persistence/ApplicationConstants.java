@@ -1,4 +1,4 @@
-package net.ximias.effect.views.scenes;
+package net.ximias.persistence;
 
 import javafx.scene.paint.Color;
 import org.json.JSONObject;
@@ -35,7 +35,7 @@ public interface ApplicationConstants {
 	JSONObject EMPTY_JSON = new JSONObject("{}");
 	
 	String VERSION_NAME = "Beta";
-	String VERSION = "0.1.1";
+	String VERSION = "0.1.2";
 	
 	String INTRO_TEXT = "Welcome to Xou "+VERSION_NAME+".\n" +
 	                    "This is an early version of the application. Expect kinks, bugs and sharp edges.\n" +

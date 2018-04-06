@@ -3,6 +3,7 @@ package net.ximias.effect.views.scenes;
 import javafx.scene.paint.Color;
 import net.ximias.effect.EffectView;
 import net.ximias.effect.producers.*;
+import net.ximias.persistence.ApplicationConstants;
 
 import java.util.Timer;
 import java.util.TimerTask;

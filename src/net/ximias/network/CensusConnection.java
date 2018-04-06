@@ -1,6 +1,6 @@
 package net.ximias.network;
 
-import net.ximias.effect.views.scenes.ApplicationConstants;
+import net.ximias.persistence.ApplicationConstants;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
