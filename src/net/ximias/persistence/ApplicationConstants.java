@@ -3,6 +3,9 @@ package net.ximias.persistence;
 import javafx.scene.paint.Color;
 import org.json.JSONObject;
 
+/**
+ * Contains application-wide constants.
+ */
 public interface ApplicationConstants {
 	Color INDAR = new Color(1,0.8,0.7,1.0);
 	//public static final Color INDAR = new Color(0.0,0.75,0.6,1.0);
@@ -35,7 +38,7 @@ public interface ApplicationConstants {
 	JSONObject EMPTY_JSON = new JSONObject("{}");
 	
 	String VERSION_NAME = "Beta";
-	String VERSION = "0.1.2";
+	String VERSION = "0.1.3";
 	
 	String INTRO_TEXT = "Welcome to Xou "+VERSION_NAME+".\n" +
 	                    "This is an early version of the application. Expect kinks, bugs and sharp edges.\n" +

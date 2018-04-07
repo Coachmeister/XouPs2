@@ -2,14 +2,25 @@ package net.ximias.persistence;
 
 import javafx.scene.paint.Color;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.HashSet;
 
+/**
+ * Stores values for to get and set as useful.
+ */
 public class Persisted implements Serializable {
 	public static Persisted getInstance(){
 		return PersistLoader.getInstance();
 	}
 	
+	/**
+	 * Used to set defaults if no saved data can be loaded.
+	 * @return an instance initialized with default values.
+	 */
 	public Persisted defaults() {
 		LAST_LOGIN = "ximias";
 		BACKGROUND_BRIGHTNESS_SLIDER = ApplicationConstants.DEFAULT_BACKGROUND_BRIGHTENS;
@@ -17,6 +28,7 @@ public class Persisted implements Serializable {
 		EFFECT_TRANSPARENCY_SLIDER = ApplicationConstants.DEFAULT_EFFECT_INTENSITY;
 		APPLICATION_WIDTH = 600;
 		APPLICATION_HEIGHT = 450;
+		PLANETSIDE_INPUT_PROFILE = new HashSet<>(6);
 		ACTION_COLORING = populateActionColoring();
 		return this;
 	}
@@ -27,8 +39,28 @@ public class Persisted implements Serializable {
 	public double EFFECT_TRANSPARENCY_SLIDER;
 	public double APPLICATION_WIDTH;
 	public double APPLICATION_HEIGHT;
-	public HashMap<String, Color> ACTION_COLORING;
+	public transient HashMap<String, Color> ACTION_COLORING;
+	public HashSet<File> PLANETSIDE_INPUT_PROFILE;
+	public File LAST_SELECTED_INPUT_PROFILE;
 	
+	private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException{
+		in.defaultReadObject();
+		HashMap<String, PersistColor> actionColorPersist = (HashMap<String, PersistColor>) in.readObject();
+		ACTION_COLORING = new HashMap<>();
+		actionColorPersist.forEach((s, persistColor) -> ACTION_COLORING.put(s, persistColor.toColor()));
+	}
+	
+	private void writeObject(java.io.ObjectOutputStream out) throws IOException{
+		out.defaultWriteObject();
+		HashMap<String, PersistColor> actionColorPersist = new HashMap<>();
+		ACTION_COLORING.forEach((key, value) -> actionColorPersist.put(key, new PersistColor(value.getRed(), value.getGreen(), value.getBlue(), value.getOpacity())));
+		out.writeObject(actionColorPersist);
+	}
+	
+	/**
+	 * Adds default values to the actionColoring list.
+	 * @return the actionColoring list.
+	 */
 	private HashMap<String, Color> populateActionColoring() {
 		HashMap<String, Color> result = new HashMap<>();
 		result.put("Jump", Color.GREEN);

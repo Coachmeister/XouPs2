@@ -1,4 +1,4 @@
-package net.ximias.gui;
+package net.ximias.gui.guiElements;
 
 
 import javafx.scene.canvas.Canvas;

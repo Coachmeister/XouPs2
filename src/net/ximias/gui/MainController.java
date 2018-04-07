@@ -68,8 +68,6 @@ public class MainController extends Application implements Renderer{
 		primaryStage.heightProperty().addListener((observable, oldValue, newValue) -> onResizeHeight(newValue.intValue()));
 		primaryStage.widthProperty().addListener((observable, oldValue, newValue) -> onResizeWidth(newValue.intValue()));
 		primaryStage.centerOnScreen();
-		primaryStage.setX(primaryStage.getX() >=0 ? primaryStage.getX() : 0);
-		primaryStage.setY(primaryStage.getY() >=0 ? primaryStage.getY() : 0);
 		Scene scene = new Scene(gui);
 		scene.getStylesheets().clear();
 		scene.getStylesheets().add("style.css");

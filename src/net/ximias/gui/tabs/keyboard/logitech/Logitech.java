@@ -1,19 +1,20 @@
 package net.ximias.gui.tabs.keyboard.logitech;
 
 import com.logitech.gaming.LogiLED;
-import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import javafx.scene.paint.Color;
 import net.ximias.effect.Renderer;
 import net.ximias.effect.views.EffectContainer;
 import net.ximias.peripheral.Keyboard;
 import net.ximias.peripheral.KeyboardEffectContainer;
 
-import javax.print.attribute.standard.MediaSize;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.logging.Logger;
 
-
+/**
+ * Logitech specific implementation of the Keyboard interface.
+ * Used to display keyboard effects on logitech peripherals.
+ */
 public class Logitech implements Renderer, Keyboard {
 	private static final int FRAME_RATE_MS = 17; // 58 frames per second.
 	private final HashMap<Integer, Color> exemptKeys = new HashMap<>(32);
@@ -51,6 +52,11 @@ public class Logitech implements Renderer, Keyboard {
 		}
 	}
 	
+	/**
+	 * Used to set and exempt a single key from effects.
+	 * @param name the name of the key.
+	 * @param color the color of the key.
+	 */
 	private void setAndExemptKeyByName(String name, Color color) {
 		if (!multiKey) return;
 		name = getLogitechNameForKey(name);
@@ -66,6 +72,11 @@ public class Logitech implements Renderer, Keyboard {
 		}
 	}
 	
+	/**
+	 * Used to translate PlanetSide2 specific keynames into Logitech ones.
+	 * @param name the name of a key, as PlanetSide2 names it.
+	 * @return the Logitech equivalent of that key.
+	 */
 	private String getLogitechNameForKey(String name){
 		// No key combos
 		if (name.contains("+")) return "UNDEFINED";
@@ -126,10 +137,14 @@ public class Logitech implements Renderer, Keyboard {
 		LogiLED.LogiLedShutdown();
 	}
 	
+	@Override
 	public KeyboardEffectContainer getEffectContainer() {
 		return effectContainer;
 	}
 	
+	/**
+	 * Called every frame of animation.
+	 */
 	private void drawFrame() {
 		
 		Color globalColor = effectContainer.getGlobalColor();
@@ -144,6 +159,9 @@ public class Logitech implements Renderer, Keyboard {
 		}
 	}
 	
+	/**
+	 * sets lighting for exempt keys and exempts them from the effects.
+	 */
 	private void setExemptKeyColors() {
 		if (!multiKey) return;
 		LogiLED.LogiLedSetTargetDevice(LogiLED.LOGI_DEVICETYPE_PERKEY_RGB);
@@ -165,6 +183,12 @@ public class Logitech implements Renderer, Keyboard {
 		setExemptKeyColors();
 	}
 	
+	/**
+	 * Sets all keys not included in the bitmap.
+	 * This includes the G-Keys and logos.
+	 * A bit of possible future proofing has been added, by having the loops go higher than strictly needed.
+	 * @param color the color to set the keys.
+	 */
 	private void setAllNonBitmapKeys(Color color) {
 		for (int i = 0xFFF1; i < 0xFFFF; i++) {
 			LogiLED.LogiLedSetLightingForKeyWithKeyName(i, (int) Math.round(color.getRed() * 100), (int) Math.round(color.getGreen() * 100), (int) Math.round(color.getBlue() * 100));
@@ -174,6 +198,10 @@ public class Logitech implements Renderer, Keyboard {
 		}
 	}
 	
+	/**
+	 * Used to obtain a logitech specific bitmap array of BGRA color values for each key.
+	 * @return a byte array with color codes for each key.
+	 */
 	private byte[] getFormattedColorArray() {
 		Color[][] source = effectContainer.getPerKeyColor();
 		int width = source.length;
@@ -192,6 +220,9 @@ public class Logitech implements Renderer, Keyboard {
 		return dest;
 	}
 	
+	/**
+	 * Starts the rendering.
+	 */
 	private void start() {
 		stop();
 		animationTimer.scheduleAtFixedRate(new TimerTask() {
@@ -202,15 +233,26 @@ public class Logitech implements Renderer, Keyboard {
 		}, 0, FRAME_RATE_MS);
 	}
 	
+	/**
+	 * Stops the rendering.
+	 */
 	private void stop() {
 		animationTimer.cancel();
 		animationTimer = new Timer(true);
 	}
 	
+	/**
+	 * Sets whether the multikey specific calculations should occur.
+	 * @param multiKey true, if a per-key RGB keyboard is among the peripherals.
+	 */
 	public void setMultiKey(boolean multiKey) {
 		this.multiKey = multiKey;
 	}
 	
+	/**
+	 * Returns whether the multikey property is set or not.
+	 * @return the value of the multikey property.
+	 */
 	@Override
 	public boolean isMultiKey() {
 		return multiKey;

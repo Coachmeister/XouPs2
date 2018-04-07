@@ -10,7 +10,10 @@ import net.ximias.peripheral.KeyboardEffectContainer;
 import net.ximias.peripheral.effects.WaveEffectDirection;
 import net.ximias.peripheral.effects.WaveEffectProducer;
 
-
+/**
+ * Used to emulate a w*h sized keyboard on screen.
+ * Mustly used for debugging and preview purposes.
+ */
 public class KeyboardEmulator implements Renderer {
 	
 	private static final int SPACING = 5;
@@ -30,6 +33,9 @@ public class KeyboardEmulator implements Renderer {
 		}
 	};
 	
+	/**
+	 * Called every frame of animation.
+	 */
 	private void animateFrame() {
 		GraphicsContext ctx = canvas.getGraphicsContext2D();
 		ctx.setFill(Color.BLACK);
@@ -48,27 +54,46 @@ public class KeyboardEmulator implements Renderer {
 		}
 	}
 	
+	/**
+	 * Called when emulator is stopped.
+	 * Used for visual purposes.
+	 */
 	private void insertStoppedFrame(){
 		GraphicsContext ctx = canvas.getGraphicsContext2D();
 		ctx.applyEffect(new ColorAdjust(0,-1,-0.5,0));
 	}
 	
+	/**
+	 * Starts the emulator.
+	 */
 	private void start(){
-		
 		isEnabled = true;
 		animationTimer.start();
 	}
 	
+	/**
+	 * Stops the emulator.
+	 */
 	public void stop(){
 		isEnabled = false;
 		animationTimer.stop();
 		insertStoppedFrame();
 	}
 	
+	/**
+	 * Utility function for calculating the with of a single key.
+	 * @param numWidth the number of keys to fit in the width of the canvas.
+	 * @return the size in pixels of the with of the key.
+	 */
 	private int getWidthOfSquare(int numWidth){
 		return (int) Math.floor(canvas.getWidth()/numWidth - SPACING);
 	}
 	
+	/**
+	 * Utility function for calculating the height of a single key.
+	 * @param numHeight the number of keys to fit in the height of the canvas.
+	 * @return the size in pixels of the height of the key.
+	 */
 	private int getHeightOfSquare(int numHeight){
 		return (int) Math.floor(canvas.getHeight()/numHeight - SPACING);
 	}
