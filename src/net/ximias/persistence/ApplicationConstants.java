@@ -33,12 +33,14 @@ public interface ApplicationConstants {
 	double DEFAULT_BACKGROUND_INTENSITY = 0.1;
 	double DEFAULT_BACKGROUND_BRIGHTENS = 0.5;
 	
+	int BACKUP_POLLING_RATE_IN_MS = 2000;
+	
 	String[] XIMIAS_IDS = {"8287548916321388337","5428653157989617089"};
 	
 	JSONObject EMPTY_JSON = new JSONObject("{}");
 	
 	String VERSION_NAME = "Beta";
-	String VERSION = "0.1.3";
+	String VERSION = "0.1.4";
 	
 	String INTRO_TEXT = "Welcome to Xou "+VERSION_NAME+".\n" +
 	                    "This is an early version of the application. Expect kinks, bugs and sharp edges.\n" +

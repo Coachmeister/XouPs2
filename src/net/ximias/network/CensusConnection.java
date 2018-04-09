@@ -20,7 +20,7 @@ public class CensusConnection {
 	private static final Logger staticLogger = Logger.getLogger(CensusConnection.class.getName());
 	private static final LeastRecentlyUsedCache<String, CompletableFuture<JSONObject>> recentQueries = new LeastRecentlyUsedCache<>(512); // Guesstimated to be large enough to contain the common queries and experience id name mappings.
 	
-	private static JSONObject sendCensusQuery(String urlParameters) throws IOException {
+	private static JSONObject sendAndCacheCensusQuery(String urlParameters) throws IOException {
 		CompletableFuture<JSONObject> cached;
 		synchronized (recentQueries) {
 			cached = recentQueries.get(urlParameters);
@@ -44,15 +44,23 @@ public class CensusConnection {
 		}
 		staticLogger.info("Looking up data in census: "+urlParameters);
 		cached = recentQueries.get(urlParameters);
-		
+		try{
+			JSONObject response = establishConnectionAndQuery(urlParameters);
+			cached.complete(response);
+			return response;
+		}catch (Error e){
+			cached.completeExceptionally(e);
+			throw e;
+		}
+	}
+	
+	private static JSONObject establishConnectionAndQuery(String urlParameters) throws IOException {
 		HttpURLConnection connection = (HttpURLConnection) new URL("http://census.daybreakgames.com/s:XouPs2/get/ps2/" + urlParameters).openConnection();
 		connection.setRequestMethod("GET");
 		if (connection.getResponseCode() != 200) {
 			staticLogger.severe("Unexpected response code: " + connection.getResponseCode());
 			if (connection.getResponseCode() - 200 >= 100) {
-				Error error = new Error("server error response (" + connection.getResponseCode() + ") to request: ...get/ps2/" + urlParameters);
-				cached.completeExceptionally(error);
-				throw error;
+				throw new Error("server error response (" + connection.getResponseCode() + ") to request: ...get/ps2/" + urlParameters);
 			}
 		}
 		
@@ -64,7 +72,6 @@ public class CensusConnection {
 		}
 		
 		JSONObject result = new JSONObject(response.toString());
-		cached.complete(result);
 		return result;
 	}
 	
@@ -76,7 +83,7 @@ public class CensusConnection {
 	 * @throws IOException
 	 */
 	public static JSONArray listPlayersStartsWith(String prefix) throws IOException {
-		JSONObject players = sendCensusQuery("character_name/?name.first_lower=^" + prefix.toLowerCase() + "&c:limit=10");
+		JSONObject players = sendAndCacheCensusQuery("character_name/?name.first_lower=^" + prefix.toLowerCase() + "&c:limit=10");
 		if (players.has("character_name_list")) {
 			return players.getJSONArray("character_name_list");
 		} else {
@@ -84,25 +91,44 @@ public class CensusConnection {
 		}
 	}
 	
-	public static JSONObject sendQuery(String query) {
+	/**
+	 * Used to get data from the census. Will cache the response.
+	 * @param queryString the string after .../get/ps2/
+	 * @return the response from the census servers.
+	 */
+	public static JSONObject sendQuery(String queryString) {
 		try {
-			return sendCensusQuery(query);
+			return sendAndCacheCensusQuery(queryString);
 		} catch (IOException e) {
 			staticLogger.warning("Query failed: " + e);
 			staticLogger.warning("retrying...");
 			try {
-				return sendCensusQuery(query);
+				return sendAndCacheCensusQuery(queryString);
 			} catch (IOException e1) {
 				staticLogger.severe("Second query attempt failed: " + e);
 				staticLogger.warning("retrying..");
 				try {
-					return sendCensusQuery(query);
+					return sendAndCacheCensusQuery(queryString);
 				} catch (IOException e2) {
 					staticLogger.severe("Third attempt failed: " + e);
 					staticLogger.severe("I'll assume trying any more times won't fix the issue. I hope the rest of the program can cope with an empty response");
 				}
 			}
 			return null;
+		}
+	}
+	
+	/**
+	 * Used to poll the census. Wil bypass the cache, as response might change on subsequent calls.
+	 * Needless to say, using this function is expensive, and should be avoided if possible.
+	 * @param queryString the queryString to poll. Should start with [target]/?[query]
+	 * @return the response form the server. Or empty json on exception.
+	 */
+	public static JSONObject poll(String queryString){
+		try {
+			return establishConnectionAndQuery(queryString);
+		} catch (IOException e) {
+			return ApplicationConstants.EMPTY_JSON;
 		}
 	}
 	
@@ -115,9 +141,9 @@ public class CensusConnection {
 	 * @throws IOException
 	 */
 	public static JSONObject findPlayerByName(String namePrefix) throws IOException {
-		JSONObject players = sendCensusQuery("character_name/?name.first_lower=^" + namePrefix.toLowerCase() + "&c:limit=10");
+		JSONObject players = sendAndCacheCensusQuery("character_name/?name.first_lower=^" + namePrefix.toLowerCase() + "&c:limit=10");
 		
-		return sendCensusQuery("character/?character_id=" + players.getJSONArray("character_name_list").getJSONObject(0).getString("character_id")).getJSONArray("character_list").getJSONObject(0);
+		return sendAndCacheCensusQuery("character/?character_id=" + players.getJSONArray("character_name_list").getJSONObject(0).getString("character_id")).getJSONArray("character_list").getJSONObject(0);
 		
 	}
 	

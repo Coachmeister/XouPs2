@@ -67,6 +67,10 @@
     -fx-text-fill: accent;
 }
 
+.corner {
+    -fx-background-color: background;
+}
+
 .hyperlink{
     -fx-text-fill: accent;
 }

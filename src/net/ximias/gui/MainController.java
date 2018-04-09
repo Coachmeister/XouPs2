@@ -10,15 +10,22 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.RadialGradient;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import net.ximias.effect.Renderer;
 import net.ximias.effect.views.EffectContainer;
+import net.ximias.gui.guiElements.StatusIndicator;
 import net.ximias.gui.tabs.*;
 import net.ximias.effect.views.scenes.*;
 import net.ximias.logging.WebLogAppender;
+import net.ximias.network.Ps2EventStreamingConnection;
 import net.ximias.persistence.ApplicationConstants;
 import net.ximias.persistence.Persisted;
 
@@ -35,9 +42,12 @@ public class MainController extends Application implements Renderer{
 	private static final Logger PROJECT_LEVEL_LOGGER = Logger.getLogger("net.ximias");
 	private static final WebLogAppender webLogAppender = new WebLogAppender();
 	private final EffectContainer effectContainer = new EffectContainer(ApplicationConstants.DEFAULT_EFFECT_INTENSITY, this);
-	private final PlayStateScene scene = new PlayStateScene(effectContainer);
+	private final Ps2EventStreamingConnection streamingConnection = new Ps2EventStreamingConnection();
+	private final PlayStateScene scene = new PlayStateScene(effectContainer, streamingConnection);
 	private AnimationTimer animationTimer;
 	private Logger logger = Logger.getLogger(getClass().getName());
+	private Rectangle statusArea;
+	private StatusIndicator statusIndicatorController = StatusIndicator.getInstance() ;
 	
 	@FXML
 	private MainEffectView effectViewController;
@@ -49,9 +59,15 @@ public class MainController extends Application implements Renderer{
 	private Features featuresTabController;
 	@FXML
 	private KeyboardTab keyboardTabController;
-	
 	@FXML
 	private TabPane tabPane;
+	@FXML
+	private Circle statusIndicator;
+	@FXML
+	private Rectangle statusRectangle;
+	@FXML
+	private Text statusText;
+	
 	
 	public static void main(String[] args) {
 		initLogger();
@@ -110,8 +126,29 @@ public class MainController extends Application implements Renderer{
 			setupLogTab();
 			setupTabListener();
 			setupKeyboardTab();
+			statusIndicatorController.injectMainController(this);
+			statusIndicatorController.injectComponents(statusIndicator, statusRectangle, statusText);
+			statusIndicatorController.addStatus("No issues detected!", StatusSeverity.NOTHING);
 			animationTimer.start();
 		});
+	}
+	
+	@FXML
+	private void showStatus(MouseEvent event){
+		statusIndicatorController.showTooltip();
+	}
+	
+	@FXML
+	private void hideStatus(MouseEvent event){
+		statusIndicatorController.hideToolTip();
+	}
+	
+	public void addStatus(String text, StatusSeverity severity){
+		statusIndicatorController.addStatus(text, severity);
+	}
+	
+	public void removeStatus(String text){
+		statusIndicatorController.removeStatus(text);
 	}
 	
 	private void setupKeyboardTab() {
@@ -195,6 +232,7 @@ public class MainController extends Application implements Renderer{
 	
 	@Override
 	public void resumeRendering() {
+		if (animationTimer == null) return;
 		animationTimer.start();
 		logger.fine("Rendering resumed.");
 	}

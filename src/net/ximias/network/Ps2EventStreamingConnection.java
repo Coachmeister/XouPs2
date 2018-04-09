@@ -1,5 +1,7 @@
 package net.ximias.network;
 
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import net.ximias.psEvent.handler.Ps2EventHandler;
 import org.json.JSONObject;
 
@@ -20,6 +22,8 @@ public class Ps2EventStreamingConnection {
 	private WebsocketClientEndpoint clientEndPoint;
 	
 	private final Logger logger = Logger.getLogger(getClass().getName());
+	private final SimpleBooleanProperty isAvailable = new SimpleBooleanProperty(true);
+	private final Ps2BackupPollingService pollingService = new Ps2BackupPollingService(this);
 	
 	public Ps2EventStreamingConnection() {
 		try {
@@ -29,17 +33,30 @@ public class Ps2EventStreamingConnection {
 			clientEndPoint.addMessageHandler(message -> {
 				JSONObject response = new JSONObject(message);
 				logger.info(response.toString());
-				if (!response.has("payload")) return;
-				JSONObject payload = response.getJSONObject("payload");
-				logger.fine(payload.toString());
-				globalListenerActions(payload);
-				globalHandlers.forEach(it -> it.eventReceived(payload));
-				subscribedEvents.get(payload.getString("event_name")).parallelStream().forEach(it -> it.eventReceived(payload));
-				logger.fine( "Affected: "+subscribedEvents.get(payload.getString("event_name")).size() + " Handlers");
+				
+				if (!response.has("payload")) {
+					delegateNonPayloadedResponse(response);
+				}else{
+					JSONObject payload = response.getJSONObject("payload");
+					delegatePayload(payload);
+				}
 			});
 		} catch (URISyntaxException ex) {
 			System.err.println("URISyntaxException exception: " + ex.getMessage());
 		}
+	}
+	
+	/**
+	 * Used to delegate a payload to all subscribed events.
+	 * Called by the backup polling service, if streaming service is unavailable.
+	 * @param payload the event received.
+	 */
+	void delegatePayload(JSONObject payload) {
+		logger.fine(payload.toString());
+		globalListenerActions(payload);
+		globalHandlers.forEach(it -> it.eventReceived(payload));
+		subscribedEvents.get(payload.getString("event_name")).parallelStream().forEach(it -> it.eventReceived(payload));
+		logger.fine("Affected: " + subscribedEvents.get(payload.getString("event_name")).size() + " Handlers");
 	}
 	
 	private void globalListenerActions(JSONObject payload) {
@@ -90,12 +107,12 @@ public class Ps2EventStreamingConnection {
 		subscribedEvents.get(eventName).add(handler);
 		clientEndPoint.sendMessage(
 				"{" +
-						"\"service\":\"event\"," +
-						"\"action\":\"subscribe\"," +
-						"\"characters\":[\"" + playerId + "\"]," +
-						"\"eventNames\":[\"" + eventName + "\"]" +
-						",\"logicalAndCharactersWithWorlds\":true" +
-						"}"
+				"\"service\":\"event\"," +
+				"\"action\":\"subscribe\"," +
+				"\"characters\":[\"" + playerId + "\"]," +
+				"\"eventNames\":[\"" + eventName + "\"]" +
+				",\"logicalAndCharactersWithWorlds\":true" +
+				"}"
 		);
 	}
 	
@@ -127,19 +144,64 @@ public class Ps2EventStreamingConnection {
 		subscribedEvents.get(eventName).add(handler);
 		clientEndPoint.sendMessage(
 				"{" +
-						"\"service\":\"event\"," +
-						"\"action\":\"subscribe\"," +
-						"\"worlds\":[\"" + worldId + "\"]," +
-						"\"eventNames\":[\"" + eventName + "\"]" +
-						",\"logicalAndCharactersWithWorlds\":true" +
-						"}"
+				"\"service\":\"event\"," +
+				"\"action\":\"subscribe\"," +
+				"\"worlds\":[\"" + worldId + "\"]," +
+				"\"eventNames\":[\"" + eventName + "\"]" +
+				",\"logicalAndCharactersWithWorlds\":true" +
+				"}"
 		);
 	}
 	
 	public void registerGlobalEventListener(Ps2EventHandler globalHandler) {
-		logger.fine("Global handler added: "+globalHandlers.size());
+		logger.fine("Global handler added: " + globalHandlers.size());
 		globalHandlers.remove(globalHandler);
 		globalHandlers.add(globalHandler);
+	}
+	
+	private void delegateNonPayloadedResponse(JSONObject response) {
+		if (responseIsEventWithType(response)) {
+			String eventType = response.getString("type");
+			if (eventType.equals("serviceStateChanged")) {
+				serverState(response);
+			} else if (eventType.equals("heartbeat")) {
+				heartbeat(response);
+			}
+		}
+		
+	}
+	
+	private boolean responseIsEventWithType(JSONObject response) {
+		return response.has("service") && response.getString("service").equals("event") && response.has("type");
+	}
+	
+	private void serverState(JSONObject response) {
+		String playerWorldID = CurrentPlayer.getInstance().getValue("world_id");
+		String responseWorld = response.getString("detail");
+		String responseWorldID = responseWorld.substring(responseWorld.lastIndexOf("_")+1);
+		if (playerWorldID.equals(responseWorldID)) {
+			serviceUnavailable(response.getString("online").equals("false"));
+		}
+	}
+	
+	private void serviceUnavailable(boolean isUnavailable) {
+		isAvailable.set(!isUnavailable);
+		if (isUnavailable){
+			logger.severe("Planetside streaming servers are offline. Event streaming is unavailable until servers are back. The census and keybindings will remain functional.");
+			pollingService.start();
+		}else {
+			pollingService.stop();
+		}
+		
+		
+	}
+	
+	public ReadOnlyBooleanProperty isAvailableProperty() {
+		return ReadOnlyBooleanProperty.readOnlyBooleanProperty(isAvailable);
+	}
+	
+	private void heartbeat(JSONObject response) {
+	
 	}
 }
 

@@ -2,6 +2,7 @@ package net.ximias.network;
 
 import java.net.URI;
 import java.util.logging.Logger;
+import javax.swing.*;
 import javax.websocket.ClientEndpoint;
 import javax.websocket.CloseReason;
 import javax.websocket.ContainerProvider;
@@ -28,6 +29,7 @@ public class WebsocketClientEndpoint {
 			WebSocketContainer container = ContainerProvider.getWebSocketContainer();
 			container.connectToServer(this, endpointURI);
 		} catch (Exception e) {
+			
 			throw new RuntimeException(e);
 		}
 	}
