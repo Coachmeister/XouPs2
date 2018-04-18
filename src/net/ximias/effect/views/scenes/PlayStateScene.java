@@ -6,6 +6,7 @@ import net.ximias.effect.producers.*;
 import net.ximias.network.CurrentPlayer;
 import net.ximias.network.Ps2EventStreamingConnection;
 import net.ximias.persistence.ApplicationConstants;
+import net.ximias.persistence.Persisted;
 import net.ximias.psEvent.condition.*;
 import net.ximias.psEvent.handler.*;
 
@@ -15,7 +16,6 @@ import java.util.logging.Logger;
 public class PlayStateScene implements EffectScene {
 	private final EffectView view;
 	private Ps2EventStreamingConnection connection;
-	private Logger logger = Logger.getLogger(getClass().getName());
 	
 	private PlayStateBackground background;
 	private final HashMap<String, String> experienceid = new HashMap<>(4);
@@ -285,9 +285,9 @@ public class PlayStateScene implements EffectScene {
 		FadingEffectProducer killEffect = new FadingEffectProducer(Color.WHITE, 500);
 		FadingEffectProducer headShotEffect = new FadingEffectProducer(lightOrange, 500);
 		FadingEffectProducer teamKillEffect = new FadingEffectProducer(Color.HOTPINK, 500);
-		FadingEffectProducer VSKillEnd = new FadingEffectProducer(ApplicationConstants.VS, 300);
-		FadingEffectProducer NCKillEnd = new FadingEffectProducer(ApplicationConstants.NC, 300);
-		FadingEffectProducer TRKillEnd = new FadingEffectProducer(ApplicationConstants.TR, 300);
+		FadingEffectProducer VSKillEnd = new FadingEffectProducer(Persisted.getInstance().VS, 300);
+		FadingEffectProducer NCKillEnd = new FadingEffectProducer(Persisted.getInstance().NC, 300);
+		FadingEffectProducer TRKillEnd = new FadingEffectProducer(Persisted.getInstance().TR, 300);
 		TimedEffectProducer blank = new TimedEffectProducer(Color.TRANSPARENT, 100);
 		
 		
@@ -378,9 +378,9 @@ public class PlayStateScene implements EffectScene {
 	
 	private void death() {
 		
-		BlendingEffectProducer VSDeathFade = new BlendingEffectProducer(ApplicationConstants.VS, Color.BLACK, 1000);
-		BlendingEffectProducer NCDeathFade = new BlendingEffectProducer(ApplicationConstants.NC, Color.BLACK, 1000);
-		BlendingEffectProducer TRDeathFade = new BlendingEffectProducer(ApplicationConstants.TR, Color.BLACK, 1000);
+		BlendingEffectProducer VSDeathFade = new BlendingEffectProducer(Persisted.getInstance().VS, Color.BLACK, 1000);
+		BlendingEffectProducer NCDeathFade = new BlendingEffectProducer(Persisted.getInstance().NC, Color.BLACK, 1000);
+		BlendingEffectProducer TRDeathFade = new BlendingEffectProducer(Persisted.getInstance().TR, Color.BLACK, 1000);
 		FadingEffectProducer fadeout = new FadingEffectProducer(Color.BLACK, 500);
 		TimedEffectProducer black = new TimedEffectProducer(Color.BLACK, 1000);
 		

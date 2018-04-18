@@ -7,6 +7,7 @@ import net.ximias.effect.producers.FadingEffectProducer;
 import net.ximias.network.CurrentPlayer;
 import net.ximias.network.Ps2EventStreamingConnection;
 import net.ximias.persistence.ApplicationConstants;
+import net.ximias.persistence.Persisted;
 import net.ximias.psEvent.condition.*;
 import net.ximias.psEvent.handler.GlobalHandler;
 import net.ximias.psEvent.handler.Ps2EventType;
@@ -49,11 +50,11 @@ class PlayStateBackground {
 	}
 	
 	private void init(){
-		esamir = new EventEffectProducer(background(ApplicationConstants.ESAMIR),"background");
-		amerish = new EventEffectProducer(background(ApplicationConstants.AMERISH),"background");
-		indar = new EventEffectProducer(background(ApplicationConstants.INDAR),"background");
-		hossin = new EventEffectProducer(background(ApplicationConstants.HOSSIN),"background");
-		EventEffectProducer other = new EventEffectProducer(ApplicationConstants.OTHER, "background");
+		esamir = new EventEffectProducer(background(Persisted.getInstance().ESAMIR),"background");
+		amerish = new EventEffectProducer(background(Persisted.getInstance().AMERISH),"background");
+		indar = new EventEffectProducer(background(Persisted.getInstance().INDAR),"background");
+		hossin = new EventEffectProducer(background(Persisted.getInstance().HOSSIN),"background");
+		EventEffectProducer other = new EventEffectProducer(Persisted.getInstance().OTHER, "background");
 		
 		SingleCondition isEsamir = new SingleCondition(Condition.EQUALS, new EventData("zone_id", ConditionDataSource.PLAYER), new EventData(String.valueOf(ApplicationConstants.ESAMIR_ID), ConditionDataSource.CONSTANT));
 		SingleCondition isAmerish = new SingleCondition(Condition.EQUALS, new EventData("zone_id", ConditionDataSource.PLAYER), new EventData(String.valueOf(ApplicationConstants.AMERISH_ID), ConditionDataSource.CONSTANT));
@@ -81,10 +82,10 @@ class PlayStateBackground {
 	
 	
 	private void recalculateBackground() {
-		esamir.setColor(background(ApplicationConstants.ESAMIR));
-		amerish.setColor(background(ApplicationConstants.AMERISH));
-		indar.setColor(background(ApplicationConstants.INDAR));
-		hossin.setColor(background(ApplicationConstants.HOSSIN));
+		esamir.setColor(background(Persisted.getInstance().ESAMIR));
+		amerish.setColor(background(Persisted.getInstance().AMERISH));
+		indar.setColor(background(Persisted.getInstance().INDAR));
+		hossin.setColor(background(Persisted.getInstance().HOSSIN));
 		logoutFade.setColor(Color.BLACK.deriveColor(0,1,1,1.0-backgroundBrightness));
 		updateHandlers();
 	}

@@ -66,9 +66,9 @@ public class CurrentPlayer {
 	}
 	
 	public Color getFactionColor(){
-		if (getValue("faction_id").equals(String.valueOf(ApplicationConstants.VS_ID))) return ApplicationConstants.VS;
-		if (getValue("faction_id").equals(String.valueOf(ApplicationConstants.NC_ID))) return ApplicationConstants.NC;
-		if (getValue("faction_id").equals(String.valueOf(ApplicationConstants.TR_ID))) return ApplicationConstants.TR;
+		if (getValue("faction_id").equals(String.valueOf(ApplicationConstants.VS_ID))) return Persisted.getInstance().VS;
+		if (getValue("faction_id").equals(String.valueOf(ApplicationConstants.NC_ID))) return Persisted.getInstance().NC;
+		if (getValue("faction_id").equals(String.valueOf(ApplicationConstants.TR_ID))) return Persisted.getInstance().TR;
 		return ApplicationConstants.MISSING;
 		
 		

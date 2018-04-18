@@ -258,7 +258,9 @@ public class KeyboardTab {
 		keybindFileSelect.setDisable(false);
 		//searchingProgress.setVisible(false);
 		manualSearch.setDisable(false);
+		setDisabled(false);
 		keybindFileSelect.getSelectionModel().select(Persisted.getInstance().LAST_SELECTED_INPUT_PROFILE);
+		if (keybindFileSelect.getSelectionModel().getSelectedItem() == null) keybindFileSelect.getSelectionModel().selectFirst();
 	}
 	
 	/**
@@ -322,7 +324,7 @@ public class KeyboardTab {
 		else setPsDirectories(dirs);
 		setupTableView();
 		addActionChoice.valueProperty().addListener((observable, oldValue, newValue) -> addActionButton.setDisable(newValue==null));
-		
+		setDisabled(true);
 		//emulator = new KeyboardEmulator(emulationCanvas, new KeyboardEffectContainer(controller.getEffectContainer(), 21,7));
 	}
 	

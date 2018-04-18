@@ -30,16 +30,33 @@ public class Persisted implements Serializable {
 		APPLICATION_HEIGHT = 450;
 		PLANETSIDE_INPUT_PROFILE = new HashSet<>(6);
 		ACTION_COLORING = populateActionColoring();
+		
+		INDAR = new Color(1, 0.8, 0.7, 1.0);
+		ESAMIR = new Color(0.7,0.9,1,1.0);
+		AMERISH = new Color(0.0,0.8,0.4,1.0);
+		HOSSIN = new Color(0.7,0.9,0.1,1.0);
+		OTHER = new Color(1.0,0.85,.75,1.0);
+		VS = new Color(0.4,0.0,1.0,1.0);
+		TR = new Color(0.8,0.0,0.0,1.0);
+		NC = new Color(0.1,0.3,0.9,1.0);
 		return this;
 	}
 	
+	public transient HashMap<String, Color> ACTION_COLORING;
+	public transient Color INDAR;
+	public transient Color ESAMIR;
+	public transient Color AMERISH;
+	public transient Color HOSSIN;
+	public transient Color OTHER;
+	public transient Color VS;
+	public transient Color TR;
+	public transient Color NC;
 	public String LAST_LOGIN;
 	public double BACKGROUND_BRIGHTNESS_SLIDER;
 	public double BACKGROUND_TRANSPARENCY_SLIDER;
 	public double EFFECT_TRANSPARENCY_SLIDER;
 	public double APPLICATION_WIDTH;
 	public double APPLICATION_HEIGHT;
-	public transient HashMap<String, Color> ACTION_COLORING;
 	public HashSet<File> PLANETSIDE_INPUT_PROFILE;
 	public File LAST_SELECTED_INPUT_PROFILE;
 	
@@ -48,13 +65,29 @@ public class Persisted implements Serializable {
 		HashMap<String, PersistColor> actionColorPersist = (HashMap<String, PersistColor>) in.readObject();
 		ACTION_COLORING = new HashMap<>();
 		actionColorPersist.forEach((s, persistColor) -> ACTION_COLORING.put(s, persistColor.toColor()));
+		INDAR = ((PersistColor)in.readObject()).toColor();
+		ESAMIR =  ((PersistColor) in.readObject()).toColor();
+		AMERISH = ((PersistColor) in.readObject()).toColor();
+		HOSSIN =  ((PersistColor) in.readObject()).toColor();
+		OTHER =   ((PersistColor) in.readObject()).toColor();
+		VS = ((PersistColor) in.readObject()).toColor();
+		TR = ((PersistColor) in.readObject()).toColor();
+		NC = ((PersistColor) in.readObject()).toColor();
 	}
 	
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException{
 		out.defaultWriteObject();
 		HashMap<String, PersistColor> actionColorPersist = new HashMap<>();
-		ACTION_COLORING.forEach((key, value) -> actionColorPersist.put(key, new PersistColor(value.getRed(), value.getGreen(), value.getBlue(), value.getOpacity())));
+		ACTION_COLORING.forEach((key, value) -> actionColorPersist.put(key, PersistColor.getPersistColor(value)));
 		out.writeObject(actionColorPersist);
+		out.writeObject(PersistColor.getPersistColor(INDAR));
+		out.writeObject(PersistColor.getPersistColor(ESAMIR));
+		out.writeObject(PersistColor.getPersistColor(AMERISH));
+		out.writeObject(PersistColor.getPersistColor(HOSSIN));
+		out.writeObject(PersistColor.getPersistColor(OTHER));
+		out.writeObject(PersistColor.getPersistColor(VS));
+		out.writeObject(PersistColor.getPersistColor(TR));
+		out.writeObject(PersistColor.getPersistColor(NC));
 	}
 	
 	/**
