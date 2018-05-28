@@ -5,8 +5,9 @@ import com.philips.lighting.hue.sdk.wrapper.entertainment.animation.SequenceAnim
 import com.philips.lighting.hue.sdk.wrapper.entertainment.animation.TweenAnimation;
 import com.philips.lighting.hue.sdk.wrapper.entertainment.effect.Effect;
 import com.philips.lighting.hue.sdk.wrapper.entertainment.effect.LightIteratorEffect;
+import net.ximias.Hue.hueEffects.HueEffect;
 
-public class LightIteratorExample implements HueEffect {
+public class LightIteratorExample implements HueExampleEffect {
 	private static final int OFFSET = 150;
 	private static final int FADE_IN = 100;
 	private static final int FADE_OUT = 100;

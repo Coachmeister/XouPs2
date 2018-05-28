@@ -31,7 +31,7 @@ public interface ApplicationConstants {
 	JSONObject EMPTY_JSON = new JSONObject("{}");
 	
 	String VERSION_NAME = "Beta";
-	String VERSION = "0.1.5";
+	String VERSION = "0.1.6";
 	
 	String INTRO_TEXT = "Welcome to Xou "+VERSION_NAME+".\n" +
 	                    "This is an early version of the application. Expect kinks, bugs and sharp edges.\n" +
@@ -53,13 +53,13 @@ public interface ApplicationConstants {
 			"Development has been started on the following:",
 			"KeyboardTab effects. Planned support for Logitech, probably Razer chroma, and maybe Steelseries.",
 			"Possibly keyboard-specific effects, like ripple or waves. Though those would not render correctly on the Hue",
+			"Philips Hue Entertainment support",
 			"On the to-do:",
 			"Finding a name that is not the working title of the project (Feel free to send in ideas)",
 			"Incorporating character select into the nice user interface (This is complicated for technical reasons)",
 			"Individual continent properties and the option to modify continent ambient colors",
 			"Effect settings window where effects can be modified and created from scratch",
 			"Probably a tutorial for the above. PlanetSide2 events are quirky.", //Effect for getting killed with The Commissioner
-			"Philips Hue Entertainment support",
 			"Multiple skins for the application interface",
 			"Shareable effect and color settings.",
 			"Effect profiles, so multiple behaviours can be saved and switched between."

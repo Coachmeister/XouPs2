@@ -5,8 +5,9 @@ import com.philips.lighting.hue.sdk.wrapper.entertainment.Location;
 import com.philips.lighting.hue.sdk.wrapper.entertainment.animation.ConstantAnimation;
 import com.philips.lighting.hue.sdk.wrapper.entertainment.effect.Effect;
 import com.philips.lighting.hue.sdk.wrapper.entertainment.effect.MultiChannelEffect;
+import net.ximias.Hue.hueEffects.HueEffect;
 
-public class MultiChannelEffectExample implements HueEffect{
+public class MultiChannelEffectExample implements HueExampleEffect {
 	
 	@Override
 	public Effect getEffect() {

@@ -24,7 +24,7 @@ public class BlendingEffectProducer extends EffectProducer {
 	
 	@Override
 	public Effect build() {
-		return new TimedColorAnimation(startColor, endColor, duration);
+		return new TimedColorAnimation(startColor, endColor, duration, this);
 	}
 	
 	@Override
@@ -40,16 +40,30 @@ public class BlendingEffectProducer extends EffectProducer {
 		h.put("endColor", endColor.toString());
 		return h;
 	}
+	
+	public Color getStartColor() {
+		return startColor;
+	}
+	
+	public Color getEndColor() {
+		return endColor;
+	}
+	
+	public int getDuration() {
+		return (int) duration;
+	}
 }
 class TimedColorAnimation implements Effect{
 	private final Color startColor;
 	private final Color endColor;
 	private final long duration;
 	private final long startTime;
+	private final EffectProducer parent;
 	
-	TimedColorAnimation(Color startColor, Color endColor, long duration_milliseconds) {
+	TimedColorAnimation(Color startColor, Color endColor, long duration_milliseconds, EffectProducer parent) {
 		this.startColor = startColor;
 		this.endColor = endColor;
+		this.parent = parent;
 		duration = duration_milliseconds;
 		startTime = System.currentTimeMillis();
 	}
@@ -67,5 +81,10 @@ class TimedColorAnimation implements Effect{
 	@Override
 	public boolean hasIntensity() {
 		return true;
+	}
+	
+	@Override
+	public EffectProducer getProducer() {
+		return parent;
 	}
 }

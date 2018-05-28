@@ -24,6 +24,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import net.ximias.Hue.HueGameState;
+import net.ximias.Hue.hueEffects.HueEffect;
 import net.ximias.gui.MainController;
 import net.ximias.Hue.EffectExamples;
 import net.ximias.Hue.examples.*;
@@ -49,7 +51,8 @@ public class HueTab {
 	public CheckBox hueEnable;
 	public ToggleButton startGameEffectsButton;
 	
-	private static final String TAG = "HueQuickStartApp";
+	private HueGameState gameState;
+	private MainController mainController;
 	
 	private static final int MAX_HUE = 65535;
 	private static final int MAX_BRIGHTNESS = 254;
@@ -84,6 +87,7 @@ public class HueTab {
 		System.loadLibrary("huesdk");
 	}
 	public void injectMainController(MainController mainController) {
+		this.mainController = mainController;
 		File data = new File("data");
 		data.mkdir();
 		Persistence.setStorageLocation(data.getAbsolutePath(), "HueQuickStart");
@@ -122,7 +126,9 @@ public class HueTab {
 	private void toggleGameEffects(ActionEvent actionEvent) {
 		if (startGameEffectsButton.isSelected()){
 			updateUI(UIState.GameState, "Entertainment game effects enabled!");
+			gameState = new HueGameState(entertainment, mainController.getEffectContainer());
 		}else{
+			gameState.endGameState();
 			updateUI(UIState.EntertainmentReady, "Connected, entertainment ready.");
 		}
 	}
@@ -442,7 +448,9 @@ public class HueTab {
 		entertainment.registerObserver(new Observer() {
 			@Override
 			public void onMessage(Message message) {
-				logger.info("Entertainment message: " + message.getType() + " " + message.getUserMessage());
+				if (!message.getUserMessage().isEmpty()){
+					logger.info("Entertainment message: " + message.getType() + " " + message.getUserMessage());
+				}
 			}
 		}, Message.Type.RENDER);
 		
@@ -492,7 +500,7 @@ public class HueTab {
 		playTestEffect(new LightSourceEffectExample());
 	}
 	
-	private void playTestEffect(HueEffect effect){
+	private void playTestEffect(HueExampleEffect effect){
 		effectExamples.play(effect);
 		updateUI(UIState.EntertainmentRunning, "Entertainment test effect running.");
 	}
@@ -571,7 +579,7 @@ public class HueTab {
 					hueEnable.setDisable(false);
 					bridgeIpTextView.setVisible(true);
 					randomizeLightsButton.setDisable(false);
-					explosionEffectButton.setDisable(false);
+					explosionEffectButton.setDisable(true);
 					bridgeDiscoveryButton.setDisable(false);
 					break;
 				case EntertainmentReady:

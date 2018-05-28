@@ -4,8 +4,9 @@ import com.philips.lighting.hue.sdk.wrapper.entertainment.Color;
 import com.philips.lighting.hue.sdk.wrapper.entertainment.Location;
 import com.philips.lighting.hue.sdk.wrapper.entertainment.effect.Effect;
 import com.philips.lighting.hue.sdk.wrapper.entertainment.effect.ExplosionEffect;
+import net.ximias.Hue.hueEffects.HueEffect;
 
-public class ExplosionEffectExample implements HueEffect {
+public class ExplosionEffectExample implements HueExampleEffect {
 	@Override
 	public Effect getEffect() {
 		Color red = new Color(1.0, 0.0, 0.0);

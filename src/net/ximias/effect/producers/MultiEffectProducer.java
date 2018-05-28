@@ -15,7 +15,7 @@ public class MultiEffectProducer extends EffectProducer {
 	
 	@Override
 	public Effect build() {
-		return new MultiEffect(effects);
+		return new MultiEffect(effects, this);
 	}
 	
 	@Override
@@ -23,6 +23,10 @@ public class MultiEffectProducer extends EffectProducer {
 		for (EffectProducer effect : effects) {
 			effect.setColor(color);
 		}
+	}
+	
+	public EffectProducer[] getEffects() {
+		return effects;
 	}
 	
 	@Override
@@ -34,9 +38,11 @@ class MultiEffect implements Effect{
 	private final EffectProducer[] effects;
 	private Effect current;
 	private int count;
+	private EffectProducer parent;
 	
-	public MultiEffect(EffectProducer[] effects) {
+	public MultiEffect(EffectProducer[] effects, EffectProducer parent) {
 		this.effects = effects;
+		this.parent = parent;
 		count = 0;
 		current = effects[0].build();
 	}
@@ -57,5 +63,10 @@ class MultiEffect implements Effect{
 	@Override
 	public boolean hasIntensity() {
 		return true;
+	}
+	
+	@Override
+	public EffectProducer getProducer() {
+		return parent;
 	}
 }

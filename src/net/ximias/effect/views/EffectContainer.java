@@ -1,10 +1,7 @@
 package net.ximias.effect.views;
 
 import javafx.scene.paint.Color;
-import net.ximias.effect.Effect;
-import net.ximias.effect.EffectView;
-import net.ximias.effect.FixedEffect;
-import net.ximias.effect.Renderer;
+import net.ximias.effect.*;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -27,6 +24,7 @@ public class EffectContainer implements EffectView {
 	private final Timer resumeTimer = new Timer("Resume rendering timer", true);
 	private TimerTask resumeTask = resumeTask();
 	private static final long STANDARD_DELAY_TIME = 60_000L;
+	private final ArrayList<EffectAddListener> effectAddListeners = new ArrayList<>();
 	
 	
 	private EffectContainer() {
@@ -78,6 +76,7 @@ public class EffectContainer implements EffectView {
 		if (effect.getColor().getOpacity() == 0) {
 			logger.info("Added effect is fully transparent");
 		}
+		effectAddListeners.forEach(it->it.onEffectAdded(effect));
 	}
 	
 	private void resetTimer() {
@@ -151,5 +150,20 @@ public class EffectContainer implements EffectView {
 	
 	public void setEffectIntensity(double effectIntensity) {
 		this.effectIntensity = effectIntensity;
+	}
+	
+	/**
+	 * Adds an effectListener object.
+	 * The added object will immediately be notified of all added effects.
+	 * This works retroactively on all currently running effects as well.
+	 * @param listener the listener to add.
+	 */
+	public void addEffectAddListener(EffectAddListener listener){
+		effectAddListeners.add(listener);
+		effects.forEach(it-> listener.onEffectAdded(it));
+	}
+	
+	public void removeEffectListener(EffectAddListener listener){
+		effectAddListeners.remove(listener);
 	}
 }

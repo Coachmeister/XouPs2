@@ -46,4 +46,6 @@ public interface Effect {
 		}
 		return Color.color(Math.min(r / a, 1.0), Math.min(g / a, 1.0), Math.min(b / a, 1.0));
 	}
+	
+	EffectProducer getProducer();
 }

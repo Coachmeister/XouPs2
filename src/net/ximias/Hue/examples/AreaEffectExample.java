@@ -6,8 +6,9 @@ import com.philips.lighting.hue.sdk.wrapper.entertainment.animation.ConstantAnim
 import com.philips.lighting.hue.sdk.wrapper.entertainment.animation.SequenceAnimation;
 import com.philips.lighting.hue.sdk.wrapper.entertainment.animation.TweenAnimation;
 import com.philips.lighting.hue.sdk.wrapper.entertainment.effect.Effect;
+import net.ximias.Hue.hueEffects.HueEffect;
 
-public class AreaEffectExample implements HueEffect {
+public class AreaEffectExample implements HueExampleEffect {
 	@Override
 	public Effect getEffect() {
 		ConstantAnimation r = new ConstantAnimation(1.0);

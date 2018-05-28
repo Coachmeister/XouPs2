@@ -26,7 +26,7 @@ public class TimedEffectProducer extends EffectProducer {
 	
 	@Override
 	public Effect build() {
-		return new TimedColorEffect(duration, color);
+		return new TimedColorEffect(duration, color, this);
 	}
 	
 	@Override
@@ -41,13 +41,19 @@ public class TimedEffectProducer extends EffectProducer {
 		h.put("color", color.toString());
 		return h;
 	}
+	
+	public int getDuration() {
+		return (int) duration;
+	}
 }
 class TimedColorEffect implements FixedEffect{
 	private final long startTime;
 	private final long duration;
 	protected final Color color;
+	private final EffectProducer parent;
 	
-	TimedColorEffect(long duration_milliseconds, Color color_javafx){
+	TimedColorEffect(long duration_milliseconds, Color color_javafx, EffectProducer parent){
+		this.parent = parent;
 		startTime = System.currentTimeMillis();
 		duration = duration_milliseconds;
 		color = color_javafx;
@@ -60,6 +66,11 @@ class TimedColorEffect implements FixedEffect{
 	@Override
 	public boolean hasIntensity() {
 		return true;
+	}
+	
+	@Override
+	public EffectProducer getProducer() {
+		return parent;
 	}
 	
 	public Color getColor() {

@@ -60,7 +60,7 @@ public class EventEffectProducer extends EffectProducer{
 		}
 		
 		if (ec == null) {
-			ec = new EventColorEffect(color, name);
+			ec = new EventColorEffect(color, name,this);
 			eventEffects.put(name,new WeakReference<>(ec));
 		}else{
 			ec.setColor(color);
@@ -82,9 +82,10 @@ class EventColorEffect implements FixedEffect {
 	private boolean done = false;
 	private Color color;
 	private String name;
-
-	EventColorEffect(Color color_javafx, String name) {
+	private EffectProducer parent;
+	EventColorEffect(Color color_javafx, String name, EffectProducer parent) {
 		color = color_javafx;
+		this.parent = parent;
 		this.name = name;
 	}
 	
@@ -114,6 +115,11 @@ class EventColorEffect implements FixedEffect {
 	@Override
 	public String getName() {
 		return "Constant color. Name: "+name;
+	}
+	
+	@Override
+	public EffectProducer getProducer() {
+		return parent;
 	}
 	
 	@Override
