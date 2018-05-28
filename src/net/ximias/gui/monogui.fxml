@@ -56,10 +56,10 @@
                         <fx:include fx:id="keyboardTab" source="keyboardTab.fxml" />
                      </content>
                   </Tab>
-                  <Tab closable="false" disable="true" text="Philips Hue [N/A]">
-                    <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                    </content>
+                  <Tab closable="false" text="Philips Hue [WIP]">
+                     <content>
+                        <fx:include fx:id="hueTab" source="hue.fxml" />
+                     </content>
                   </Tab>
               </tabs>
             </TabPane>

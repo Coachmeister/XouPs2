@@ -60,6 +60,8 @@ public class MainController extends Application implements Renderer{
 	@FXML
 	private KeyboardTab keyboardTabController;
 	@FXML
+	private HueTab hueTabController;
+	@FXML
 	private TabPane tabPane;
 	@FXML
 	private Circle statusIndicator;
@@ -126,6 +128,7 @@ public class MainController extends Application implements Renderer{
 			setupLogTab();
 			setupTabListener();
 			setupKeyboardTab();
+			setupHueTab();
 			statusIndicatorController.injectMainController(this);
 			statusIndicatorController.injectComponents(statusIndicator, statusRectangle, statusText);
 			statusIndicatorController.addStatus("No issues detected!", StatusSeverity.NOTHING);
@@ -153,6 +156,10 @@ public class MainController extends Application implements Renderer{
 	
 	private void setupKeyboardTab() {
 		keyboardTabController.injectMainController(this);
+	}
+	
+	private void setupHueTab() {
+		hueTabController.injectMainController(this);
 	}
 	
 	private void setupEffectViewTab() {

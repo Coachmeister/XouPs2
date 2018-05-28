@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.ximias.gui.tabs.HueTab">
+   <children>
+      <VBox prefHeight="400.0" prefWidth="600.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <HBox spacing="5.0" VBox.vgrow="NEVER">
+               <children>
+                  <Label text="Status: " />
+                  <Label fx:id="statusTextView" text="status" HBox.hgrow="ALWAYS" />
+                  <Separator orientation="VERTICAL" prefHeight="0.0" />
+                  <Label text="Bridge IP: " />
+                  <Label fx:id="bridgeIpTextView" text="bridgeip" HBox.hgrow="ALWAYS" />
+                  <Separator visible="false" HBox.hgrow="ALWAYS" />
+                  <CheckBox fx:id="hueEnable" alignment="BOTTOM_LEFT" mnemonicParsing="false" onAction="#toggleEnable" text="Enable" HBox.hgrow="NEVER" />
+               </children>
+            </HBox>
+            <HBox spacing="2.0" VBox.vgrow="NEVER">
+               <children>
+                  <ChoiceBox fx:id="bridgeDiscoveryListView" prefWidth="150.0" />
+                  <Button fx:id="bridgeDiscoverySelect" mnemonicParsing="false" onAction="#onItemClick" text="Select" />
+                  <Separator orientation="VERTICAL" prefHeight="0.0" />
+                  <Button fx:id="randomizeLightsButton" mnemonicParsing="false" onAction="#randomizeLights" text="Randomize lights" />
+                  <Separator orientation="VERTICAL" prefHeight="0.0" />
+                  <Button fx:id="bridgeDiscoveryButton" mnemonicParsing="false" onAction="#startBridgeDiscovery" text="Bridge Discovery" />
+               </children>
+            </HBox>
+            <HBox spacing="2.0" VBox.vgrow="NEVER">
+               <children>
+                  <Button fx:id="explosionEffectButton" mnemonicParsing="false" onAction="#explosionEffect" text="Explosion" />
+                  <Separator orientation="VERTICAL" prefHeight="0.0" />
+                  <Button fx:id="areaEffectButton" mnemonicParsing="false" onAction="#areaEffect" text="Area" />
+                  <Separator orientation="VERTICAL" prefHeight="0.0" />
+                  <Button fx:id="alertEffectButton" mnemonicParsing="false" onAction="#alertEffect" text="Iterative Alert" />
+                  <Separator orientation="VERTICAL" prefHeight="0.0" />
+                  <Button fx:id="multiChannelButton" mnemonicParsing="false" onAction="#multiChannelEffect" text="MultiChannel" />
+                  <Separator orientation="VERTICAL" prefHeight="0.0" />
+                  <Button fx:id="lightSourceButton" mnemonicParsing="false" onAction="#lightSourceEffect" text="Light source Alert" />
+               </children>
+            </HBox>
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <ToggleButton fx:id="startGameEffectsButton" mnemonicParsing="false" onAction="#toggleGameEffects" prefWidth="10000.0" text="Start Game Effects" HBox.hgrow="ALWAYS">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </ToggleButton>
+               </children>
+            </HBox>
+            <ImageView fx:id="pushlinkImage" fitHeight="349.0" fitWidth="385.0" pickOnBounds="true" preserveRatio="true" VBox.vgrow="ALWAYS">
+               <image>
+                  <Image url="@../../../../res/pushlink_image.png" />
+               </image>
+            </ImageView>
+         </children>
+      </VBox>
+   </children>
+   <padding>
+      <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+   </padding>
+</AnchorPane>

@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="huecppsdk-wrapper-javadoc">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/Hue/huecppsdk-wrapper.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/lib/Hue/huecppsdk-wrapper-javadoc.jar!/" />
+    </JAVADOC>
+    <NATIVE>
+      <root url="file://$PROJECT_DIR$/lib/Hue" />
+    </NATIVE>
+    <SOURCES />
+  </library>
+</component>
