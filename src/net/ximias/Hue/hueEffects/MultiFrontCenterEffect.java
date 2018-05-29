@@ -5,6 +5,8 @@ import com.philips.lighting.hue.sdk.wrapper.entertainment.animation.SequenceAnim
 import com.philips.lighting.hue.sdk.wrapper.entertainment.effect.AreaEffect;
 import com.philips.lighting.hue.sdk.wrapper.entertainment.effect.Effect;
 
+import java.util.logging.Logger;
+
 public class MultiFrontCenterEffect implements AreaEffectProducer {
 	private int duration;
 	private double opacityMultiplyer =1;
@@ -13,13 +15,11 @@ public class MultiFrontCenterEffect implements AreaEffectProducer {
 	private SequenceAnimation b;
 	private SequenceAnimation a;
 	private AreaEffectProducer[] effects;
+	private final Logger logger = Logger.getLogger(getClass().getName());
 	
 	public MultiFrontCenterEffect(AreaEffectProducer[] effects) {
 		this.effects = effects;
-		r = new SequenceAnimation();
-		g = new SequenceAnimation();
-		b = new SequenceAnimation();
-		a = new SequenceAnimation();
+		logger.fine("Initializing MultiFrontEffect with size of: "+effects.length);
 		
 		calculateValues(effects);
 		for (AreaEffectProducer effect : effects) {
@@ -28,6 +28,10 @@ public class MultiFrontCenterEffect implements AreaEffectProducer {
 	}
 	
 	private void calculateValues(AreaEffectProducer[] effects) {
+		r = new SequenceAnimation();
+		g = new SequenceAnimation();
+		b = new SequenceAnimation();
+		a = new SequenceAnimation();
 		for (int i = 0; i < effects.length; i++) {
 			effects[i].adjustOpacity(opacityMultiplyer);
 			AreaEffect effect = (AreaEffect) effects[i].getEffect();
@@ -35,15 +39,18 @@ public class MultiFrontCenterEffect implements AreaEffectProducer {
 			g.append(effect.getGreenAnimation(), "g" + i);
 			b.append(effect.getBlueAnimation(), "b" + i);
 			a.append(effect.getOpacityAnimation(), "a" + i);
+			logger.finer("Opacity #"+i+": "+effect.getOpacityAnimation().getValue());
 		}
+		logger.fine("R animation count: "+r.getAnimationCount());
 	}
 	
 	@Override
 	public Effect getEffect() {
 		AreaEffect effect = new AreaEffect();
-		effect.setArea(Area.Predefine.Front);
+		
 		effect.setColorAnimation(r, g, b);
 		effect.setOpacityAnimation(a);
+		effect.setArea(Area.Predefine.Front);
 		return effect;
 	}
 	

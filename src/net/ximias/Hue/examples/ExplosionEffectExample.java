@@ -4,25 +4,38 @@ import com.philips.lighting.hue.sdk.wrapper.entertainment.Color;
 import com.philips.lighting.hue.sdk.wrapper.entertainment.Location;
 import com.philips.lighting.hue.sdk.wrapper.entertainment.effect.Effect;
 import com.philips.lighting.hue.sdk.wrapper.entertainment.effect.ExplosionEffect;
+import net.ximias.Hue.HueEffectWrapper;
 import net.ximias.Hue.hueEffects.HueEffect;
+import net.ximias.effect.producers.BlendingEffectProducer;
+import net.ximias.effect.producers.FadingEffectProducer;
+import net.ximias.effect.producers.MultiEffectProducer;
 
 public class ExplosionEffectExample implements HueExampleEffect {
+	
+	private HueEffect hueEffect;
+	
+	public ExplosionEffectExample() {
+		javafx.scene.paint.Color ex1 = new javafx.scene.paint.Color(1, 1, 0.3, 1);
+		javafx.scene.paint.Color ex2 = new javafx.scene.paint.Color(1, 0.6, 0, 1);
+		javafx.scene.paint.Color ex3 = new javafx.scene.paint.Color(1, 0.3, 0, 1);
+		
+		BlendingEffectProducer e0 = new BlendingEffectProducer(javafx.scene.paint.Color.WHITE, ex1, 100);
+		BlendingEffectProducer e1 = new BlendingEffectProducer(ex1, ex2, 100);
+		BlendingEffectProducer e2 = new BlendingEffectProducer(ex2, ex3, 100);
+		FadingEffectProducer e3 = new FadingEffectProducer(ex3, 1000);
+		
+		MultiEffectProducer explosion = new MultiEffectProducer(e0, e1, e2, e1, e2, e1, e2, e3);
+		HueEffectWrapper wrapper = new HueEffectWrapper();
+		hueEffect = wrapper.getAsHueEffect(explosion.build());
+	}
+	
 	@Override
 	public Effect getEffect() {
-		Color red = new Color(1.0, 0.0, 0.0);
-		Location center = new Location(0.0, 0.0);
-		final double duration = 2000;
-		double radius = 0.7;
-		double radiusExpansionTime = 100;
-		double intensityExpansionTime = 50;
-		
-		ExplosionEffect effect = new ExplosionEffect();
-		effect.prepareEffect(red, center, duration, radius, radiusExpansionTime, intensityExpansionTime);
-		return effect;
+		return hueEffect.getEffect();
 	}
 	
 	@Override
 	public int getDuration() {
-		return 2000;
+		return hueEffect.getDuration();
 	}
 }

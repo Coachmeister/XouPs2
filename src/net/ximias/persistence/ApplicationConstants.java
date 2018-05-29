@@ -3,6 +3,8 @@ package net.ximias.persistence;
 import javafx.scene.paint.Color;
 import org.json.JSONObject;
 
+import java.util.GregorianCalendar;
+
 /**
  * Contains application-wide constants.
  */
@@ -43,8 +45,8 @@ public interface ApplicationConstants {
 	                    "\n" +
 	                    "Have fun on the continents of Auraxis. Now with ambient lighting.\n" +
 	                    "~Ximias.";
-	long EXP_DATE = 1_530_396_060_000L;//new GregorianCalendar(2018,6,1,0,1).getTime().getTime()
-	String EXP_MESSAGE = "This is a friendly reminder that this beta test is long over.\n" +
+	long EXP_DATE = new GregorianCalendar(2018,9,1,0,1).getTime().getTime();
+	String EXP_MESSAGE = "This is a friendly reminder that your version is pretty old by now.\n" +
 	                     "Updates and fixes has been made, so there is no longer a reason to run this old, archaic monstrosity.\n" +
 	                     "Me being me, I'm not going to stop you.. -I'll assume you have your reasons.\n" +
 	                     "~Ximias.";

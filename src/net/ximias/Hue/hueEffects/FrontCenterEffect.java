@@ -24,12 +24,12 @@ public class FrontCenterEffect implements AreaEffectProducer {
 	@Override
 	public Effect getEffect() {
 		AreaEffect effect = new AreaEffect();
-		TweenAnimation r = new TweenAnimation(startColor.getRed(), endColor.getRed(),duration, TweenType.Linear);
-		TweenAnimation g = new TweenAnimation(startColor.getGreen(), endColor.getGreen(),duration, TweenType.Linear);
-		TweenAnimation b = new TweenAnimation(startColor.getBlue(), endColor.getBlue(),duration, TweenType.Linear);
-		TweenAnimation a = new TweenAnimation(startColor.getOpacity()*opacityMultiplyer, endColor.getOpacity()*opacityMultiplyer, TweenType.Linear);
+		TweenAnimation r = new TweenAnimation(startColor.getRed(), endColor.getRed(), duration, TweenType.Linear);
+		TweenAnimation g = new TweenAnimation(startColor.getGreen(), endColor.getGreen(), duration, TweenType.Linear);
+		TweenAnimation b = new TweenAnimation(startColor.getBlue(), endColor.getBlue(), duration, TweenType.Linear);
+		TweenAnimation a = new TweenAnimation(startColor.getOpacity() * opacityMultiplyer, endColor.getOpacity() * opacityMultiplyer, duration, TweenType.Linear);
 		
-		effect.setColorAnimation(r,g,b);
+		effect.setColorAnimation(r, g, b);
 		effect.setOpacityAnimation(a);
 		effect.setArea(Area.Predefine.Front);
 		

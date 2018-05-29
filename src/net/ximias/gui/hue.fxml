@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.image.*?>
@@ -22,6 +23,15 @@
                   <CheckBox fx:id="hueEnable" alignment="BOTTOM_LEFT" mnemonicParsing="false" onAction="#toggleEnable" text="Enable" HBox.hgrow="NEVER" />
                </children>
             </HBox>
+            <Label text="Photosensitive seizure warning: I like flashing effects.">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </Label>
+            <Separator prefWidth="200.0" />
             <HBox spacing="2.0" VBox.vgrow="NEVER">
                <children>
                   <ChoiceBox fx:id="bridgeDiscoveryListView" prefWidth="150.0" />

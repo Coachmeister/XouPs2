@@ -34,15 +34,22 @@ public class HueEffectWrapper {
 		}if (producer instanceof TimedEffectProducer){
 			return new FrontCenterEffect(effectToWrap.getColor(), effectToWrap.getColor(), ((TimedEffectProducer)producer).getDuration());
 		}if (producer instanceof MultiEffectProducer){
-			MultiEffectProducer mEffect = ((MultiEffectProducer) producer);
-			ArrayList<AreaEffectProducer> effectProducers = new ArrayList<>(mEffect.getEffects().length);
-			for (EffectProducer effectProducer : mEffect.getEffects()) {
-				effectProducers.add((AreaEffectProducer) getAsHueEffect(effectProducer.build()));
-			}
-			return new MultiFrontCenterEffect(effectProducers.toArray(new AreaEffectProducer[0]));
+			return handleMultiEffect((MultiEffectProducer) producer);
 		}
 		logger.severe("Effect not recognized: "+effectToWrap.getProducer().getClass().getSimpleName());
 		return new FrontCenterEffect(Color.TRANSPARENT, Color.TRANSPARENT, 0);
+	}
+	
+	private HueEffect handleMultiEffect(MultiEffectProducer producer) {
+		logger.fine("Wrapping multi effect");
+		MultiEffectProducer mEffect = producer;
+		ArrayList<AreaEffectProducer> effectProducers = new ArrayList<>(mEffect.getEffects().length);
+		
+		for (EffectProducer effectProducer : mEffect.getEffects()) {
+			effectProducers.add((AreaEffectProducer) getAsHueEffect(effectProducer.build()));
+		}
+		logger.fine("MultiEffect size: "+effectProducers.size());
+		return new MultiFrontCenterEffect(effectProducers.toArray(new AreaEffectProducer[0]));
 	}
 	
 }
