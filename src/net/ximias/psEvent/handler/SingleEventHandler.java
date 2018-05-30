@@ -79,7 +79,7 @@ public class SingleEventHandler extends Ps2EventHandler {
 		if (type == Ps2EventType.PLAYER){
 			con.subscribePlayerEvent(eventName, CurrentPlayer.getInstance().getPlayerID(),handler);
 		}else{
-			con.subscribeWorldEvent(eventName,CurrentPlayer.getInstance().getValue("world_id"),handler);
+			con.subscribeWorldEvent(eventName,CurrentPlayer.getInstance().getWorld(),handler);
 		}
 	}
 	

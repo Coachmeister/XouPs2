@@ -36,10 +36,7 @@ class PlayStateBackground {
 	private EventEffectProducer hossin;
 	private FadingEffectProducer logoutFade;
 	
-	private final SingleCondition isPlayer = new SingleCondition(Condition.EQUALS,
-			new EventData(CurrentPlayer.getInstance().getPlayerID(),ConditionDataSource.CONSTANT),
-			new EventData("character_id", ConditionDataSource.EVENT)
-	);
+	private final SingleCondition isPlayer = PlayStateScene.isPlayer;
 	
 	public PlayStateBackground(EffectView view, Ps2EventStreamingConnection connection, double backgroundIntensity, double backgroundBrightness) {
 		this.view = view;

@@ -20,8 +20,8 @@ public class PlayStateScene implements EffectScene {
 	private PlayStateBackground background;
 	private final HashMap<String, String> experienceid = new HashMap<>(4);
 	
-	private final SingleCondition isPlayer = new SingleCondition(Condition.EQUALS,
-			new EventData(CurrentPlayer.getInstance().getPlayerID(), ConditionDataSource.CONSTANT),
+	public static final SingleCondition isPlayer = new SingleCondition(Condition.EQUALS,
+			new EventData("character_id", ConditionDataSource.PLAYER),
 			new EventData("character_id", ConditionDataSource.EVENT)
 	);
 	

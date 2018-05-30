@@ -33,7 +33,6 @@ public class LoginTab {
 	public Button selectionButton;
 	private static final SimpleBooleanProperty init = new SimpleBooleanProperty(true);
 	MainController mainController;
-	Ps2EventStreamingConnection connection = new Ps2EventStreamingConnection();
 	private ArrayList<String> errors = new ArrayList<>(5);
 	private Logger logger = Logger.getLogger(getClass().getName());
 	private Timer nameUpdateTimer = new Timer();
@@ -50,22 +49,36 @@ public class LoginTab {
 				public void run() {
 					Platform.runLater(() -> nameChanged());
 				}
-			},300);
+			}, 300);
 		});
 		selectionButton.setDisable(true);
 		characterChoice.setDisable(true);
 		characterChoice.valueProperty().addListener((observable, oldValue, newValue) -> {
-			selectionButton.setDisable(newValue == null);
-			characterChoice.setDisable(newValue == null);
+			if (newValue == null){
+				selectionButton.setDisable(true);
+				characterChoice.setDisable(true);
+			}else{
+				if (init.get()){
+					characterChoice.setDisable(false);
+					selectionButton.setDisable(false);
+				} else {
+					JSONObject selectedItem = characterChoice.getSelectionModel().getSelectedItem();
+					characterChoice.setDisable(false);
+					selectionButton.setDisable(!(selectedItem != null && !selectedItem.get("character_id").equals(CurrentPlayer.getInstance().getPlayerID())));
+				}
+			}
 		});
 	}
 	
 	public void login(ActionEvent actionEvent) {
+		String character_id = characterChoice.getSelectionModel().getSelectedItem().getString("character_id");
+		selectionButton.setDisable(true);
 		if (init.get()) {
-			CurrentPlayer.initCurrentPlayer(characterChoice.getSelectionModel().getSelectedItem().getString("character_id"));
+			CurrentPlayer.initCurrentPlayer(character_id);
 			init.set(false);
 		} else {
-			CurrentPlayer.getInstance().setPlayerID(characterChoice.getSelectionModel().getSelectedItem().getString("character_id"));
+			CurrentPlayer.getInstance().setPlayerID(character_id);
+			mainController.getEffectData().playerIDUpdated();
 		}
 	}
 	
@@ -83,7 +96,6 @@ public class LoginTab {
 			
 			playerNameList = CensusConnection.listPlayersStartsWith(partlyPlayerName);
 			performCharacterSelection(playerNameList);
-			characterChoice.setDisable(false);
 		} catch (IOException e) {
 			String errorText = "Error occurred when trying to login: " + e;
 			errors.add(errorText);

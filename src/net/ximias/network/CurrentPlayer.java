@@ -78,4 +78,8 @@ public class CurrentPlayer {
 		if (getValue("faction_id").equals(String.valueOf(ApplicationConstants.TR_ID))) return Persisted.getInstance().TR;
 		return ApplicationConstants.MISSING;
 	}
+	
+	public String getWorld() {
+		return getValue("world_id");
+	}
 }

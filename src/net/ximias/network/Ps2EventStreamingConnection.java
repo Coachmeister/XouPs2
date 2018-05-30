@@ -9,6 +9,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -24,13 +25,14 @@ public class Ps2EventStreamingConnection {
 	private final Logger logger = Logger.getLogger(getClass().getName());
 	private final SimpleBooleanProperty isAvailable = new SimpleBooleanProperty(true);
 	private final Ps2BackupPollingService pollingService = new Ps2BackupPollingService(this);
-	
+	private final ArrayList<WebsocketClientEndpoint.MessageHandler> messageHandlers = new ArrayList<>();
 	public Ps2EventStreamingConnection() {
 		try {
 			// open websocket
 			clientEndPoint = new WebsocketClientEndpoint(new URI("wss://push.planetside2.com/streaming?environment=ps2&service-id=s:XouPs2"));
 			
 			clientEndPoint.addMessageHandler(message -> {
+				messageHandlers.forEach(it->it.handleMessage(message));
 				JSONObject response = new JSONObject(message);
 				logger.info(response.toString());
 				
@@ -78,6 +80,43 @@ public class Ps2EventStreamingConnection {
 		}
 	}
 	
+	public void resubscribeAllEvents(){
+		logger.warning("Clearing subscriptions");
+		clientEndPoint.sendMessage(
+				"{" +
+				"\"action\":\"clearSubscribe\"," +
+				"\"all\":\"true\"," +
+				"\"service\":\"event\"" +
+				"}"
+		);
+		addMessageHandler(new WebsocketClientEndpoint.MessageHandler() {
+			@Override
+			public void handleMessage(String message) {
+				JSONObject response = new JSONObject(message);
+				if (response.has("subscription") && response.getJSONObject("subscription").getInt("characterCount") == 0) {
+					removeMessageHandlers(this);
+					logger.warning("Subscriptions cleared");
+					ArrayList<ArrayList<Ps2EventHandler>> eventsToSubscribe = new ArrayList<>();
+					eventsToSubscribe.addAll(subscribedEvents.values());
+					eventsToSubscribe.add(globalHandlers);
+					subscribedEvents.clear();
+					globalHandlers.clear();
+					eventsIds.clear();
+					eventsToSubscribe.forEach(it -> it.forEach(that -> that.register(Ps2EventStreamingConnection.this)));
+				}
+			}
+		});
+		
+	}
+	
+	private void addMessageHandler(WebsocketClientEndpoint.MessageHandler messageHandler) {
+		messageHandlers.add(messageHandler);
+	}
+	
+	public void removeMessageHandlers(WebsocketClientEndpoint.MessageHandler messageHandler){
+	    messageHandlers.remove(messageHandler);
+	}
+	
 	/**
 	 * Subscribe to a player centric event in the streaming API.
 	 * SIDE EFFECT! SUBSCRIBING TO THE SAME EVENT NAME MULTIPLE TIMES, ONLY APPLIES TO THE FIRST PLAYER ID
@@ -110,6 +149,7 @@ public class Ps2EventStreamingConnection {
 				"\"service\":\"event\"," +
 				"\"action\":\"subscribe\"," +
 				"\"characters\":[\"" + playerId + "\"]," +
+				"\"worlds\":[\"" + CurrentPlayer.getInstance().getWorld() + "\"]," +
 				"\"eventNames\":[\"" + eventName + "\"]" +
 				",\"logicalAndCharactersWithWorlds\":true" +
 				"}"

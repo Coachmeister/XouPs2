@@ -1,5 +1,6 @@
 package net.ximias.network;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.logging.Logger;
 import javax.swing.*;
@@ -85,6 +86,14 @@ public class WebsocketClientEndpoint {
 	 */
 	public void sendMessage(String message) {
 		this.userSession.getAsyncRemote().sendText(message);
+	}
+	
+	public void sendBlockingMessage(String message){
+		try {
+			this.userSession.getBasicRemote().sendText(message);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**

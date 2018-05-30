@@ -69,4 +69,8 @@ public class EffectData {
 	public void updateBackground() {
 		scene.updateBackground();
 	}
+	
+	public void playerIDUpdated() {
+		connection.resubscribeAllEvents();
+	}
 }
