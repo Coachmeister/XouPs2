@@ -91,7 +91,7 @@ public class Properties {
 				oldZone = Integer.valueOf(CurrentPlayer.getInstance().getValue("zone_id"));
 			}
 			CurrentPlayer.getInstance().setZoneId(selections.get(newValue));
-			mainController.getEffectScene().updateBackground();
+			mainController.getEffectData().updateBackground();
 		});
 		
 		backgroundIntensitySlider.setValue(Persisted.getInstance().BACKGROUND_TRANSPARENCY_SLIDER);
@@ -109,14 +109,14 @@ public class Properties {
 		persisted.BACKGROUND_TRANSPARENCY_SLIDER = backgroundIntensitySlider.getValue();
 		persisted.BACKGROUND_BRIGHTNESS_SLIDER = backgroundBrightnessSlider.getValue();
 		mainController.getEffectContainer().setEffectIntensity(effectIntensitySlider.getValue());
-		mainController.getEffectScene().intensityChanged(backgroundBrightnessSlider.getValue(),backgroundIntensitySlider.getValue());
+		mainController.getEffectData().intensityChanged(backgroundBrightnessSlider.getValue(),backgroundIntensitySlider.getValue());
 	}
 	
 	public void onTabChange(int newValue){
 		if (newValue != 1 && worldWasModified) {
 			worldWasModified = false;
 			CurrentPlayer.getInstance().setZoneId(oldZone);
-			mainController.getEffectScene().updateBackground();
+			mainController.getEffectData().updateBackground();
 			setSelectionToCurrentZone(selections);
 		}
 	}

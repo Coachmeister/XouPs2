@@ -153,6 +153,10 @@ public class Ps2EventStreamingConnection {
 		);
 	}
 	
+	public void removeEvent(Ps2EventHandler ps2EventHandler) {
+		subscribedEvents.values().forEach(it->it.remove(ps2EventHandler));
+	}
+	
 	public void registerGlobalEventListener(Ps2EventHandler globalHandler) {
 		logger.fine("Global handler added: " + globalHandlers.size());
 		globalHandlers.remove(globalHandler);

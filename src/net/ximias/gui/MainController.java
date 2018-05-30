@@ -12,7 +12,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.RadialGradient;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -23,9 +22,8 @@ import net.ximias.effect.Renderer;
 import net.ximias.effect.views.EffectContainer;
 import net.ximias.gui.guiElements.StatusIndicator;
 import net.ximias.gui.tabs.*;
-import net.ximias.effect.views.scenes.*;
+import net.ximias.gui.tabs.editor.datastructures.EffectData;
 import net.ximias.logging.WebLogAppender;
-import net.ximias.network.Ps2EventStreamingConnection;
 import net.ximias.persistence.ApplicationConstants;
 import net.ximias.persistence.Persisted;
 
@@ -42,8 +40,6 @@ public class MainController extends Application implements Renderer{
 	private static final Logger PROJECT_LEVEL_LOGGER = Logger.getLogger("net.ximias");
 	private static final WebLogAppender webLogAppender = new WebLogAppender();
 	private final EffectContainer effectContainer = new EffectContainer(ApplicationConstants.DEFAULT_EFFECT_INTENSITY, this);
-	private final Ps2EventStreamingConnection streamingConnection = new Ps2EventStreamingConnection();
-	private final PlayStateScene scene = new PlayStateScene(effectContainer, streamingConnection);
 	private AnimationTimer animationTimer;
 	private Logger logger = Logger.getLogger(getClass().getName());
 	private Rectangle statusArea;
@@ -62,6 +58,10 @@ public class MainController extends Application implements Renderer{
 	@FXML
 	private HueTab hueTabController;
 	@FXML
+	private EffectEditorTab effectEditorTabController;
+	@FXML
+	private LoginTab loginTabController;
+	@FXML
 	private TabPane tabPane;
 	@FXML
 	private Circle statusIndicator;
@@ -69,7 +69,22 @@ public class MainController extends Application implements Renderer{
 	private Rectangle statusRectangle;
 	@FXML
 	private Text statusText;
+	@FXML
+	private Tab effectViewT;
+	@FXML
+	private Tab propertiesT;
+	@FXML
+	private Tab logT;
+	@FXML
+	private Tab featuresT;
+	@FXML
+	private Tab keyboardT;
+	@FXML
+	private Tab hueT;
+	@FXML
+	private Tab editorT;
 	
+	private EffectData effectData;
 	
 	public static void main(String[] args) {
 		initLogger();
@@ -122,18 +137,33 @@ public class MainController extends Application implements Renderer{
 					animateFrame();
 				}
 			};
-			setupEffectViewTab();
-			setupPreviewTab();
+			loginTabController.initProperty().addListener((observable, oldValue, newValue) -> {
+				if (!newValue){
+					onLogin();
+				}
+			});
+			bindTabToInit(effectViewT);
+			bindTabToInit(propertiesT);
+			bindTabToInit(editorT);
+			
+			setupTabListener();
+			setupHueTab();
+			setupKeyboardTab();
 			setupFeaturesTab();
 			setupLogTab();
-			setupTabListener();
-			setupKeyboardTab();
-			setupHueTab();
+			setupLoginTab();
 			statusIndicatorController.injectMainController(this);
 			statusIndicatorController.injectComponents(statusIndicator, statusRectangle, statusText);
 			statusIndicatorController.addStatus("No issues detected!", StatusSeverity.NOTHING);
 			animationTimer.start();
 		});
+	}
+	
+	private void onLogin() {
+		effectData = new EffectData(effectContainer);
+		setupEffectViewTab();
+		setupPropertiesTab();
+		setupEffectEditorTab();
 	}
 	
 	@FXML
@@ -154,6 +184,10 @@ public class MainController extends Application implements Renderer{
 		statusIndicatorController.removeStatus(text);
 	}
 	
+	private void bindTabToInit(Tab tab) {
+		tab.disableProperty().bind(loginTabController.initProperty());
+	}
+	
 	private void setupKeyboardTab() {
 		keyboardTabController.injectMainController(this);
 	}
@@ -162,20 +196,23 @@ public class MainController extends Application implements Renderer{
 		hueTabController.injectMainController(this);
 	}
 	
+	private void setupLoginTab() {
+		loginTabController.injectMainController(this);
+		loginTabController.initProperty().addListener((observable, oldValue, newValue) -> {
+			if (newValue) effectData = new EffectData(getEffectContainer());
+		});
+	}
+	
+	private void setupEffectEditorTab() {
+		effectEditorTabController.injectMainController(this);
+	}
+	
 	private void setupEffectViewTab() {
 		effectViewController.injectMainController(this);
 	}
 	
-	private void setupPreviewTab() {
+	private void setupPropertiesTab() {
 		propertiesTabController.injectMainController(this);
-	}
-	
-	private void setupTabListener() {
-		tabPane.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
-			logger.info("Tab changed to: " + newValue);
-			propertiesTabController.onTabChange(newValue.intValue());
-			resumeRendering();
-		});
 	}
 	
 	private void setupFeaturesTab() {
@@ -184,6 +221,14 @@ public class MainController extends Application implements Renderer{
 	
 	private void setupLogTab() {
 		logTabController.injectMainController(this, webLogAppender);
+	}
+	
+	private void setupTabListener() {
+		tabPane.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+			logger.info("Tab changed to: " + newValue);
+			propertiesTabController.onTabChange(newValue.intValue());
+			resumeRendering();
+		});
 	}
 	
 	private void animateFrame() {
@@ -233,8 +278,9 @@ public class MainController extends Application implements Renderer{
 		return effectContainer;
 	}
 	
-	public PlayStateScene getEffectScene() {
-		return scene;
+	
+	public EffectData getEffectData(){
+		return effectData;
 	}
 	
 	@Override

@@ -31,34 +31,44 @@
          <children>
             <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE">
               <tabs>
-                <Tab closable="false" text="Effect View">
+                  <Tab closable="false" text="Login">
+                     <content>
+                        <fx:include fx:id="loginTab" source="tabs/login.fxml" />
+                     </content>
+                  </Tab>
+                <Tab fx:id="effectViewT" closable="false" text="Effect View">
                      <content>
                         <fx:include fx:id="effectView" source="effectView.fxml" />
                      </content>
                 </Tab>
-                <Tab closable="false" text="Properties">
+                <Tab fx:id="propertiesT" closable="false" text="Properties">
                      <content>
                         <fx:include fx:id="propertiesTab" source="propertiesTab.fxml" />
                      </content>
                 </Tab>
-                  <Tab closable="false" text="Debug Log">
+                  <Tab fx:id="logT" closable="false" text="Debug Log">
                      <content>
                         <fx:include fx:id="logTab" source="logTab.fxml" />
                      </content>
                   </Tab>
-                  <Tab closable="false" text="Planned features">
+                  <Tab fx:id="featuresT" closable="false" text="Planned features">
                      <content>
                         <fx:include fx:id="featuresTab" source="featuresTab.fxml" />
                      </content>
                   </Tab>
-                  <Tab closable="false" text="Keyboard [WIP]">
+                  <Tab fx:id="keyboardT" closable="false" text="Keyboard [Delayed]">
                      <content>
                         <fx:include fx:id="keyboardTab" source="keyboardTab.fxml" />
                      </content>
                   </Tab>
-                  <Tab closable="false" text="Philips Hue [WIP]">
+                  <Tab fx:id="hueT" closable="false" text="Philips Hue [WIP]">
                      <content>
                         <fx:include fx:id="hueTab" source="hue.fxml" />
+                     </content>
+                  </Tab>
+                  <Tab fx:id="editorT" text="Effect Editor [WIP]">
+                     <content>
+                        <fx:include fx:id="effectEditorTab" source="effectCreator.fxml" />
                      </content>
                   </Tab>
               </tabs>

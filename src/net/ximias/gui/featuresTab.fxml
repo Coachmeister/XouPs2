@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -9,12 +10,16 @@
       <VBox layoutX="28.0" layoutY="55.0" prefHeight="417.0" prefWidth="596.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <ListView fx:id="featuresList" VBox.vgrow="ALWAYS" />
-            <HBox spacing="5.0" VBox.vgrow="NEVER">
+            <StackPane VBox.vgrow="ALWAYS">
                <children>
-                  <ChoiceBox fx:id="featuresChoice" prefWidth="150.0" />
-                  <Hyperlink onAction="#openDiscordServer" text="&gt;&gt;Open Discord server for feedback and discussion&lt;&lt;" underline="true" />
+                  <Hyperlink alignment="CENTER" onAction="#openDiscordServer" text="&gt;&gt;Open Discord server for feedback and discussion&lt;&lt;" textAlignment="CENTER" underline="true" StackPane.alignment="CENTER">
+                     <padding>
+                        <Insets right="50.0" />
+                     </padding>
+                  </Hyperlink>
+                  <ChoiceBox fx:id="featuresChoice" nodeOrientation="LEFT_TO_RIGHT" StackPane.alignment="CENTER_LEFT" />
                </children>
-            </HBox>
+            </StackPane>
          </children>
       </VBox>
    </children>

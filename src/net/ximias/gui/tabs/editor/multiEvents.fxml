@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.ximias.gui.tabs.editor.controllers.MultiEventTabController">
+   <children>
+      <VBox layoutX="10.0" layoutY="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <HBox>
+               <children>
+                  <Label text="Event type" />
+                  <ChoiceBox fx:id="eventTypeChoice" prefWidth="150.0" />
+                  <Label text="Event name:" />
+                  <TextField fx:id="eventNameField" />
+                  <Button fx:id="addButton" mnemonicParsing="false" onAction="#addEvent" text="Add" />
+               </children>
+            </HBox>
+            <HBox fx:id="eventListContainer" VBox.vgrow="ALWAYS" />
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

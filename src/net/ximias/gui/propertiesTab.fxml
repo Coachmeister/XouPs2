@@ -5,7 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane fx:id="propertiesTab" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.ximias.gui.tabs.Properties">
+<AnchorPane fx:id="propertiesTab" minHeight="0.0" minWidth="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.ximias.gui.tabs.Properties">
    <children>
       <VBox spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -13,9 +13,9 @@
                <children>
                   <VBox spacing="29.0">
                      <children>
-                        <Label text="Background brightness"/>
-                        <Label text="Background transparency"/>
-                        <Label text="Effect transparency"/>
+                        <Label text="Background brightness" />
+                        <Label text="Background transparency" />
+                        <Label text="Effect transparency" />
                         <HBox>
                            <children>
                               <Button id="defaults" alignment="TOP_LEFT" centerShape="false" mnemonicParsing="false" onAction="#restoreDefaults" text="Defaults" />

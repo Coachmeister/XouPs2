@@ -13,16 +13,23 @@ import java.util.Comparator;
 import java.util.logging.Logger;
 
 public class CurrentPlayer {
-	private static final CurrentPlayer ourInstance = new CurrentPlayer();
+	private static CurrentPlayer ourInstance;
 	private final Logger logger = Logger.getLogger(getClass().getName());
 	public static CurrentPlayer getInstance() {
 		return ourInstance;
 	}
 	
-	private CurrentPlayer() {
-		initialize();
-		
-		logger.finer("Init");
+	
+	public static void initCurrentPlayer(String playerID){
+		if (ourInstance == null) {
+			ourInstance = new CurrentPlayer(playerID);
+		}else{
+			throw new Error("Player already initialized");
+		}
+	}
+	
+	private CurrentPlayer(String playerID){
+		setPlayerID(playerID);
 		setZoneId(-1);
 	}
 	
@@ -70,77 +77,5 @@ public class CurrentPlayer {
 		if (getValue("faction_id").equals(String.valueOf(ApplicationConstants.NC_ID))) return Persisted.getInstance().NC;
 		if (getValue("faction_id").equals(String.valueOf(ApplicationConstants.TR_ID))) return Persisted.getInstance().TR;
 		return ApplicationConstants.MISSING;
-		
-		
-	}
-	
-	private void initialize() {
-		try {
-			String partlyPlayerName = JOptionPane.showInputDialog(null, "Input (start of) character name", Persisted.getInstance().LAST_LOGIN);
-			if (partlyPlayerName == null) {
-				cancelled();
-			}
-			JSONArray playerNameList = CensusConnection.listPlayersStartsWith(partlyPlayerName);
-			
-			String selectedCharacterId = performCharacterSelection(playerNameList);
-			setPlayerID(selectedCharacterId);
-		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, "Connection issues. I recommend trying again:\n" + e, "Error", JOptionPane.ERROR_MESSAGE);
-			logger.severe("Connection could not be established to the PlanetSide servers. Check your connection and the PlanetSide servers, if the issue persists.");
-			System.exit(1);
-		}
-	}
-	
-	private String performCharacterSelection(JSONArray results) {
-		JSONObject[] options = getLimitedOptions(results);
-		
-		String[] names = new String[options.length];
-		for (int i = 0; i < options.length; i++) {
-			names[i] = options[i].getJSONObject("name").getString("first");
-		}
-		JComboBox<String> selection = new JComboBox<>(names);
-		
-		int selectedIndex = showComboDialog(selection);
-		Persisted.getInstance().LAST_LOGIN = names[selectedIndex];
-		return options[selectedIndex].getString("character_id");
-	}
-	
-	private int showComboDialog(JComboBox<String> selection) {
-		JOptionPane pane = new JOptionPane("Is it any of these?", JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
-		pane.add(selection,1);
-		JDialog box = pane.createDialog("Select Character");
-		box.setVisible(true);
-		box.dispose();
-		Object value = pane.getValue();
-		if (value == null){
-			cancelled();
-		}else{
-			if (value instanceof Integer){
-				if ((Integer) value != 0){
-					cancelled();
-				}
-			}
-		}
-		return selection.getSelectedIndex();
-	}
-	
-	private void cancelled() {
-		logger.severe("Application initialization canceled by user");
-		System.exit(0);
-	}
-	
-	private JSONObject[] getLimitedOptions(JSONArray results) {
-		
-		ArrayList<JSONObject> fullOptions = new ArrayList<>((int)(results.length()*1.5));
-		for (int i = 0; i < results.length(); i++) {
-			fullOptions.add(results.getJSONObject(i));
-		}
-		fullOptions.sort(Comparator.comparing(o -> o.getJSONObject("name").getString("first")));
-		
-		JSONObject[] options = new JSONObject[Math.min(results.length(), 10)];
-		for (int i = 0; i < options.length; i++) {
-			options[i] = fullOptions.get(i);
-		}
-		return options;
 	}
 }
