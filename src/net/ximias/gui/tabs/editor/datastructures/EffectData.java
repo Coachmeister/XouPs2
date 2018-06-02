@@ -17,12 +17,10 @@ public class EffectData {
 	private HashMap<String, Ps2EventHandler> linkedEvents = new HashMap<>();
 	private HashMap<String, EventCondition> conditions = new HashMap<>();
 	private Logger logger = Logger.getLogger(getClass().getName());
-	
 	private EffectView view;
 	
 	private final Ps2EventStreamingConnection connection = new Ps2EventStreamingConnection();
 	private final PlayStateScene scene;
-	
 	
 	public EffectData(EffectView view) {
 		this.view = view;
@@ -42,20 +40,36 @@ public class EffectData {
 		linkedEventNames.put(eventName, effectName);
 	}
 	
+	public void addAvailableEvent(String name, UnlinkedEvent unlinkedEvent){
+	    availableEvents.put(name, unlinkedEvent);
+	}
+	
+	public void removeAvailableEvent(String name){
+	    availableEvents.remove(name);
+	}
+	
+	public void addEffect(String name, EffectProducer producer){
+	    effects.put(name, producer);
+	}
+	
+	public void removeEffect(String name){
+	    effects.remove(name);
+	}
+	
+	public void addCondition(String name, EventCondition condition){
+	    conditions.put(name, condition);
+	}
+	
+	public void removeCondition(String name){
+	    conditions.remove(name);
+	}
+	
+	public HashMap<String, EventCondition> getConditions() {
+		return conditions;
+	}
+	
 	public EventCondition getConditionByName(String name){
 		return conditions.get(name);
-	}
-	
-	public void addEventCondition(String name, EventCondition condition){
-		conditions.put(name, condition);
-	}
-	
-	public void addUnlinkedEventByName(String name, UnlinkedEvent event){
-		availableEvents.put(name, event);
-	}
-	
-	public void addEffectByName(String name, EffectProducer effect){
-		effects.put(name, effect);
 	}
 	
 	public HashMap<String, String> getLinkedEventNames() {
