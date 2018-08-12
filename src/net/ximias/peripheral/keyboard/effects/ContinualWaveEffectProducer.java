@@ -11,14 +11,22 @@ public class ContinualWaveEffectProducer implements KeyEffectProducer {
 	private int effectWidth;
 	private WaveEffectDirection direction;
 	
+	public ContinualWaveEffectProducer(Color color, long duration, int iterations, int effectWidth, WaveEffectDirection direction) {
+		this.color = color;
+		this.duration = duration;
+		this.iterations = iterations;
+		this.effectWidth = effectWidth;
+		this.direction = direction;
+	}
+	
 	@Override
 	public KeyEffect build() {
-		return null;
+		return new ContinualWaveEffect(color, duration, iterations, effectWidth, direction);
 	}
 	
 	@Override
 	public void setColor(Color color) {
-	
+		this.color = color;
 	}
 }
 class ContinualWaveEffect extends WaveEffect{
