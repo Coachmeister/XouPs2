@@ -5,8 +5,7 @@ import net.ximias.effect.EffectView;
 import net.ximias.effect.producers.*;
 import net.ximias.network.CurrentPlayer;
 import net.ximias.network.Ps2EventStreamingConnection;
-import net.ximias.peripheral.keyboard.effects.WaveEffectDirection;
-import net.ximias.peripheral.keyboard.effects.WaveEffectProducer;
+import net.ximias.peripheral.keyboard.effects.*;
 import net.ximias.persistence.ApplicationConstants;
 import net.ximias.persistence.Persisted;
 import net.ximias.psEvent.condition.*;
@@ -22,7 +21,7 @@ public class PlayStateScene implements EffectScene {
 	private PlayStateBackground background;
 	private final HashMap<String, String> experienceid = new HashMap<>(4);
 	
-	public static final SingleCondition isPlayer = new SingleCondition(Condition.EQUALS,
+	static final SingleCondition isPlayer = new SingleCondition(Condition.EQUALS,
 			new EventData("character_id", ConditionDataSource.PLAYER),
 			new EventData("character_id", ConditionDataSource.EVENT)
 	);
@@ -143,7 +142,7 @@ public class PlayStateScene implements EffectScene {
 		
 		SingleCondition[] isXimias = new SingleCondition[ximiasKills.length + ximiasDeaths.length - 1];
 		System.arraycopy(ximiasKills, 0, isXimias, 0, ximiasKills.length);
-		System.arraycopy(ximiasDeaths, 0, isXimias, 0 + ximiasKills.length - 1, ximiasDeaths.length);
+		System.arraycopy(ximiasDeaths, 0, isXimias, ximiasKills.length - 1, ximiasDeaths.length);
 		
 		return new AnyCondition(isXimias);
 	}
@@ -155,6 +154,8 @@ public class PlayStateScene implements EffectScene {
 		FadingEffectProducer facilityfade = new FadingEffectProducer(mutedFaction, 500);
 		MultiEffectProducer facility = new MultiEffectProducer(facilityBegin, facilityfade);
 		
+		facility.attachPeripheralEffect(new WaveEffectProducer(CurrentPlayer.getInstance().getFactionColor(),800,6,WaveEffectDirection.CENTER_OUT));
+		
 		SingleEventHandler facilityCap = new SingleEventHandler(view, facility, isPlayer, Ps2EventType.PLAYER, "PlayerFacilityCapture", "Facility capture");
 		SingleEventHandler facilityDef = new SingleEventHandler(view, facility, isPlayer, Ps2EventType.PLAYER, "PlayerFacilityDefend", "Facility capture");
 		facilityCap.register(connection);
@@ -165,6 +166,10 @@ public class PlayStateScene implements EffectScene {
 		TimedEffectProducer start = new TimedEffectProducer(Color.YELLOW, 600);
 		FadingEffectProducer end = new FadingEffectProducer(Color.YELLOW, 1000);
 		MultiEffectProducer ribbon = new MultiEffectProducer(start, end);
+		
+		ribbon.attachPeripheralEffect(new MultiKeyEffectProducer(
+				new WaveEffectProducer(Color.ORANGE, 800,5,WaveEffectDirection.CENTER_OUT),
+				new WaveEffectProducer(Color.ORANGE, 800,5,WaveEffectDirection.OUT_CENTER)));
 		
 		SingleEventHandler achievement = new SingleEventHandler(view, ribbon, isPlayer, Ps2EventType.PLAYER, "AchievementEarned", "Ribbon earned");
 		achievement.register(connection);
@@ -181,6 +186,14 @@ public class PlayStateScene implements EffectScene {
 		FadingEffectProducer e3 = new FadingEffectProducer(ex3, 1000);
 		
 		MultiEffectProducer explosion = new MultiEffectProducer(e0, e1, e2, e1, e2, e1, e2, e3);
+		
+		WaveEffectProducer ke0 = new WaveEffectProducer(Color.WHITE, 200,2,WaveEffectDirection.CENTER_OUT);
+		WaveEffectProducer ke1 = new WaveEffectProducer(ex1, 200,2,WaveEffectDirection.CENTER_OUT);
+		WaveEffectProducer ke2 = new WaveEffectProducer(ex2, 200,2,WaveEffectDirection.CENTER_OUT);
+		WaveEffectProducer ke3 = new WaveEffectProducer(ex3, 200,2,WaveEffectDirection.CENTER_OUT);
+		
+		MultiKeyEffectProducer keyExplosion = new MultiKeyEffectProducer(ke0, ke1, ke2, ke3);
+		
 		SingleCondition isNotDeath = new SingleCondition(Condition.NOT_EQUALS,
 				new EventData("character_id", ConditionDataSource.EVENT),
 				new EventData(CurrentPlayer.getInstance().getPlayerID(), ConditionDataSource.CONSTANT));
@@ -209,6 +222,8 @@ public class PlayStateScene implements EffectScene {
 		
 		MultiEffectProducer alertEffect = new MultiEffectProducer(whoop, whoop, whoop, whoop, whoop);
 		
+		ContinualWaveEffectProducer keyAlertEffect = new ContinualWaveEffectProducer(Color.RED, 300,5,8,WaveEffectDirection.LEFT_TO_RIGHT);
+		alertEffect.attachPeripheralEffect(keyAlertEffect);
 		
 		SingleCondition isPlayerWorld = new SingleCondition(Condition.EQUALS,
 				new EventData("world_id", ConditionDataSource.EVENT),
@@ -223,6 +238,14 @@ public class PlayStateScene implements EffectScene {
 		TimedEffectProducer middle = new TimedEffectProducer(Color.ORANGE, 1000);
 		FadingEffectProducer end = new FadingEffectProducer(Color.ORANGE, 800);
 		MultiEffectProducer brup = new MultiEffectProducer(start, middle, end);
+		
+		ContinualWaveEffectProducer yellowUp = new ContinualWaveEffectProducer(Color.YELLOW,600,3,1,WaveEffectDirection.DOWN_TO_UP);
+		DelayProducer delay = new DelayProducer(300);
+		brup.attachPeripheralEffect(new MultiKeyEffectProducer(
+				yellowUp,
+				delay,
+				yellowUp
+		));
 		
 		SingleEventHandler battleRankEvent = new SingleEventHandler(view, brup, isPlayer, Ps2EventType.PLAYER, "BattleRankUp", "Battle rank up");
 		battleRankEvent.register(connection);
@@ -274,11 +297,9 @@ public class PlayStateScene implements EffectScene {
 				new CensusData("character", "faction_id", new HashMap<>(0), eventPlayer));
 		
 		
-		SingleCondition isDeath = isPlayer;
-		
 		AllCondition isHonestKill = new AllCondition(isKill, isNotSame);
 		SingleEventHandler honestKill = new SingleEventHandler(view, null, isHonestKill, Ps2EventType.PLAYER, "Death", "honestKillPart");
-		SingleEventHandler death = new SingleEventHandler(view, null, isDeath, Ps2EventType.PLAYER, "Death", "DeathPart");
+		SingleEventHandler death = new SingleEventHandler(view, null, isPlayer, Ps2EventType.PLAYER, "Death", "DeathPart");
 		MultiEventHandler pentaKillEvent = new MultiEventHandler(
 				new Ps2EventHandler[]{honestKill, honestKill, honestKill, honestKill, honestKill},
 				new Ps2EventHandler[]{death}, true, true, pentaKill, view, "Pentakill");
@@ -376,8 +397,8 @@ public class PlayStateScene implements EffectScene {
 		FadingEffectProducer repairEnd = new FadingEffectProducer(repair, 250);
 		MultiEffectProducer repairing = new MultiEffectProducer(repairStart, repairEnd);
 		
-		repairing.attachPeripheralEffect(new WaveEffectProducer(Color.BLUE, 1000,2,WaveEffectDirection.LEFT_TO_RIGHT));
-		repairing.attachPeripheralEffect(new WaveEffectProducer(Color.BLUE, 1000,2,WaveEffectDirection.RIGHT_TO_LEFT));
+		repairing.attachPeripheralEffect(new ContinualWaveEffectProducer(Color.BLUE, 500,2,2,WaveEffectDirection.LEFT_TO_RIGHT));
+		repairing.attachPeripheralEffect(new ContinualWaveEffectProducer(Color.BLUE, 500,2,2,WaveEffectDirection.RIGHT_TO_LEFT));
 		
 		SingleCondition containsRepair = experienceDescriptionContains("repair");
 		
