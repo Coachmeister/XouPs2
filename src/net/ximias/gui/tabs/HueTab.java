@@ -24,11 +24,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import net.ximias.Hue.HueGameState;
-import net.ximias.Hue.hueEffects.HueEffect;
+import net.ximias.peripheral.Hue.Hue.HueGameState;
 import net.ximias.gui.MainController;
-import net.ximias.Hue.EffectExamples;
-import net.ximias.Hue.examples.*;
+import net.ximias.peripheral.Hue.Hue.EffectExamples;
+import net.ximias.peripheral.Hue.Hue.examples.*;
 
 import java.io.File;
 import java.util.*;

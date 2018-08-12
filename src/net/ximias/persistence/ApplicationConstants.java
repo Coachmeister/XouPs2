@@ -54,7 +54,7 @@ public interface ApplicationConstants {
 	String PLANNED_FEATURES[] = new String[] {
 			"Development has been started on the following:",
 			"KeyboardTab effects. Planned support for Logitech, probably Razer chroma, and maybe Steelseries.",
-			"Possibly keyboard-specific effects, like ripple or waves. Though those would not render correctly on the Hue",
+			"Possibly hardware-specific effects, like ripple or waves. Though those would not render correctly on the Hue",
 			"Philips Hue Entertainment support",
 			"On the to-do:",
 			"Finding a name that is not the working title of the project (Feel free to send in ideas)",

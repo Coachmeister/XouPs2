@@ -17,14 +17,14 @@ import net.ximias.fileSearch.PsDirectoryLocator;
 import net.ximias.gui.MainController;
 import net.ximias.gui.guiElements.ResizableCanvas;
 import net.ximias.gui.guiElements.SortedStringColorTable;
-import net.ximias.gui.tabs.keyboard.KeyboardEmulator;
-import net.ximias.gui.tabs.keyboard.logitech.Logitech;
-import net.ximias.peripheral.KeyEffect;
-import net.ximias.peripheral.Keyboard;
-import net.ximias.peripheral.KeyboardEffectContainer;
-import net.ximias.peripheral.effects.KeymapColoring;
-import net.ximias.peripheral.effects.WaveEffectDirection;
-import net.ximias.peripheral.effects.WaveEffectProducer;
+import net.ximias.peripheral.keyboard.hardware.KeyboardEmulator;
+import net.ximias.peripheral.keyboard.hardware.logitech.Logitech;
+import net.ximias.peripheral.keyboard.KeyEffect;
+import net.ximias.peripheral.keyboard.Keyboard;
+import net.ximias.peripheral.keyboard.KeyboardEffectContainer;
+import net.ximias.peripheral.keyboard.effects.KeymapColoring;
+import net.ximias.peripheral.keyboard.effects.WaveEffectDirection;
+import net.ximias.peripheral.keyboard.effects.WaveEffectProducer;
 import net.ximias.persistence.Persisted;
 
 import java.io.File;
@@ -32,7 +32,7 @@ import java.util.HashSet;
 import java.util.Map;
 
 /**
- * Tab containing the keyboard specific settings.
+ * Tab containing the hardware specific settings.
  */
 /*
 Might need to be split into multiple, soon.
@@ -127,7 +127,7 @@ public class KeyboardTab {
 	}
 	
 	/**
-	 * adds a waveEffect to the keyboard and emulator.
+	 * adds a waveEffect to the hardware and emulator.
 	 * @param direction the direction of the wave.
 	 */
 	private void addEffect(WaveEffectDirection direction){

@@ -5,6 +5,8 @@ import net.ximias.effect.EffectView;
 import net.ximias.effect.producers.*;
 import net.ximias.network.CurrentPlayer;
 import net.ximias.network.Ps2EventStreamingConnection;
+import net.ximias.peripheral.keyboard.effects.WaveEffectDirection;
+import net.ximias.peripheral.keyboard.effects.WaveEffectProducer;
 import net.ximias.persistence.ApplicationConstants;
 import net.ximias.persistence.Persisted;
 import net.ximias.psEvent.condition.*;
@@ -84,7 +86,7 @@ public class PlayStateScene implements EffectScene {
 		
 		// Version 0.1.0
 		// Settings GUI
-		// Abstract net.ximias.keyboard integration
+		// Abstract net.ximias.hardware integration
 		// Logitech implementation
 		// Persistence
 		// Keymap import? from InputProfile_User.xml
@@ -207,6 +209,7 @@ public class PlayStateScene implements EffectScene {
 		
 		MultiEffectProducer alertEffect = new MultiEffectProducer(whoop, whoop, whoop, whoop, whoop);
 		
+		
 		SingleCondition isPlayerWorld = new SingleCondition(Condition.EQUALS,
 				new EventData("world_id", ConditionDataSource.EVENT),
 				new EventData("world_id", ConditionDataSource.PLAYER));
@@ -229,6 +232,8 @@ public class PlayStateScene implements EffectScene {
 		Color healGreen = bias(new Color(0, 0.95, 0.1, 1), 0.1);
 		FadingEffectProducer heal = new FadingEffectProducer(healGreen, 800);
 		
+		heal.attachPeripheralEffect(new WaveEffectProducer(Color.WHITE,500,1,WaveEffectDirection.DOWN_TO_UP));
+		
 		AllCondition isHeal = new AllCondition(isPlayer, isNotHive, experienceDescriptionContains("heal"));
 		SingleEventHandler healing = new SingleEventHandler(view, heal, isHeal, Ps2EventType.PLAYER, "GainExperience", "healing");
 		healing.register(connection);
@@ -237,6 +242,8 @@ public class PlayStateScene implements EffectScene {
 	private void revive() {
 		Color reviveGreen = new Color(0.0, 1, 0.2, 1);
 		FadingEffectProducer revive = new FadingEffectProducer(reviveGreen, 1000);
+		
+		revive.attachPeripheralEffect(new WaveEffectProducer(Color.WHITE, 500,8,WaveEffectDirection.DOWN_TO_UP));
 		
 		SingleCondition isReviveExperience = experienceDescriptionContains("revive");
 		AllCondition isRevive = new AllCondition(isReviveExperience, isPlayer, isNotHive);
@@ -369,6 +376,9 @@ public class PlayStateScene implements EffectScene {
 		FadingEffectProducer repairEnd = new FadingEffectProducer(repair, 250);
 		MultiEffectProducer repairing = new MultiEffectProducer(repairStart, repairEnd);
 		
+		repairing.attachPeripheralEffect(new WaveEffectProducer(Color.BLUE, 1000,2,WaveEffectDirection.LEFT_TO_RIGHT));
+		repairing.attachPeripheralEffect(new WaveEffectProducer(Color.BLUE, 1000,2,WaveEffectDirection.RIGHT_TO_LEFT));
+		
 		SingleCondition containsRepair = experienceDescriptionContains("repair");
 		
 		AllCondition isRepair = new AllCondition(isPlayer, containsRepair, isNotHive);
@@ -378,6 +388,7 @@ public class PlayStateScene implements EffectScene {
 	
 	private void death() {
 		
+		//Effects
 		BlendingEffectProducer VSDeathFade = new BlendingEffectProducer(Persisted.getInstance().VS, Color.BLACK, 1000);
 		BlendingEffectProducer NCDeathFade = new BlendingEffectProducer(Persisted.getInstance().NC, Color.BLACK, 1000);
 		BlendingEffectProducer TRDeathFade = new BlendingEffectProducer(Persisted.getInstance().TR, Color.BLACK, 1000);
@@ -399,6 +410,12 @@ public class PlayStateScene implements EffectScene {
 				black,
 				fadeout
 		);
+		
+		//KeyboardEffects
+		WaveEffectProducer keyDeathEffect = new WaveEffectProducer(Color.BLACK, 1250, 12, WaveEffectDirection.UP_TO_DOWN);
+		VSDeath.attachPeripheralEffect(keyDeathEffect);
+		NCDeath.attachPeripheralEffect(keyDeathEffect);
+		TRDeath.attachPeripheralEffect(keyDeathEffect);
 		
 		HashMap<String, String> eventPlayer = new HashMap<>(4);
 		eventPlayer.put("character_id", "attacker_character_id");
