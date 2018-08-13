@@ -100,7 +100,7 @@ public class CensusConnection {
 		try {
 			return sendAndCacheCensusQuery(queryString);
 		} catch (IOException e) {
-			staticLogger.warning("Query failed: " + e);
+			staticLogger.severe("Query failed: " + e);
 			staticLogger.warning("retrying...");
 			try {
 				return sendAndCacheCensusQuery(queryString);
@@ -114,7 +114,7 @@ public class CensusConnection {
 					staticLogger.severe("I'll assume trying any more times won't fix the issue. I hope the rest of the program can cope with an empty response");
 				}
 			}
-			return null;
+			return ApplicationConstants.EMPTY_JSON;
 		}
 	}
 	

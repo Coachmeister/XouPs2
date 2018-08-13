@@ -7,9 +7,7 @@ import org.json.JSONObject;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -26,12 +24,24 @@ public class Ps2EventStreamingConnection {
 	private final SimpleBooleanProperty isAvailable = new SimpleBooleanProperty(true);
 	private final Ps2BackupPollingService pollingService = new Ps2BackupPollingService(this);
 	private final ArrayList<WebsocketClientEndpoint.MessageHandler> messageHandlers = new ArrayList<>();
+	
+	private long lastMessageTime = System.currentTimeMillis();
+	
 	public Ps2EventStreamingConnection() {
+		initClientEndpoint();
+		initConnectionFailCheck();
+	}
+	
+	/**
+	 * Opens the websocket.
+	 */
+	private void initClientEndpoint() {
 		try {
 			// open websocket
 			clientEndPoint = new WebsocketClientEndpoint(new URI("wss://push.planetside2.com/streaming?environment=ps2&service-id=s:XouPs2"));
 			
 			clientEndPoint.addMessageHandler(message -> {
+				lastMessageTime = System.currentTimeMillis();
 				messageHandlers.forEach(it->it.handleMessage(message));
 				JSONObject response = new JSONObject(message);
 				logger.info(response.toString());
@@ -46,6 +56,25 @@ public class Ps2EventStreamingConnection {
 		} catch (URISyntaxException ex) {
 			System.err.println("URISyntaxException exception: " + ex.getMessage());
 		}
+	}
+	
+	/**
+	 * Starts a timer for monitoring when the last received message happened.
+	 * Restarts the connection, if the message happened after a certain threshold.
+	 */
+	private void initConnectionFailCheck() {
+		Timer connectionTimeout = new Timer(true);
+		connectionTimeout.scheduleAtFixedRate(new TimerTask() {
+			@Override
+			public void run() {
+				if (System.currentTimeMillis()>lastMessageTime+60_000){
+					logger.warning("Census connection unresponsive, reconnecting...");
+					lastMessageTime = System.currentTimeMillis();
+					initClientEndpoint();
+					resubscribeAllEvents();
+				}
+			}
+		},20_000,20_000);
 	}
 	
 	/**

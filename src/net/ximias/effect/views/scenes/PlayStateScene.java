@@ -154,7 +154,11 @@ public class PlayStateScene implements EffectScene {
 		FadingEffectProducer facilityfade = new FadingEffectProducer(mutedFaction, 500);
 		MultiEffectProducer facility = new MultiEffectProducer(facilityBegin, facilityfade);
 		
-		facility.attachPeripheralEffect(new WaveEffectProducer(Color.WHITE,400,1,WaveEffectDirection.CENTER_OUT));
+		facility.attachPeripheralEffect(new WaveEffectProducer(Color.WHITE,400,2,WaveEffectDirection.CENTER_OUT));
+		facility.attachPeripheralEffect(new MultiKeyEffectProducer(
+				new DelayProducer(40),
+				new WaveEffectProducer(new Color(1,1,1,0.5),400,2,WaveEffectDirection.CENTER_OUT)
+		));
 		
 		SingleEventHandler facilityCap = new SingleEventHandler(view, facility, isPlayer, Ps2EventType.PLAYER, "PlayerFacilityCapture", "Facility capture");
 		SingleEventHandler facilityDef = new SingleEventHandler(view, facility, isPlayer, Ps2EventType.PLAYER, "PlayerFacilityDefend", "Facility capture");
@@ -187,13 +191,12 @@ public class PlayStateScene implements EffectScene {
 		
 		MultiEffectProducer explosion = new MultiEffectProducer(e0, e1, e2, e1, e2, e1, e2, e3);
 		
-		WaveEffectProducer ke0 = new WaveEffectProducer(Color.WHITE, 200,2,WaveEffectDirection.CENTER_OUT);
-		WaveEffectProducer ke1 = new WaveEffectProducer(ex1, 200,2,WaveEffectDirection.CENTER_OUT);
-		WaveEffectProducer ke2 = new WaveEffectProducer(ex2, 200,2,WaveEffectDirection.CENTER_OUT);
-		WaveEffectProducer ke3 = new WaveEffectProducer(ex3, 200,2,WaveEffectDirection.CENTER_OUT);
+		WaveEffectProducer ke0 = new WaveEffectProducer(Color.BLACK, 200,2,WaveEffectDirection.CENTER_OUT);
+		DelayProducer del = new DelayProducer(200);
 		
-		MultiKeyEffectProducer keyExplosion = new MultiKeyEffectProducer(ke0, ke1, ke2, ke3);
+		MultiKeyEffectProducer keyExplosion = new MultiKeyEffectProducer( del,ke0,del,ke0);
 		explosion.attachPeripheralEffect(keyExplosion);
+		explosion.attachPeripheralEffect(ke0);
 		
 		SingleCondition isNotDeath = new SingleCondition(Condition.NOT_EQUALS,
 				new EventData("character_id", ConditionDataSource.EVENT),
