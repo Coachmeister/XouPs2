@@ -315,7 +315,7 @@ public class KeyboardTab {
 		this.mainController = controller;
 		emmulatorRoot.getChildren().add(emulationCanvas);
 		bindSizes();
-		emulator = new KeyboardEmulator(emulationCanvas, new KeyboardEffectContainer(controller.getEffectContainer(), 20, 6));
+		emulator = new KeyboardEmulator(emulationCanvas,mainController.getEffectContainer(),20, 6);
 		keybindFileSelect.valueProperty().addListener((observable,oldValue, newValue)-> {
 			loadKeys(null);
 			Persisted.getInstance().LAST_SELECTED_INPUT_PROFILE = newValue;		});

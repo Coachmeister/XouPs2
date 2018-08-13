@@ -6,22 +6,29 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.paint.Color;
 import net.ximias.effect.Renderer;
+import net.ximias.effect.views.EffectContainer;
 import net.ximias.peripheral.keyboard.KeyboardEffectContainer;
+
+import java.util.Map;
 
 /**
  * Used to emulate a w*h sized hardware on screen.
  * Mustly used for debugging and preview purposes.
  */
-public class KeyboardEmulator implements Renderer {
+public class KeyboardEmulator extends AbstractKeyboard implements Renderer {
 	
 	private static final int SPACING = 5;
 	private Canvas canvas;
 	private KeyboardEffectContainer effectContainer;
-	private boolean isEnabled = false;
+	private int rows;
+	private int cols;
 	
-	public KeyboardEmulator(Canvas canvas, KeyboardEffectContainer container) {
+	public KeyboardEmulator(Canvas canvas, EffectContainer container, int rows, int columns) {
+		super(container);
 		this.canvas = canvas;
-		this.effectContainer = container;
+		this.rows = rows;
+		this.cols = columns;
+		this.effectContainer = new KeyboardEffectContainer(container, rows, cols);
 	}
 	
 	AnimationTimer animationTimer = new AnimationTimer() {
@@ -65,7 +72,6 @@ public class KeyboardEmulator implements Renderer {
 	 * Starts the emulator.
 	 */
 	private void start(){
-		isEnabled = true;
 		animationTimer.start();
 	}
 	
@@ -73,7 +79,6 @@ public class KeyboardEmulator implements Renderer {
 	 * Stops the emulator.
 	 */
 	public void stop(){
-		isEnabled = false;
 		animationTimer.stop();
 		insertStoppedFrame();
 	}
@@ -101,7 +106,37 @@ public class KeyboardEmulator implements Renderer {
 		start();
 	}
 	
+	@Override
+	public int getRows() {
+		return rows;
+	}
+	
+	@Override
+	public int getColumns() {
+		return cols;
+	}
+	
+	@Override
+	public void setAndExemptColors(Map<String, Color> keyColorMap) { }
+	
+	@Override
+	public void enable() { start(); }
+	
+	@Override
+	public void disable() { stop(); }
+	
 	public KeyboardEffectContainer getEffectContainer() {
 		return effectContainer;
+	}
+	
+	@Override
+	public void resetExemptions() { }
+	
+	@Override
+	public void setMultiKey(boolean enableMultiKey) { }
+	
+	@Override
+	public boolean isMultiKey() {
+		return true;
 	}
 }
