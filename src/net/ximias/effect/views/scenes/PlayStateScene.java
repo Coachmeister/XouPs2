@@ -154,7 +154,7 @@ public class PlayStateScene implements EffectScene {
 		FadingEffectProducer facilityfade = new FadingEffectProducer(mutedFaction, 500);
 		MultiEffectProducer facility = new MultiEffectProducer(facilityBegin, facilityfade);
 		
-		facility.attachPeripheralEffect(new WaveEffectProducer(CurrentPlayer.getInstance().getFactionColor(),800,6,WaveEffectDirection.CENTER_OUT));
+		facility.attachPeripheralEffect(new WaveEffectProducer(Color.WHITE,400,1,WaveEffectDirection.CENTER_OUT));
 		
 		SingleEventHandler facilityCap = new SingleEventHandler(view, facility, isPlayer, Ps2EventType.PLAYER, "PlayerFacilityCapture", "Facility capture");
 		SingleEventHandler facilityDef = new SingleEventHandler(view, facility, isPlayer, Ps2EventType.PLAYER, "PlayerFacilityDefend", "Facility capture");
@@ -193,6 +193,7 @@ public class PlayStateScene implements EffectScene {
 		WaveEffectProducer ke3 = new WaveEffectProducer(ex3, 200,2,WaveEffectDirection.CENTER_OUT);
 		
 		MultiKeyEffectProducer keyExplosion = new MultiKeyEffectProducer(ke0, ke1, ke2, ke3);
+		explosion.attachPeripheralEffect(keyExplosion);
 		
 		SingleCondition isNotDeath = new SingleCondition(Condition.NOT_EQUALS,
 				new EventData("character_id", ConditionDataSource.EVENT),
@@ -222,7 +223,7 @@ public class PlayStateScene implements EffectScene {
 		
 		MultiEffectProducer alertEffect = new MultiEffectProducer(whoop, whoop, whoop, whoop, whoop);
 		
-		ContinualWaveEffectProducer keyAlertEffect = new ContinualWaveEffectProducer(Color.RED, 300,5,8,WaveEffectDirection.LEFT_TO_RIGHT);
+		ContinualWaveEffectProducer keyAlertEffect = new ContinualWaveEffectProducer(Color.RED, 300,5,5,WaveEffectDirection.RIGHT_TO_LEFT);
 		alertEffect.attachPeripheralEffect(keyAlertEffect);
 		
 		SingleCondition isPlayerWorld = new SingleCondition(Condition.EQUALS,
@@ -397,7 +398,7 @@ public class PlayStateScene implements EffectScene {
 		FadingEffectProducer repairEnd = new FadingEffectProducer(repair, 250);
 		MultiEffectProducer repairing = new MultiEffectProducer(repairStart, repairEnd);
 		
-		repairing.attachPeripheralEffect(new ContinualWaveEffectProducer(Color.BLUE, 500,2,2,WaveEffectDirection.LEFT_TO_RIGHT));
+		repairing.attachPeripheralEffect(new ContinualWaveEffectProducer(Color.CYAN, 500,2,2,WaveEffectDirection.LEFT_TO_RIGHT));
 		repairing.attachPeripheralEffect(new ContinualWaveEffectProducer(Color.BLUE, 500,2,2,WaveEffectDirection.RIGHT_TO_LEFT));
 		
 		SingleCondition containsRepair = experienceDescriptionContains("repair");

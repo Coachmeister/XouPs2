@@ -4,6 +4,8 @@ import javafx.scene.paint.Color;
 import net.ximias.peripheral.keyboard.KeyEffect;
 import net.ximias.peripheral.keyboard.KeyEffectProducer;
 
+import java.util.Arrays;
+
 public class DelayProducer implements KeyEffectProducer {
 	
 	private long duration;
@@ -33,6 +35,9 @@ class Delay implements KeyEffect{
 	public Color[][] getKeyColors(int width, int height) {
 		if (colors == null) {
 			colors = new Color[width][height];
+			Color[] empty = new Color[height];
+			Arrays.fill(empty, Color.TRANSPARENT);
+			Arrays.fill(colors, empty);
 		}
 		return colors;
 	}

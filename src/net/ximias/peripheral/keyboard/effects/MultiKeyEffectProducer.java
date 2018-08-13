@@ -15,7 +15,7 @@ public class MultiKeyEffectProducer implements KeyEffectProducer {
 	
 	@Override
 	public KeyEffect build() {
-		return null;
+		return new MultiKeyEffect(effectProducers);
 	}
 	
 	@Override
@@ -27,13 +27,11 @@ class MultiKeyEffect implements KeyEffect{
 	private final KeyEffectProducer[] effects;
 	private KeyEffect current;
 	private int count;
-	private EffectProducer parent;
 	
-	MultiKeyEffect(KeyEffectProducer[] effects, EffectProducer parent) {
+	MultiKeyEffect(KeyEffectProducer[] effects) {
 		this.effects = effects;
 		this.current = effects[0].build();
 		this.count = 0;
-		this.parent = parent;
 	}
 	
 	@Override
