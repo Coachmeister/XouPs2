@@ -5,6 +5,6 @@ import net.ximias.peripheral.PeripheralEffectProducer;
 
 public interface HueEffect extends PeripheralEffectProducer {
 	Effect getEffect();
-	void adjustOpacity(double opacity);
+	void setOpacity(double opacity);
 	int getDuration();
 }

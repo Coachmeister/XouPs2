@@ -46,7 +46,7 @@ public class GlobalConstantEffect implements HueEffect {
 	}
 	
 	@Override
-	public void adjustOpacity(double opacity) {
+	public void setOpacity(double opacity) {
 		opacityMultiplier = opacity;
 		setColor(color);
 	}

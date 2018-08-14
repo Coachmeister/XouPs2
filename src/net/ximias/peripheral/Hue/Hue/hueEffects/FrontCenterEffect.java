@@ -12,7 +12,7 @@ public class FrontCenterEffect implements AreaEffectProducer {
 	private Color startColor;
 	private Color endColor;
 	private int duration;
-	private double opacityMultiplyer = 1;
+	private double opacityMultiplier = 1;
 	
 	public FrontCenterEffect(Color startColor, Color endColor, int duration) {
 		this.startColor = startColor;
@@ -27,7 +27,7 @@ public class FrontCenterEffect implements AreaEffectProducer {
 		TweenAnimation r = new TweenAnimation(startColor.getRed(), endColor.getRed(), duration, TweenType.Linear);
 		TweenAnimation g = new TweenAnimation(startColor.getGreen(), endColor.getGreen(), duration, TweenType.Linear);
 		TweenAnimation b = new TweenAnimation(startColor.getBlue(), endColor.getBlue(), duration, TweenType.Linear);
-		TweenAnimation a = new TweenAnimation(startColor.getOpacity() * opacityMultiplyer, endColor.getOpacity() * opacityMultiplyer, duration, TweenType.Linear);
+		TweenAnimation a = new TweenAnimation(startColor.getOpacity() * opacityMultiplier, endColor.getOpacity() * opacityMultiplier, duration, TweenType.Linear);
 		
 		effect.setColorAnimation(r, g, b);
 		effect.setOpacityAnimation(a);
@@ -37,8 +37,8 @@ public class FrontCenterEffect implements AreaEffectProducer {
 	}
 	
 	@Override
-	public void adjustOpacity(double opacity) {
-		opacityMultiplyer = opacity;
+	public void setOpacity(double opacity) {
+		opacityMultiplier = opacity;
 	}
 	
 	@Override

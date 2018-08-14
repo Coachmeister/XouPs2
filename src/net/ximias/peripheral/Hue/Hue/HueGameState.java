@@ -10,6 +10,8 @@ import net.ximias.effect.Effect;
 import net.ximias.effect.EffectAddListener;
 import net.ximias.effect.views.EffectContainer;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
@@ -64,24 +66,35 @@ public class HueGameState implements EffectAddListener {
 		logger.info("Effect received:"+effect.getName());
 		if (!running.get()) return;
 		
-		HueEffect attached = effect.getProducer().getPeripheralEffectProducerBySuperclass(HueEffect.class);
-		if (attached == null) {
-			attached = effectWrapper.getAsHueEffect(effect);
-		}
-		if (attached instanceof GlobalConstantEffect){
-			attached.adjustOpacity(1);
+		List<HueEffect> attachedEffects = effect.getProducer().getAllPeripheralEffectProducersBySuperclass(HueEffect.class);
+		LinkedList<HueEffect> effects = new LinkedList<>();
+		
+		if (attachedEffects.isEmpty()) {
+			effects.add(effectWrapper.getAsHueEffect(effect));
 		}else{
-			attached.adjustOpacity(effectContainer.getEffectIntensity());
+			for (HueEffect attachedEffect : attachedEffects) {
+				if (attachedEffect instanceof GlobalConstantEffect){
+					attachedEffect.setOpacity(1);
+					effects.add(attachedEffect);
+				}else{
+					attachedEffect.setOpacity(effectContainer.getEffectIntensity());
+					effects.add(attachedEffect);
+				}
+				
+			}
 		}
-		com.philips.lighting.hue.sdk.wrapper.entertainment.effect.Effect entertainmentEffect = attached.getEffect();
-		synchronized (entertainment){
-			entertainment.lockMixer();
-			entertainment.addEffect(entertainmentEffect);
-			entertainment.unlockMixer();
-		}
-		entertainmentEffect.enable();
-		if (attached.getDuration()>0){
-			cancellationTimer.schedule(cancellationTask(entertainmentEffect),attached.getDuration());
+		
+		for (HueEffect hueEffect : effects) {
+			com.philips.lighting.hue.sdk.wrapper.entertainment.effect.Effect entertainmentEffect = hueEffect.getEffect();
+			synchronized (entertainment){
+				entertainment.lockMixer();
+				entertainment.addEffect(entertainmentEffect);
+				entertainment.unlockMixer();
+			}
+			entertainmentEffect.enable();
+			if (hueEffect.getDuration()>0){
+				cancellationTimer.schedule(cancellationTask(entertainmentEffect),hueEffect.getDuration());
+			}
 		}
 	}
 	

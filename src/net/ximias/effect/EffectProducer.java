@@ -27,25 +27,6 @@ public abstract class EffectProducer extends JsonSerializable{
 	}
 	
 	/**
-	 * Used to obtain the first peripheralEffect assignable from a specific class.
-	 * Will return {@code null} if none is found.
-	 * @param superclass the class assignable to a peripheralEffect.
-	 * @param <T> final type of the class.
-	 * @return the first occurence of a peripheralEffectProducer assignable from the given class.
-	 */
-	public <T extends PeripheralEffectProducer> T getPeripheralEffectProducerBySuperclass(Class<T> superclass){
-		for (PeripheralEffectProducer peripheralEffect : peripheralEffects) {
-			logger.warning("Attached effect: "+peripheralEffect.getClass().getName()+" In effect "+getName());
-			if (superclass.isAssignableFrom(peripheralEffect.getClass())){
-				logger.warning("peripheral effect did match: "+superclass.getName());
-				return superclass.cast(peripheralEffect);
-			}
-			logger.warning("Did not match query of: "+superclass.getName());
-		}
-		return null;
-	}
-	
-	/**
 	 * Used to obtain a list of all peripheralEffects assignable from a superclass.
 	 * Will return an empty list, if none are found.
 	 * @param superclass the class assignable from peripharalEffect. Fx. {@link KeyEffect}

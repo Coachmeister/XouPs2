@@ -33,7 +33,7 @@ public class MultiFrontCenterEffect implements AreaEffectProducer {
 		b = new SequenceAnimation();
 		a = new SequenceAnimation();
 		for (int i = 0; i < effects.length; i++) {
-			effects[i].adjustOpacity(opacityMultiplyer);
+			effects[i].setOpacity(opacityMultiplyer);
 			AreaEffect effect = (AreaEffect) effects[i].getEffect();
 			r.append(effect.getRedAnimation(), "r" + i);
 			g.append(effect.getGreenAnimation(), "g" + i);
@@ -55,7 +55,7 @@ public class MultiFrontCenterEffect implements AreaEffectProducer {
 	}
 	
 	@Override
-	public void adjustOpacity(double opacity) {
+	public void setOpacity(double opacity) {
 		opacityMultiplyer = opacity;
 		calculateValues(effects);
 	}
