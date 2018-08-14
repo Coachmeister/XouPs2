@@ -119,7 +119,7 @@ public class EffectContainer implements EffectView {
 		} else {
 			delay = effects.stream().map(effect -> ((FixedEffect) effect).getRemainingTime()).reduce(STANDARD_DELAY_TIME, Math::min);
 		}
-		logger.info("Can be paused for: " + delay + " ms");
+		logger.fine("Can be paused for: " + delay + " ms");
 		resetTimer();
 		resumeTimer.schedule(resumeTask, delay);
 	}

@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class CensusData extends ConditionData {
 	/*
@@ -28,7 +29,7 @@ public class CensusData extends ConditionData {
 	private String resolve;
 	private HashMap<String, String> searchTerms;
 	private HashMap<String, String> eventSearchTerms;
-	
+	private Logger logger = Logger.getLogger(getClass().getName());
 	/**
 	 * Example:
 	 * HashMap<String, String> params = new HashMap<>();
@@ -125,15 +126,15 @@ public class CensusData extends ConditionData {
 				}
 			}
 		}
-		System.out.println("possible error in query. Target response was not produced:");
-		System.out.println("Query: " + queryString);
-		System.out.println("Response: " + response);
-		response.keySet().forEach(System.out::println);
+		logger.severe("possible error in query. Target response was not produced:");
+		logger.severe("Query: " + queryString);
+		logger.severe("Response: " + response);
+		response.keySet().forEach(logger::info);
 		return "";
 	}
 	
 	private JSONObject unpackSingleResponseFromArray(JSONObject response) {
-		System.out.println("Census response: "+response);
+		logger.info("Census response: "+response);
 		if (response.keySet().stream().anyMatch(it -> it.contains("list"))) {
 			JSONArray responseList = response.getJSONArray(response.keySet().stream()
 					.filter(it -> it.contains("list"))
