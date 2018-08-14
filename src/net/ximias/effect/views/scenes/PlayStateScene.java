@@ -270,7 +270,8 @@ public class PlayStateScene implements EffectScene {
 		Color reviveGreen = new Color(0.0, 1, 0.2, 1);
 		FadingEffectProducer revive = new FadingEffectProducer(reviveGreen, 1000);
 		
-		revive.attachPeripheralEffect(new WaveEffectProducer(Color.WHITE, 500,8,WaveEffectDirection.DOWN_TO_UP));
+		
+		revive.attachPeripheralEffect(new MultiKeyEffectProducer(new DelayProducer(250),new WaveEffectProducer(Color.WHITE, 500,3,WaveEffectDirection.DOWN_TO_UP)));
 		
 		SingleCondition isReviveExperience = experienceDescriptionContains("revive");
 		AllCondition isRevive = new AllCondition(isReviveExperience, isPlayer, isNotHive);
