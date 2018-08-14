@@ -17,18 +17,31 @@ import java.util.logging.Logger;
  * Used to display hardware effects on logitech peripherals.
  */
 public class Logitech extends AbstractKeyboard implements Renderer {
-	private static final int FRAME_RATE_MS = 17; // 58 frames per second.
+	private static final int FRAME_RATE_MS = 33; //Appears to work better at 30 fps
 	private final HashMap<Integer, Color> exemptKeys = new HashMap<>(32);
 	private KeyboardEffectContainer effectContainer;
 	private boolean multiKey;
-	private Timer animationTimer = new Timer(true);
+	private static final String ANIMATION_TIMER_NAME = "Logitech animation timer";
+	private Timer animationTimer = new Timer(ANIMATION_TIMER_NAME,true);
 	private Logger logger = Logger.getLogger(getClass().getName());
-	
+	private boolean gFlashOn = true;
+	private boolean isStarted = false;
+	private long lastRender = System.currentTimeMillis();
 	
 	public Logitech(EffectContainer globalEffectContainer, boolean enableMultiKey) {
 		super(globalEffectContainer);
 		multiKey = enableMultiKey;
 		effectContainer = new KeyboardEffectContainer(globalEffectContainer, LogiLED.LOGI_LED_BITMAP_WIDTH, LogiLED.LOGI_LED_BITMAP_HEIGHT);
+		effectContainer.subscribeResumeRendering(this);
+		Timer animationMonitor = new Timer(ANIMATION_TIMER_NAME,true);
+		animationMonitor.scheduleAtFixedRate(new TimerTask() {
+			@Override
+			public void run() {
+				if (System.currentTimeMillis() > lastRender+61_000){
+					logger.severe("Keyboard renderer stopped for over 1 minute");
+				}
+			}
+		},1000,1000);
 	}
 	
 	@Override
@@ -155,10 +168,11 @@ public class Logitech extends AbstractKeyboard implements Renderer {
 		
 		if (multiKey) {
 			LogiLED.LogiLedSetTargetDevice(LogiLED.LOGI_DEVICETYPE_PERKEY_RGB);
-			setAllNonBitmapKeys(globalColor);
+			setAllNonBitmapKeys(gFlashOn ? globalColor : globalColor.invert());
+			gFlashOn = !gFlashOn;
 			LogiLED.LogiLedSetLightingFromBitmap(getFormattedColorArray());
-			
 		}
+		if (effectContainer.isPausable()) stop();
 	}
 	
 	/**
@@ -183,6 +197,7 @@ public class Logitech extends AbstractKeyboard implements Renderer {
 		LogiLED.LogiLedSetTargetDevice(LogiLED.LOGI_DEVICETYPE_PERKEY_RGB);
 		exemptKeys.clear();
 		setExemptKeyColors();
+		drawFrame();
 	}
 	
 	/**
@@ -225,22 +240,28 @@ public class Logitech extends AbstractKeyboard implements Renderer {
 	/**
 	 * Starts the rendering.
 	 */
-	private void start() {
-		stop();
-		animationTimer.scheduleAtFixedRate(new TimerTask() {
-			@Override
-			public void run() {
-				drawFrame();
-			}
-		}, 0, FRAME_RATE_MS);
+	private synchronized void start() {
+		if (!isStarted){
+			logger.warning("Keyboard rendering started/resumed");
+			isStarted = true;
+			animationTimer.scheduleAtFixedRate(new TimerTask() {
+				@Override
+				public void run() {
+					lastRender = System.currentTimeMillis();
+					drawFrame();
+				}
+			}, 0, FRAME_RATE_MS);
+		}
 	}
 	
 	/**
 	 * Stops the rendering.
 	 */
-	private void stop() {
+	private synchronized void stop() {
+		logger.warning("Keyboard rendering stopped/paused");
+		isStarted = false;
 		animationTimer.cancel();
-		animationTimer = new Timer(true);
+		animationTimer = new Timer(ANIMATION_TIMER_NAME,true);
 	}
 	
 	/**
@@ -248,6 +269,7 @@ public class Logitech extends AbstractKeyboard implements Renderer {
 	 * @param multiKey true, if a per-key RGB hardware is among the peripherals.
 	 */
 	public void setMultiKey(boolean multiKey) {
+		resumeRendering();
 		this.multiKey = multiKey;
 	}
 	

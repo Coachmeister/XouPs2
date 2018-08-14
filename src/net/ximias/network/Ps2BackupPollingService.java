@@ -13,11 +13,13 @@ import java.util.logging.Logger;
  * Used for polling the census as a backup for when the streaming is down.
  */
 public class Ps2BackupPollingService {
-	private Timer pollTimer = new Timer(true);
+	private final String POLL_TIMER_NAME = "PS2 polling timer";
+	private Timer pollTimer = new Timer(POLL_TIMER_NAME,true);
 	private String lastTimestamp = "";
 	private Ps2EventStreamingConnection receiver;
 	private Logger logger = Logger.getLogger(getClass().getName());
 	private static final String STATUS_STRING = "Event streaming servers offline. Polling census for events. Expect slowness (potato mode activated).";
+	
 	public Ps2BackupPollingService(Ps2EventStreamingConnection receiver) {
 		this.receiver = receiver;
 	}
@@ -58,6 +60,6 @@ public class Ps2BackupPollingService {
 	
 	private void resetTimer(){
 		pollTimer.cancel();
-		pollTimer = new Timer(true);
+		pollTimer = new Timer(POLL_TIMER_NAME,true);
 	}
 }

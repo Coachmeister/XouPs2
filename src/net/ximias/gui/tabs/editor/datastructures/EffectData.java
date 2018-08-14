@@ -1,7 +1,9 @@
 package net.ximias.gui.tabs.editor.datastructures;
 
+import javafx.scene.paint.Color;
 import net.ximias.effect.EffectProducer;
 import net.ximias.effect.EffectView;
+import net.ximias.effect.producers.TimedEffectProducer;
 import net.ximias.effect.views.scenes.PlayStateScene;
 import net.ximias.network.Ps2EventStreamingConnection;
 import net.ximias.psEvent.condition.EventCondition;
@@ -25,6 +27,12 @@ public class EffectData {
 	public EffectData(EffectView view) {
 		this.view = view;
 		scene = new PlayStateScene(view, connection);
+		connection.hasDisconnectedProperty().addListener((observable, oldValue, newValue) -> {
+			if (newValue){
+				view.addEffect(new TimedEffectProducer(Color.BLACK, 200).build());
+				scene.updateBackground();
+			}
+		});
 	}
 	
 	public void linkEffectWithEvent(String eventName, String effectName){

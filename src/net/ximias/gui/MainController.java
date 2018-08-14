@@ -232,7 +232,7 @@ public class MainController extends Application implements Renderer{
 	}
 	
 	private void animateFrame() {
-		if (effectContainer.canPauseRendering()){
+		if (effectContainer.isPausable()){
 			animationTimer.stop();
 			logger.fine("Rendering has been paused.");
 		}

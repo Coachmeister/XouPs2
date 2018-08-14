@@ -28,6 +28,7 @@ import java.util.TimerTask;
 import java.util.logging.Logger;
 
 public class LoginTab {
+	public static final String LOGIN_NAME_CHANGE_TIMER = "Login name change timer";
 	public ChoiceBox<JSONObject> characterChoice;
 	public TextField nameField;
 	public Button selectionButton;
@@ -35,14 +36,14 @@ public class LoginTab {
 	MainController mainController;
 	private ArrayList<String> errors = new ArrayList<>(5);
 	private Logger logger = Logger.getLogger(getClass().getName());
-	private Timer nameUpdateTimer = new Timer();
+	private Timer nameUpdateTimer = new Timer(LOGIN_NAME_CHANGE_TIMER,true);
 	
 	public void injectMainController(MainController controller) {
 		logger.info("init");
 		this.mainController = controller;
 		nameField.textProperty().addListener((observable, oldValue, newValue) -> {
 			nameUpdateTimer.cancel();
-			nameUpdateTimer = new Timer(true);
+			nameUpdateTimer = new Timer(LOGIN_NAME_CHANGE_TIMER,true);
 			characterChoice.setDisable(true);
 			nameUpdateTimer.schedule(new TimerTask() {
 				@Override

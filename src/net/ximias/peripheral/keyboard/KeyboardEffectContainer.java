@@ -1,29 +1,49 @@
 package net.ximias.peripheral.keyboard;
 
 import javafx.scene.paint.Color;
+import net.ximias.effect.Renderer;
 import net.ximias.effect.views.EffectContainer;
+import net.ximias.effect.views.PauseableContainer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.logging.Logger;
 
-public class KeyboardEffectContainer {
+public class KeyboardEffectContainer extends PauseableContainer implements Renderer {
 	private final EffectContainer globalContainer;
 	private final LinkedList<KeyEffect> effects = new LinkedList<>();
 	private int rows,columns;
+	private Logger logger = Logger.getLogger(getClass().getName());
 	
 	public KeyboardEffectContainer(EffectContainer globalContainer, int columns, int rows) {
 		this.globalContainer = globalContainer;
 		this.columns = columns;
 		this.rows = rows;
+		globalContainer.subscribeResumeRendering(this);
 	}
 	
 	public Color getGlobalColor(){
 		return globalContainer.getColor();
 	}
 	
+	@Override
+	protected long calculateResumeTime() {
+		return -1;
+	}
+	
+	@Override
+	public boolean canPauseRendering(){
+		if (!globalContainer.canPauseRendering()) return false;
+		return effects.isEmpty();
+	}
+	
 	public void addEffect(KeyEffect effect){
-		effects.add(effect);
+		synchronized (effects){
+			effects.add(effect);
+			logger.warning("KeyEffect added!");
+			resumeNow();
+		}
 	}
 	
 	public Color[][] getPerKeyColor(){
@@ -31,19 +51,21 @@ public class KeyboardEffectContainer {
 	}
 	
 	private Color[][] getColorsFromAndClearEffects(){
-		effects.removeIf(KeyEffect::isDone);
-		
-		Color[][][] interpolationColors = new Color[effects.size()+1][columns][rows];
-		Color[][] backgroundComp = new Color[columns][rows];
-		Color[] backgroundRow = new Color[rows];
-		Arrays.fill(backgroundRow, getGlobalColor().deriveColor(0,1,1,0.2));
-		Arrays.fill(backgroundComp, backgroundRow);
-		interpolationColors[0] = backgroundComp;
-		
-		for (int i = 1; i < effects.size() + 1; i++) {
-			interpolationColors[i] = effects.get(i-1).getKeyColors(columns, rows);
+		synchronized (effects){
+			effects.removeIf(KeyEffect::isDone);
+			
+			Color[][][] interpolationColors = new Color[effects.size()+1][columns][rows];
+			Color[][] backgroundComp = new Color[columns][rows];
+			Color[] backgroundRow = new Color[rows];
+			Arrays.fill(backgroundRow, getGlobalColor().deriveColor(0,1,1,0.2));
+			Arrays.fill(backgroundComp, backgroundRow);
+			interpolationColors[0] = backgroundComp;
+			
+			for (int i = 1; i < effects.size() + 1; i++) {
+				interpolationColors[i] = effects.get(i-1).getKeyColors(columns, rows);
+			}
+			return interpolate(interpolationColors);
 		}
-		return interpolate(interpolationColors);
 	}
 	
 	private Color[][] interpolate(Color[][][] colors){
@@ -87,5 +109,10 @@ public class KeyboardEffectContainer {
 		interpolationColors[0] = backgroundComp;
 		
 		System.out.println(interpolationColors.length);
+	}
+	
+	@Override
+	public void resumeRendering() {
+		resumeNow();
 	}
 }

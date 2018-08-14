@@ -15,6 +15,7 @@ import java.util.logging.Logger;
  * Events can be subscribed to by calling subscribePlayerEvent or subscribeWorldEvent.
  */
 public class Ps2EventStreamingConnection {
+	public static final int CONNECTION_TIMEOUT = 90_000;
 	private final HashMap<String, ArrayList<Ps2EventHandler>> subscribedEvents = new HashMap<>();
 	private final HashMap<String, ArrayList<String>> eventsIds = new HashMap<>();
 	private final ArrayList<Ps2EventHandler> globalHandlers = new ArrayList<>(12);
@@ -22,12 +23,15 @@ public class Ps2EventStreamingConnection {
 	
 	private final Logger logger = Logger.getLogger(getClass().getName());
 	private final SimpleBooleanProperty isAvailable = new SimpleBooleanProperty(true);
+	private final SimpleBooleanProperty hasDisconnected = new SimpleBooleanProperty(false);
 	private final Ps2BackupPollingService pollingService = new Ps2BackupPollingService(this);
 	private final ArrayList<WebsocketClientEndpoint.MessageHandler> messageHandlers = new ArrayList<>();
+	private static Ps2EventStreamingConnection instance;
 	
 	private long lastMessageTime = System.currentTimeMillis();
 	
 	public Ps2EventStreamingConnection() {
+		instance = this;
 		initClientEndpoint();
 		initConnectionFailCheck();
 	}
@@ -63,15 +67,17 @@ public class Ps2EventStreamingConnection {
 	 * Restarts the connection, if the message happened after a certain threshold.
 	 */
 	private void initConnectionFailCheck() {
-		Timer connectionTimeout = new Timer(true);
+		Timer connectionTimeout = new Timer("Ps connection timeout detector",true);
 		connectionTimeout.scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
-				if (System.currentTimeMillis()>lastMessageTime+60_000){
-					logger.warning("Census connection unresponsive, reconnecting...");
+				if (System.currentTimeMillis()> lastMessageTime + CONNECTION_TIMEOUT&&isAvailable.get()){
+					logger.warning("Event streaming connection unresponsive, reconnecting...");
+					hasDisconnected.set(true);
 					lastMessageTime = System.currentTimeMillis();
 					initClientEndpoint();
 					resubscribeAllEvents();
+					hasDisconnected.set(false);
 				}
 			}
 		},20_000,20_000);
@@ -123,7 +129,7 @@ public class Ps2EventStreamingConnection {
 			public void handleMessage(String message) {
 				JSONObject response = new JSONObject(message);
 				if (response.has("subscription") && response.getJSONObject("subscription").getInt("characterCount") == 0) {
-					removeMessageHandlers(this);
+					removeMessageHandler(this);
 					logger.warning("Subscriptions cleared");
 					ArrayList<ArrayList<Ps2EventHandler>> eventsToSubscribe = new ArrayList<>();
 					eventsToSubscribe.addAll(subscribedEvents.values());
@@ -131,18 +137,19 @@ public class Ps2EventStreamingConnection {
 					subscribedEvents.clear();
 					globalHandlers.clear();
 					eventsIds.clear();
-					eventsToSubscribe.forEach(it -> it.forEach(that -> that.register(Ps2EventStreamingConnection.this)));
+					eventsToSubscribe.forEach(it -> it.forEach(that -> {
+						that.register(instance);
+					}));
 				}
 			}
 		});
-		
 	}
 	
 	private void addMessageHandler(WebsocketClientEndpoint.MessageHandler messageHandler) {
 		messageHandlers.add(messageHandler);
 	}
 	
-	public void removeMessageHandlers(WebsocketClientEndpoint.MessageHandler messageHandler){
+	public void removeMessageHandler(WebsocketClientEndpoint.MessageHandler messageHandler){
 	    messageHandlers.remove(messageHandler);
 	}
 	
@@ -267,6 +274,10 @@ public class Ps2EventStreamingConnection {
 		}
 		
 		
+	}
+	
+	public ReadOnlyBooleanProperty hasDisconnectedProperty(){
+		return ReadOnlyBooleanProperty.readOnlyBooleanProperty(hasDisconnected);
 	}
 	
 	public ReadOnlyBooleanProperty isAvailableProperty() {

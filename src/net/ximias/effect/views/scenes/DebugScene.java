@@ -20,11 +20,11 @@ public class DebugScene implements EffectScene {
 		EventEffectProducer effect = new EventEffectProducer( darkblue,"blue");
 		view.addEffect(effect.build());
 		
-		new Timer(true).scheduleAtFixedRate(new TimerTask() {
+		new Timer("Recurring test effects (only for debug)",true).scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
 				count++;
-				//heal();
+				heal();
 				//kill();
 				//revive();
 				//death();

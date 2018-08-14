@@ -42,7 +42,7 @@ public class LightSourceEffectExample implements HueExampleEffect {
 		
 		effect.setColorAnimation(new TweenAnimation(1,0,8000,TweenType.Linear),new ConstantAnimation(0),new TweenAnimation(0,1,8000,TweenType.Linear));
 		
-		new Timer().schedule(new TimerTask() {
+		new Timer("(Only for debug) Hue effect animation timer").schedule(new TimerTask() {
 			@Override
 			public void run() {
 				effect.setColorAnimation(new ConstantAnimation(1),new ConstantAnimation(0),new TweenAnimation(1,1,10000,TweenType.Linear));

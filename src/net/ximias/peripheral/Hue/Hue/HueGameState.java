@@ -21,7 +21,7 @@ public class HueGameState implements EffectAddListener {
 	private HueEffectWrapper effectWrapper = new HueEffectWrapper();
 	private SimpleBooleanProperty running = new SimpleBooleanProperty(false);
 	private Logger logger = Logger.getLogger(getClass().getName());
-	private Timer cancellationTimer = new Timer(true);
+	private Timer cancellationTimer = new Timer("HueEffect cancellation timer.",true);
 	private EffectContainer effectContainer;
 	
 	public HueGameState(Entertainment entertainment, EffectContainer effectContainer) {

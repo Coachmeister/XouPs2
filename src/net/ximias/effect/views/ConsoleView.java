@@ -18,7 +18,7 @@ public class ConsoleView implements EffectView {
 	
 	public ConsoleView(){
 		effects = new ArrayList<>(60);
-		new Timer().scheduleAtFixedRate(new TimerTask() {
+		new Timer("Console view timer").scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
 				System.out.println(getColorAndClearFinishedEffects());
