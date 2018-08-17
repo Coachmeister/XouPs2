@@ -11,7 +11,7 @@ import java.util.logging.LogRecord;
 
 public class WebLogFormatter extends Formatter {
 	private final Date date = new Date();
-	private final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+	private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 	private static final String format = LoggingSupport.getSimpleFormat();
 	
 	@Override
@@ -21,7 +21,7 @@ public class WebLogFormatter extends Formatter {
 		if (record.getSourceClassName() != null) {
 			source = record.getSourceClassName().substring(record.getSourceClassName().lastIndexOf('.')+1);
 			if (record.getSourceMethodName() != null) {
-				source += "#" + record.getSourceMethodName();
+				source += " at " + record.getSourceMethodName();
 			}
 		} else {
 			source = record.getLoggerName();

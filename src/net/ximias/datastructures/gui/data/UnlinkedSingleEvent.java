@@ -1,4 +1,4 @@
-package net.ximias.gui.tabs.editor.datastructures;
+package net.ximias.datastructures.gui.data;
 
 import net.ximias.effect.EffectProducer;
 import net.ximias.effect.EffectView;

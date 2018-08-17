@@ -1,4 +1,4 @@
-package net.ximias.network;
+package net.ximias.datastructures.collections;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

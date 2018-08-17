@@ -87,6 +87,22 @@
     -fx-selection-bar: accent;
 }
 
+.warning{
+    -fx-text-fill: yellow;
+    -fx-selection-bar: accent;
+}
+
+.info{
+    -fx-text-fill: text;
+    -fx-selection-bar: accent;
+}
+
+.severe{
+    -fx-text-fill: red;
+    -fx-selection-bar: accent;
+}
+
+
 .list-cell:even{
     -fx-background: background;
 }

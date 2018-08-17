@@ -1,4 +1,4 @@
-package net.ximias.gui.tabs.editor.datastructures;
+package net.ximias.datastructures.gui.data;
 
 import javafx.scene.paint.Color;
 import net.ximias.effect.EffectProducer;

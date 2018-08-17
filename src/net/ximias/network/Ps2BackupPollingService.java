@@ -1,7 +1,7 @@
 package net.ximias.network;
 
 import net.ximias.gui.StatusSeverity;
-import net.ximias.gui.guiElements.StatusIndicator;
+import net.ximias.datastructures.gui.nodes.StatusIndicator;
 import net.ximias.persistence.ApplicationConstants;
 import org.json.JSONObject;
 

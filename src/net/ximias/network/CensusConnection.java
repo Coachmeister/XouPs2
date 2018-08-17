@@ -1,5 +1,6 @@
 package net.ximias.network;
 
+import net.ximias.datastructures.collections.LeastRecentlyUsedCache;
 import net.ximias.persistence.ApplicationConstants;
 import org.json.JSONArray;
 import org.json.JSONObject;

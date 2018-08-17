@@ -1,4 +1,4 @@
-package net.ximias.gui.guiElements;
+package net.ximias.datastructures.gui.nodes;
 
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;

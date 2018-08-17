@@ -20,9 +20,11 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import net.ximias.effect.Renderer;
 import net.ximias.effect.views.EffectContainer;
-import net.ximias.gui.guiElements.StatusIndicator;
+import net.ximias.datastructures.gui.nodes.StatusIndicator;
 import net.ximias.gui.tabs.*;
-import net.ximias.gui.tabs.editor.datastructures.EffectData;
+import net.ximias.datastructures.gui.data.EffectData;
+import net.ximias.logging.CollectionLogAppender;
+import net.ximias.logging.FileLogAppender;
 import net.ximias.logging.WebLogAppender;
 import net.ximias.persistence.ApplicationConstants;
 import net.ximias.persistence.Persisted;
@@ -38,7 +40,8 @@ import java.util.logging.*;
 public class MainController extends Application implements Renderer{
 	
 	private static final Logger PROJECT_LEVEL_LOGGER = Logger.getLogger("net.ximias");
-	private static final WebLogAppender webLogAppender = new WebLogAppender();
+	private static final FileLogAppender fileLogAppender = new FileLogAppender();
+	private static boolean logDisabled = false;
 	private final EffectContainer effectContainer = new EffectContainer(ApplicationConstants.DEFAULT_EFFECT_INTENSITY, this);
 	private AnimationTimer animationTimer;
 	private Logger logger = Logger.getLogger(getClass().getName());
@@ -131,6 +134,8 @@ public class MainController extends Application implements Renderer{
 	private void initialize() {
 		Platform.runLater(() -> {
 			PROJECT_LEVEL_LOGGER.warning("GUI initializing...");
+			setupLogTab();
+			PROJECT_LEVEL_LOGGER.info("Log tab initialized!");
 			animationTimer = new AnimationTimer() {
 				@Override
 				public void handle(long now) {
@@ -150,7 +155,6 @@ public class MainController extends Application implements Renderer{
 			setupHueTab();
 			setupKeyboardTab();
 			setupFeaturesTab();
-			setupLogTab();
 			setupLoginTab();
 			statusIndicatorController.injectMainController(this);
 			statusIndicatorController.injectComponents(statusIndicator, statusRectangle, statusText);
@@ -220,7 +224,7 @@ public class MainController extends Application implements Renderer{
 	}
 	
 	private void setupLogTab() {
-		logTabController.injectMainController(this, webLogAppender);
+		logTabController.injectMainController(this, fileLogAppender.getLogFile());
 	}
 	
 	private void setupTabListener() {
@@ -262,15 +266,23 @@ public class MainController extends Application implements Renderer{
 		return tabPane.getSelectionModel().getSelectedIndex() == 0 ? effectViewController.getCanvas() : propertiesTabController.getCanvas();
 	}
 	
+	public void addProjectLevelLoggerHandler(Handler handler){
+		PROJECT_LEVEL_LOGGER.addHandler(handler);
+		if (logDisabled){
+			handler.publish(new LogRecord(Level.SEVERE, "Logging is disabled on account of missing logging.properties file."));
+		}
+	}
+	
 	private static void initLogger() {
 		try (FileInputStream fis = new FileInputStream("logging.properties")) {
 			LogManager logManager = LogManager.getLogManager();
 			logManager.readConfiguration(fis);
-			PROJECT_LEVEL_LOGGER.addHandler(webLogAppender);
+			PROJECT_LEVEL_LOGGER.addHandler(fileLogAppender);
 		} catch (IOException e) {
+			logDisabled = true;
 			System.err.println("Logging config file not readable: " + e +
 			                   "\n Disabling output to Logging tab.");
-			webLogAppender.append(new LogRecord(Level.SEVERE, "Logging tab is disabled on account of missing logging.properties file."));
+			fileLogAppender.publish(new LogRecord(Level.SEVERE, "Logging is disabled on account of missing logging.properties file."));
 		}
 	}
 	
