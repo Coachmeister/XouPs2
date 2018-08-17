@@ -13,13 +13,20 @@ public class WebLogFormatter extends Formatter {
 	private final Date date = new Date();
 	private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 	private static final String format = LoggingSupport.getSimpleFormat();
+	public static boolean verbose = false;
 	
 	@Override
-	public String format(LogRecord record) {
+	public String format(LogRecord recordIn) {
+		TypedRecord record;
+		if (!(recordIn instanceof TypedRecord)) {
+			record = TypedRecord.toTypedRecord(recordIn);
+		}else{
+			record = (TypedRecord) recordIn;
+		}
 		date.setTime(record.getMillis());
 		String source;
 		if (record.getSourceClassName() != null) {
-			source = record.getSourceClassName().substring(record.getSourceClassName().lastIndexOf('.')+1);
+			source = verbose ? record.getSourceClassName() : record.getSourceClassName().substring(record.getSourceClassName().lastIndexOf('.')+1);
 			if (record.getSourceMethodName() != null) {
 				source += " at " + record.getSourceMethodName();
 			}
@@ -39,7 +46,8 @@ public class WebLogFormatter extends Formatter {
 		}
 		
 		return (dateFormatter.format(date)+" "+
-				"["+record.getLevel()+"]"+" "+
+		        "["+record.getCategory().getName().toUpperCase()+"] "+
+		        "["+record.getLevel()+"]"+" "+
 				"["+source+"]"+ " "+
 				message+" "+
 				throwable);

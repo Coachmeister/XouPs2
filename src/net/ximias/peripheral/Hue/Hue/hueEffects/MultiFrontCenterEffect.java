@@ -4,8 +4,8 @@ import com.philips.lighting.hue.sdk.wrapper.entertainment.Area;
 import com.philips.lighting.hue.sdk.wrapper.entertainment.animation.SequenceAnimation;
 import com.philips.lighting.hue.sdk.wrapper.entertainment.effect.AreaEffect;
 import com.philips.lighting.hue.sdk.wrapper.entertainment.effect.Effect;
+import net.ximias.logging.Logger;
 
-import java.util.logging.Logger;
 
 public class MultiFrontCenterEffect implements AreaEffectProducer {
 	private int duration;

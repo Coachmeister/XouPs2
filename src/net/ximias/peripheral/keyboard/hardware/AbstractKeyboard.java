@@ -7,7 +7,8 @@ import net.ximias.peripheral.keyboard.KeyEffectProducer;
 import net.ximias.peripheral.keyboard.Keyboard;
 
 import java.util.List;
-import java.util.logging.Logger;
+import net.ximias.logging.Logger;
+
 
 public abstract class AbstractKeyboard implements EffectAddListener, Keyboard {
 	private Logger logger = Logger.getLogger(getClass().getName());

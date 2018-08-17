@@ -15,7 +15,8 @@ import net.ximias.effect.producers.MultiEffectProducer;
 import net.ximias.effect.producers.TimedEffectProducer;
 
 import java.util.ArrayList;
-import java.util.logging.Logger;
+import net.ximias.logging.Logger;
+
 
 /**
  * Wrapper for displaying the standard effects on the hue lights.

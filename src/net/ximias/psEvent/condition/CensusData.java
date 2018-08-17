@@ -7,7 +7,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
+import net.ximias.logging.Logger;
+
 
 public class CensusData extends ConditionData {
 	/*

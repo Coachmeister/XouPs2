@@ -1,16 +1,11 @@
 package net.ximias.network;
 
 import javafx.scene.paint.Color;
+import net.ximias.logging.Logger;
 import net.ximias.persistence.ApplicationConstants;
 import net.ximias.persistence.Persisted;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import javax.swing.*;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.logging.Logger;
 
 public class CurrentPlayer {
 	private static CurrentPlayer ourInstance;

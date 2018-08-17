@@ -13,9 +13,9 @@ import javafx.util.Callback;
 import net.ximias.datastructures.RandomAccessFileTextReader;
 import net.ximias.datastructures.collections.EvictingObservableList;
 import net.ximias.gui.MainController;
+import net.ximias.logging.Category;
 import net.ximias.logging.CollectionLogAppender;
 import net.ximias.logging.FileLogAppender;
-import net.ximias.logging.Logger;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -57,8 +57,6 @@ public class Log {
 	private final String[] INFO_FILTER = {"SEVERE", "WARNING", "INFO"};
 	private String[] currentFilter = INFO_FILTER;
 	
-	// TODO Autoscroll
-	
 	public void injectMainController(MainController controller, RandomAccessFile logFile){
 		this.mainController = controller;
 		fileReader = new RandomAccessFileTextReader(logFile, FileLogAppender.UTF16);
@@ -74,7 +72,7 @@ public class Log {
 	private void populateFilters() {
 		LinkedList<String> categories = new LinkedList<>();
 		categories.add("All");
-		Arrays.stream(Logger.Categories.values()).forEach(it-> categories.add(it.getName()));
+		Arrays.stream(Category.values()).forEach(it-> categories.add(it.getName()));
 		categoryChoice.setItems(FXCollections.observableList(categories));
 		
 		

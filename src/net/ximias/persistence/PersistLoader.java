@@ -1,7 +1,8 @@
 package net.ximias.persistence;
 
 import java.io.*;
-import java.util.logging.Logger;
+import net.ximias.logging.Logger;
+
 
 /**
  * Used to save and restore persisted data as a serialized file or create one if needed.

@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.logging.Logger;
+import net.ximias.logging.Logger;
+
 
 public class Searcher {
 	private SearchProperties properties;

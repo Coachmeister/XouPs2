@@ -9,7 +9,8 @@ import net.ximias.psEvent.condition.SingleCondition;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.logging.Logger;
+import net.ximias.logging.Logger;
+
 
 public class GlobalHandler extends Ps2EventHandler {
 	private final EventCondition condition;

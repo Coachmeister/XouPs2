@@ -8,43 +8,31 @@ public class Logger extends java.util.logging.Logger {
 		super(name, resourceBundleName);
 	}
 	
-	public enum Categories{
-		GENERAL("general"),
-		APPLICATION("application"),
-		EFFECTS("effects"),
-		NETWORK("network");
-		
-		private String name;
-		Categories(String name) {
-			this.name = name;
-		}
-		
-		public String getName() {
-			return name;
-		}
-	}
-	
 	public java.util.logging.Logger general(){
 		return this;
 	}
 	
 	public java.util.logging.Logger application(){
-		return getTypedLogger(Categories.APPLICATION);
+		return getTypedLogger(Category.APPLICATION);
 	}
 	
 	public java.util.logging.Logger effects(){
-		return getTypedLogger(Categories.EFFECTS);
+		return getTypedLogger(Category.EFFECTS);
 	}
 	
 	public java.util.logging.Logger network(){
-		return getTypedLogger(Categories.NETWORK);
+		return getTypedLogger(Category.NETWORK);
+	}
+	
+	public java.util.logging.Logger logAs(Category category){
+		return getTypedLogger(category);
 	}
 	
 	@Override
 	public void log(LogRecord record) {
-		record.setMessage("[general] "+record.getMessage());
-		System.out.println("log: "+record.getMessage());
-		super.log(record);
+		TypedRecord ret = TypedRecord.toTypedRecord(record);
+		ret.setCategory(Category.GENERAL);
+		super.log(ret);
 	}
 	
 	public static Logger getLogger(String name){
@@ -53,12 +41,14 @@ public class Logger extends java.util.logging.Logger {
 	}
 	
 	
-	public Logger getTypedLogger(Categories category){
-		return new Logger(getName()+" #"+category,getResourceBundleName()){
+	private Logger getTypedLogger(Category category){
+		if (category == Category.GENERAL) return this;
+		return new Logger(getName()+" #"+category.getName(),getResourceBundleName()){
 			@Override
 			public void log(LogRecord record) {
-				record.setMessage("["+category.getName()+"] "+record.getMessage());
-				super.log(record);
+				TypedRecord ret = TypedRecord.toTypedRecord(record);
+				ret.setCategory(category);
+				super.log(ret);
 			}
 		};
 	}

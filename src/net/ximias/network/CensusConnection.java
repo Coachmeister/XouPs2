@@ -1,6 +1,7 @@
 package net.ximias.network;
 
 import net.ximias.datastructures.collections.LeastRecentlyUsedCache;
+import net.ximias.logging.Logger;
 import net.ximias.persistence.ApplicationConstants;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -12,7 +13,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Logger;
 
 /**
  * Used to look up information via the census API

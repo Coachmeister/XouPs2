@@ -13,8 +13,8 @@ import net.ximias.psEvent.handler.GlobalHandler;
 import net.ximias.psEvent.handler.Ps2EventType;
 import net.ximias.psEvent.handler.SingleEventHandler;
 import org.json.JSONObject;
+import net.ximias.logging.Logger;
 
-import java.util.logging.Logger;
 
 class PlayStateBackground {
 	private final Logger logger = Logger.getLogger(getClass().getName());

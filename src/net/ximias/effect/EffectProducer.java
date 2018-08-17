@@ -7,7 +7,7 @@ import net.ximias.peripheral.keyboard.KeyEffect;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
+import net.ximias.logging.Logger;
 import java.util.stream.Collectors;
 
 public abstract class EffectProducer extends JsonSerializable{

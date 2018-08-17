@@ -12,7 +12,6 @@ import net.ximias.psEvent.condition.*;
 import net.ximias.psEvent.handler.*;
 
 import java.util.HashMap;
-import java.util.logging.Logger;
 
 public class PlayStateScene implements EffectScene {
 	private final EffectView view;

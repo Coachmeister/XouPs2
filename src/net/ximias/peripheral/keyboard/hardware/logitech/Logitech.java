@@ -10,7 +10,8 @@ import net.ximias.peripheral.keyboard.hardware.AbstractKeyboard;
 
 import java.lang.reflect.Field;
 import java.util.*;
-import java.util.logging.Logger;
+import net.ximias.logging.Logger;
+
 
 /**
  * Logitech specific implementation of the Keyboard interface.

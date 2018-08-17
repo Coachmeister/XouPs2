@@ -6,7 +6,8 @@ import com.philips.lighting.hue.sdk.wrapper.entertainment.effect.Effect;
 import javafx.scene.paint.Color;
 
 import java.util.HashMap;
-import java.util.logging.Logger;
+import net.ximias.logging.Logger;
+
 
 public class GlobalConstantEffect implements HueEffect {
 	private Color color;

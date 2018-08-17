@@ -24,7 +24,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.logging.Logger;
+import net.ximias.logging.Logger;
+
 
 public class LoginTab {
 	public static final String LOGIN_NAME_CHANGE_TIMER = "Login name change timer";

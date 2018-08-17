@@ -9,7 +9,8 @@ import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
-import java.util.logging.Logger;
+import net.ximias.logging.Logger;
+
 
 /**
  * Modifiable color effect.

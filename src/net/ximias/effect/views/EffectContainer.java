@@ -4,13 +4,8 @@ import javafx.scene.paint.Color;
 import net.ximias.effect.*;
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
+import net.ximias.logging.Logger;
+
 
 /**
  * Effect container. Poll getColor to get the color of this instant.

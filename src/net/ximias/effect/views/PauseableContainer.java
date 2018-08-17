@@ -5,7 +5,8 @@ import net.ximias.effect.Renderer;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.logging.Logger;
+import net.ximias.logging.Logger;
+
 
 public abstract class PauseableContainer {
 	private ArrayList<Renderer> renderers = new ArrayList<>(9);

@@ -7,7 +7,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.logging.Logger;
+import net.ximias.logging.Logger;
+
 
 /**
  * Receives an array of Condition data and a Condition to apply to the given data.

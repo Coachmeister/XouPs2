@@ -16,7 +16,8 @@ import javafx.util.Callback;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.logging.Logger;
+import net.ximias.logging.Logger;
+
 
 public class SortedStringColorTable<S extends Map.Entry<String, Color>> extends javafx.scene.control.TableView<S> {
 	

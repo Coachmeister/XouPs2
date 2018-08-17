@@ -2,13 +2,13 @@ package net.ximias.network;
 
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import net.ximias.logging.Logger;
 import net.ximias.psEvent.handler.Ps2EventHandler;
 import org.json.JSONObject;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
-import java.util.logging.Logger;
 
 /**
  * Connects to the event streaming part of the census API.

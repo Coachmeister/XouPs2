@@ -2,7 +2,7 @@ package net.ximias.network;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.logging.Logger;
+import net.ximias.logging.Logger;
 import javax.swing.*;
 import javax.websocket.ClientEndpoint;
 import javax.websocket.CloseReason;

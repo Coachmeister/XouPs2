@@ -9,7 +9,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -18,14 +21,12 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import net.ximias.datastructures.gui.data.EffectData;
+import net.ximias.datastructures.gui.nodes.StatusIndicator;
 import net.ximias.effect.Renderer;
 import net.ximias.effect.views.EffectContainer;
-import net.ximias.datastructures.gui.nodes.StatusIndicator;
 import net.ximias.gui.tabs.*;
-import net.ximias.datastructures.gui.data.EffectData;
-import net.ximias.logging.CollectionLogAppender;
 import net.ximias.logging.FileLogAppender;
-import net.ximias.logging.WebLogAppender;
 import net.ximias.persistence.ApplicationConstants;
 import net.ximias.persistence.Persisted;
 
@@ -39,12 +40,12 @@ import java.util.logging.*;
  */
 public class MainController extends Application implements Renderer{
 	
-	private static final Logger PROJECT_LEVEL_LOGGER = Logger.getLogger("net.ximias");
+	private static final net.ximias.logging.Logger PROJECT_LEVEL_LOGGER = net.ximias.logging.Logger.getLogger("net.ximias");
+	private net.ximias.logging.Logger logger = net.ximias.logging.Logger.getLogger(getClass().getName());
 	private static final FileLogAppender fileLogAppender = new FileLogAppender();
 	private static boolean logDisabled = false;
 	private final EffectContainer effectContainer = new EffectContainer(ApplicationConstants.DEFAULT_EFFECT_INTENSITY, this);
 	private AnimationTimer animationTimer;
-	private Logger logger = Logger.getLogger(getClass().getName());
 	private Rectangle statusArea;
 	private StatusIndicator statusIndicatorController = StatusIndicator.getInstance() ;
 	

@@ -31,7 +31,8 @@ import net.ximias.peripheral.Hue.Hue.examples.*;
 
 import java.io.File;
 import java.util.*;
-import java.util.logging.Logger;
+import net.ximias.logging.Logger;
+
 
 public class HueTab {
 	

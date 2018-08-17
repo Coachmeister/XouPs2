@@ -10,7 +10,8 @@ import net.ximias.psEvent.condition.EventCondition;
 import net.ximias.psEvent.handler.Ps2EventHandler;
 
 import java.util.HashMap;
-import java.util.logging.Logger;
+import net.ximias.logging.Logger;
+
 
 public class EffectData {
 	private HashMap<String, EffectProducer> effects = new HashMap<>();

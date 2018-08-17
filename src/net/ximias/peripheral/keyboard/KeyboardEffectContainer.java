@@ -8,7 +8,8 @@ import net.ximias.effect.views.PauseableContainer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.logging.Logger;
+import net.ximias.logging.Logger;
+
 
 public class KeyboardEffectContainer extends PauseableContainer implements Renderer {
 	private final EffectContainer globalContainer;

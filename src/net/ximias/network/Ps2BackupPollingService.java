@@ -2,12 +2,12 @@ package net.ximias.network;
 
 import net.ximias.gui.StatusSeverity;
 import net.ximias.datastructures.gui.nodes.StatusIndicator;
+import net.ximias.logging.Logger;
 import net.ximias.persistence.ApplicationConstants;
 import org.json.JSONObject;
 
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.logging.Logger;
 
 /**
  * Used for polling the census as a backup for when the streaming is down.

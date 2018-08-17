@@ -14,7 +14,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.logging.Logger;
+import net.ximias.logging.Logger;
+
 
 public class HueGameState implements EffectAddListener {
 	private final Entertainment entertainment;
