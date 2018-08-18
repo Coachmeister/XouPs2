@@ -85,19 +85,19 @@ public class SingleCondition extends JsonSerializable implements EventCondition 
 	
 	public boolean evaluate(JSONObject payload){
 			for (int i = 0; i < data.size()-1; i++) {
-				logger.finer("evaluating: "+data.get(i).get(payload)+" "+condition.name()+" "+data.get(i+1).get(payload));
+				logger.effects().fine("evaluating: "+data.get(i).get(payload)+" "+condition.name()+" "+data.get(i+1).get(payload));
 				try{
 					if (!condition.eval(data.get(i).get(payload),data.get(i+1).get(payload))) {
-						logger.finer("Evaluated to false");
+						logger.effects().fine("Evaluated to false");
 						return false;
 					}
 				}catch (NumberFormatException e){
-					logger.severe("Letters can not be compared using "+condition.name()+
+					logger.effects().severe("Letters can not be compared using "+condition.name()+
 							"\ncomparison was: "+data.get(i).get(payload)+" "+condition.name()+" "+data.get(i+1).get(payload));
 					return false;
 				}
 			}
-			logger.finer("Evaluated to true");
+			logger.effects().fine("Evaluated to true");
 			return true;
 	}
 	

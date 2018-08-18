@@ -105,7 +105,6 @@ class PlayStateBackground {
 	
 	
 	public synchronized void intensityChanged(double backgroundBrightness, double backgroundIntensity){
-		logger.finer("Intensity changed");
 		this.backgroundBrightness = backgroundBrightness;
 		this.backgroundIntensity = backgroundIntensity;
 		recalculateBackground();
@@ -113,7 +112,7 @@ class PlayStateBackground {
 	
 	private Color background(Color color){
 		Color result = color.deriveColor(0, 1, backgroundBrightness, backgroundIntensity);
-		if (result.getOpacity() < 0.0009) logger.warning("Background is extremely transparent: "+result.getOpacity());
+		if (result.getOpacity() < 0.0009) logger.effects().warning("Background is extremely transparent: "+result.getOpacity());
 		return result;
 	}
 }

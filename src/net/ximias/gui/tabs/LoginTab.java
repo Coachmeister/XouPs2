@@ -39,7 +39,6 @@ public class LoginTab {
 	private Timer nameUpdateTimer = new Timer(LOGIN_NAME_CHANGE_TIMER,true);
 	
 	public void injectMainController(MainController controller) {
-		logger.info("init");
 		this.mainController = controller;
 		nameField.textProperty().addListener((observable, oldValue, newValue) -> {
 			nameUpdateTimer.cancel();
@@ -85,7 +84,7 @@ public class LoginTab {
 	
 	private synchronized void nameChanged() {
 		try {
-			logger.info("Name changed");
+			logger.general().warning("Name changed");
 			String partlyPlayerName = nameField.getText();
 			if (partlyPlayerName.length() < 5) {
 				characterChoice.setItems(FXCollections.emptyObservableList());

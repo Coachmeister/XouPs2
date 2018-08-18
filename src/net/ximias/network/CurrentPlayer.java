@@ -40,7 +40,7 @@ public class CurrentPlayer {
 			playerInfo = playerObject.getJSONArray("character_list").getJSONObject(0);
 			setZoneId(zoneId);
 		} else {
-			logger.warning("No character list returned: "+ playerObject.toString());
+			logger.network().warning("No character list returned: "+ playerObject.toString());
 		}
 	}
 	
@@ -57,14 +57,14 @@ public class CurrentPlayer {
 		if (playerInfo.has(key)) {
 			return playerInfo.getString(key);
 		}
-		logger.warning("Player variable not found: " + key);
+		logger.general().warning("Player variable not found: " + key);
 		return "";
 	}
 	
 	public void setZoneId(int zoneId) {
 		this.zoneId = zoneId;
 		playerInfo.put("zone_id",String.valueOf(zoneId));
-		logger.info("Zone id updated: "+zoneId);
+		logger.effects().info("Zone id updated: "+zoneId);
 	}
 	
 	public Color getFactionColor(){

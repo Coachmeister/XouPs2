@@ -19,7 +19,7 @@ public class MultiFrontCenterEffect implements AreaEffectProducer {
 	
 	public MultiFrontCenterEffect(AreaEffectProducer[] effects) {
 		this.effects = effects;
-		logger.fine("Initializing MultiFrontEffect with size of: "+effects.length);
+		logger.effects().fine("Initializing MultiFrontEffect with size of: "+effects.length);
 		
 		calculateValues(effects);
 		for (AreaEffectProducer effect : effects) {
@@ -39,9 +39,7 @@ public class MultiFrontCenterEffect implements AreaEffectProducer {
 			g.append(effect.getGreenAnimation(), "g" + i);
 			b.append(effect.getBlueAnimation(), "b" + i);
 			a.append(effect.getOpacityAnimation(), "a" + i);
-			logger.finer("Opacity #"+i+": "+effect.getOpacityAnimation().getValue());
 		}
-		logger.fine("R animation count: "+r.getAnimationCount());
 	}
 	
 	@Override

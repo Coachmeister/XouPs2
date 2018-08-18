@@ -57,10 +57,10 @@ public class Searcher {
 			}
 			currentDepth++;
 			if (currentDepth > properties.maxDepth) return null;
-			logger.info("No result in prioritized directories. Expanded search to: " + next.size() + " directories.");
+			logger.general().info("No result in prioritized directories. Expanded search to: " + next.size() + " directories.");
 			breadth = next;
 		}
-		logger.warning("Single search found no result");
+		logger.general().warning("Single search found no result");
 		return null;
 	}
 	
@@ -86,7 +86,7 @@ public class Searcher {
 			currentDepth++;
 			if (currentDepth>properties.maxDepth) return;
 			if (!properties.isSearchExhaustive && !result.isEmpty()) return;
-			System.out.println("No result in prioritized directories. Expanded search to: "+next.size()+" directories.");
+			logger.general().info("No result in prioritized directories. Expanded search to: "+next.size()+" directories.");
 			breadth = next;
 		}
 	}

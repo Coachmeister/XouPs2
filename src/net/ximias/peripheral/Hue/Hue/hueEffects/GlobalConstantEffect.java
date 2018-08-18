@@ -23,7 +23,7 @@ public class GlobalConstantEffect implements HueEffect {
 	
 	public void setColor(Color color) {
 		AreaEffect thisEffect = constantEffects.get(name);
-		logger.info("Color of "+name+" changed to: "+color);
+		logger.effects().info("Color of "+name+" changed to: "+color);
 		if (thisEffect != null) {
 			thisEffect.setFixedColor(new com.philips.lighting.hue.sdk.wrapper.entertainment.Color(color.getRed(), color.getGreen(), color.getBlue()));
 			thisEffect.setFixedOpacity(color.getOpacity() * opacityMultiplier);

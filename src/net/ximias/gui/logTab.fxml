@@ -24,7 +24,7 @@
                   </Label>
                   <ChoiceBox fx:id="categoryChoice" />
                   <Separator orientation="VERTICAL" />
-                  <CheckBox fx:id="filtersAnd" mnemonicParsing="false" selected="true" text="And">
+                  <CheckBox fx:id="filtersAnd" mnemonicParsing="false" text="And">
                      <HBox.margin>
                         <Insets top="2.0" />
                      </HBox.margin>

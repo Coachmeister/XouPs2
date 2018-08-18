@@ -49,7 +49,7 @@ public class SortedStringColorTable<S extends Map.Entry<String, Color>> extends 
 	 */
 	public void restoreSelection(){
 		if (selectedActions.isEmpty()) {
-			logger.info("Could not restore selection. Selected actions is empty.");
+			logger.application().info("Could not restore selection. Selected actions is empty.");
 			return;
 		}
 		Platform.runLater(() -> {
@@ -59,7 +59,7 @@ public class SortedStringColorTable<S extends Map.Entry<String, Color>> extends 
 			for (int i = 0; i < data.size(); i++) {
 				S s = data.get(i);
 				if (selectedActions.contains(s.getKey())) {
-					logger.info("Selected "+s.getKey());
+					logger.application().info("Selected "+s.getKey());
 					getSelectionModel().select(s);
 				}
 			}

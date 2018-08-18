@@ -36,14 +36,14 @@ public class CensusConnection {
 			try {
 				return cached.get();
 			} catch (InterruptedException e) {
-				staticLogger.severe("Waiting census request interrupted: " + e);
+				staticLogger.network().severe("Waiting census request interrupted: " + e);
 				return ApplicationConstants.EMPTY_JSON;
 			} catch (ExecutionException e) {
-				staticLogger.severe("Exception in census request: " + e);
+				staticLogger.network().severe("Exception in census request: " + e);
 				return ApplicationConstants.EMPTY_JSON;
 			}
 		}
-		staticLogger.info("Looking up data in census: "+urlParameters);
+		staticLogger.network().info("Looking up data in census: "+urlParameters);
 		cached = recentQueries.get(urlParameters);
 		try{
 			JSONObject response = establishConnectionAndQuery(urlParameters);
@@ -59,7 +59,7 @@ public class CensusConnection {
 		HttpURLConnection connection = (HttpURLConnection) new URL("http://census.daybreakgames.com/s:XouPs2/get/ps2/" + urlParameters).openConnection();
 		connection.setRequestMethod("GET");
 		if (connection.getResponseCode() != 200) {
-			staticLogger.severe("Unexpected response code: " + connection.getResponseCode());
+			staticLogger.network().severe("Unexpected response code: " + connection.getResponseCode());
 			if (connection.getResponseCode() - 200 >= 100) {
 				throw new Error("server error response (" + connection.getResponseCode() + ") to request: ...get/ps2/" + urlParameters);
 			}
@@ -101,18 +101,18 @@ public class CensusConnection {
 		try {
 			return sendAndCacheCensusQuery(queryString);
 		} catch (IOException e) {
-			staticLogger.severe("Query failed: " + e);
-			staticLogger.warning("retrying...");
+			staticLogger.network().severe("Query failed: " + e);
+			staticLogger.network().warning("retrying...");
 			try {
 				return sendAndCacheCensusQuery(queryString);
 			} catch (IOException e1) {
-				staticLogger.severe("Second query attempt failed: " + e);
-				staticLogger.warning("retrying..");
+				staticLogger.network().severe("Second query attempt failed: " + e);
+				staticLogger.network().warning("retrying..");
 				try {
 					return sendAndCacheCensusQuery(queryString);
 				} catch (IOException e2) {
-					staticLogger.severe("Third attempt failed: " + e);
-					staticLogger.severe("I'll assume trying any more times won't fix the issue. I hope the rest of the program can cope with an empty response");
+					staticLogger.network().severe("Third attempt failed: " + e);
+					staticLogger.network().severe("I'll assume trying any more times won't fix the issue. I hope the rest of the program can cope with an empty response");
 				}
 			}
 			return ApplicationConstants.EMPTY_JSON;

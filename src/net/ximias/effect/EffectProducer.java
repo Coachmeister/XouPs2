@@ -12,13 +12,7 @@ import java.util.stream.Collectors;
 
 public abstract class EffectProducer extends JsonSerializable{
 	private ArrayList<PeripheralEffectProducer> peripheralEffects = new ArrayList<>(6);
-	private String name;
-	private Logger logger = Logger.getLogger(getClass().getName());
 	public abstract Effect build();
-	
-	public String getName() {
-		return name;
-	}
 	
 	public abstract void setColor(Color color);
 	

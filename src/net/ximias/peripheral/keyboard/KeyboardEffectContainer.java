@@ -42,7 +42,7 @@ public class KeyboardEffectContainer extends PauseableContainer implements Rende
 	public void addEffect(KeyEffect effect){
 		synchronized (effects){
 			effects.add(effect);
-			logger.warning("KeyEffect added!");
+			logger.effects().warning("KeyEffect added!");
 			resumeNow();
 		}
 	}

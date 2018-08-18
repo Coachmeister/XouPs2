@@ -40,7 +40,7 @@ import java.util.logging.*;
  */
 public class MainController extends Application implements Renderer{
 	
-	private static final net.ximias.logging.Logger PROJECT_LEVEL_LOGGER = net.ximias.logging.Logger.getLogger("net.ximias");
+	private static final java.util.logging.Logger PROJECT_LEVEL_LOGGER = java.util.logging.Logger.getLogger("net.ximias");
 	private net.ximias.logging.Logger logger = net.ximias.logging.Logger.getLogger(getClass().getName());
 	private static final FileLogAppender fileLogAppender = new FileLogAppender();
 	private static boolean logDisabled = false;
@@ -108,13 +108,13 @@ public class MainController extends Application implements Renderer{
 		Scene scene = new Scene(gui);
 		scene.getStylesheets().clear();
 		scene.getStylesheets().add("style.css");
-		logger.finer("Stylesheets: " + scene.getStylesheets().size());
+		logger.application().fine("Stylesheets: " + scene.getStylesheets().size());
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
 	
 	private void onResizeHeight(int newValue){
-		logger.info("Height updated!");
+		logger.application().info("Height updated!");
 		Persisted.getInstance().APPLICATION_HEIGHT = newValue;
 	}
 	private void onResizeWidth(int newValue){
@@ -136,7 +136,6 @@ public class MainController extends Application implements Renderer{
 		Platform.runLater(() -> {
 			PROJECT_LEVEL_LOGGER.warning("GUI initializing...");
 			setupLogTab();
-			PROJECT_LEVEL_LOGGER.info("Log tab initialized!");
 			animationTimer = new AnimationTimer() {
 				@Override
 				public void handle(long now) {
@@ -194,14 +193,17 @@ public class MainController extends Application implements Renderer{
 	}
 	
 	private void setupKeyboardTab() {
+		logger.application().info("Keyboard tab init.");
 		keyboardTabController.injectMainController(this);
 	}
 	
 	private void setupHueTab() {
+		logger.application().info("Hue tab init.");
 		hueTabController.injectMainController(this);
 	}
 	
 	private void setupLoginTab() {
+		logger.application().info("Login tab init.");
 		loginTabController.injectMainController(this);
 		loginTabController.initProperty().addListener((observable, oldValue, newValue) -> {
 			if (newValue) effectData = new EffectData(getEffectContainer());
@@ -209,28 +211,33 @@ public class MainController extends Application implements Renderer{
 	}
 	
 	private void setupEffectEditorTab() {
+		logger.application().info("Effect edit tab init.");
 		effectEditorTabController.injectMainController(this);
 	}
 	
 	private void setupEffectViewTab() {
+		logger.application().info("Effect view tab init.");
 		effectViewController.injectMainController(this);
 	}
 	
 	private void setupPropertiesTab() {
+		logger.application().info("Features tab init.");
 		propertiesTabController.injectMainController(this);
 	}
 	
 	private void setupFeaturesTab() {
+		logger.application().info("Features tab init.");
 		featuresTabController.injectMainController(this);
 	}
 	
 	private void setupLogTab() {
+		logger.application().info("Log tab init.");
 		logTabController.injectMainController(this, fileLogAppender.getLogFile());
 	}
 	
 	private void setupTabListener() {
 		tabPane.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
-			logger.info("Tab changed to: " + newValue);
+			logger.application().info("Tab changed to: " + newValue);
 			propertiesTabController.onTabChange(newValue.intValue());
 			resumeRendering();
 		});
@@ -239,7 +246,6 @@ public class MainController extends Application implements Renderer{
 	private void animateFrame() {
 		if (effectContainer.isPausable()){
 			animationTimer.stop();
-			logger.fine("Rendering has been paused.");
 		}
 		Canvas activeCanvas = getActiveCanvas();
 		GraphicsContext ctx = activeCanvas.getGraphicsContext2D();
@@ -300,6 +306,6 @@ public class MainController extends Application implements Renderer{
 	public void resumeRendering() {
 		if (animationTimer == null) return;
 		animationTimer.start();
-		logger.fine("Rendering resumed.");
+		logger.application().fine("Rendering resumed.");
 	}
 }

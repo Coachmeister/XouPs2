@@ -30,17 +30,17 @@ public class Ps2BackupPollingService {
 	 */
 	public void start(){
 		resetTimer();
-		logger.warning("Starting backup polling service. Expect events to be received with high delay. Some will be missed entirely");
+		logger.general().warning("Starting backup polling service. Expect events to be received with high delay. Some will be missed entirely");
 		pollTimer.scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
 				JSONObject payload = CensusConnection.poll("characters_event/?character_id="+CurrentPlayer.getInstance().getPlayerID()+"&c:limit=1");
-				logger.info("Response from polling: "+payload);
+				logger.network().info("Response from polling: "+payload);
 				if (!payload.has("characters_event_list")) return;
 				payload = payload.getJSONArray("characters_event_list").getJSONObject(0);
 				if (payload.has("timestamp") && !payload.getString("timestamp").equals(lastTimestamp)){
 					payload.put("event_name",payload.getString("event_type"));
-					logger.warning("Event received through polling: "+payload.getString("event_name"));
+					logger.network().warning("Event received through polling: "+payload.getString("event_name"));
 					lastTimestamp = payload.getString("timestamp");
 					receiver.delegatePayload(payload);
 				}
@@ -53,7 +53,7 @@ public class Ps2BackupPollingService {
 	 * Stops polling the census.
 	 */
 	public void stop(){
-		logger.warning("Stopping polling");
+		logger.network().warning("Stopping polling");
 		resetTimer();
 		StatusIndicator.getInstance().removeStatus(STATUS_STRING);
 	}

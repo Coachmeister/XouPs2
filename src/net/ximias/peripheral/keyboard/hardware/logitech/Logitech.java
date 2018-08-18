@@ -39,7 +39,7 @@ public class Logitech extends AbstractKeyboard implements Renderer {
 			@Override
 			public void run() {
 				if (System.currentTimeMillis() > lastRender+61_000){
-					logger.severe("Keyboard renderer stopped for over 1 minute");
+					logger.effects().severe("Keyboard renderer stopped for over 1 minute");
 				}
 			}
 		},1000,1000);
@@ -82,7 +82,7 @@ public class Logitech extends AbstractKeyboard implements Renderer {
 					exemptKeys.put(field.getInt(null), color);
 					setExemptKeyColors();
 				} catch (IllegalAccessException e) {
-					logger.warning("Looking up key threw Exception: " + e);
+					logger.general().warning("Looking up key threw Exception: " + e);
 				}
 			}
 		}
@@ -243,7 +243,7 @@ public class Logitech extends AbstractKeyboard implements Renderer {
 	 */
 	private synchronized void start() {
 		if (!isStarted){
-			logger.warning("Keyboard rendering started/resumed");
+			logger.effects().info("Keyboard rendering started/resumed");
 			isStarted = true;
 			animationTimer.scheduleAtFixedRate(new TimerTask() {
 				@Override
@@ -259,7 +259,7 @@ public class Logitech extends AbstractKeyboard implements Renderer {
 	 * Stops the rendering.
 	 */
 	private synchronized void stop() {
-		logger.warning("Keyboard rendering stopped/paused");
+		logger.effects().info("Keyboard rendering stopped/paused");
 		isStarted = false;
 		animationTimer.cancel();
 		animationTimer = new Timer(ANIMATION_TIMER_NAME,true);

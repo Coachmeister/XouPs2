@@ -50,7 +50,7 @@ public class EffectContainer extends PauseableContainer implements EffectView {
 			effects.removeIf(Effect::isDone);
 			Color result = Effect.blend(effectIntensity, effects.toArray(new Effect[0]));
 			if (result.equals(Color.BLACK) || result.getOpacity() == 0) {
-				logger.warning("Color is fully black or transparent");
+				logger.effects().warning("Color is fully black or transparent");
 			}
 			return result;
 		}
@@ -66,13 +66,12 @@ public class EffectContainer extends PauseableContainer implements EffectView {
 		synchronized (effects){
 			if (!effects.contains(effect)) {
 				effects.add(effect);
-				logger.info(effect.getClass().getName() + " added. current effect size: " + effects.size());
-				logger.fine("Current color: " + getColorAndClearFinishedEffects());
+				logger.effects().info(effect.getClass().getName() + " added. current effect size: " + effects.size());
 			}
 			
 		}
 		if (effect.getColor().getOpacity() == 0) {
-			logger.info("Added effect is fully transparent");
+			logger.effects().info("Added effect is fully transparent");
 		}
 		effectAddListeners.forEach(it -> it.onEffectAdded(effect));
 	}

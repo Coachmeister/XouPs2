@@ -29,19 +29,19 @@ class PersistLoader {
 	 * Create defaults if needed.
 	 */
 	private static void unPersist() {
-		logger.warning("Reading file: "+FILE_NAME);
+		logger.application().warning("Reading file: "+FILE_NAME);
 		try (ObjectInputStream oin = new ObjectInputStream(new FileInputStream(FILE_NAME))){
 			instance = (Persisted)oin.readObject();
 		}catch (FileNotFoundException e){
-			logger.warning(FILE_NAME+" not found, creating a new one");
+			logger.application().warning(FILE_NAME+" not found, creating a new one");
 			instance = instantiateDefault();
 		} catch (IOException e) {
-			logger.severe("Could not load saved data. Using defaults: "+e);
+			logger.application().severe("Could not load saved data. Using defaults: "+e);
 			e.printStackTrace();
 			instance = instantiateDefault();
 		} catch (ClassNotFoundException e) {
-			logger.severe("WTF!: This error shouldn't happen. Unless you messed with the "+FILE_NAME+" file, some of the program is missing or saved data got corrupted: "+e);
-			logger.severe("WTF!: I'll try to overwrite, and hope you just messed around with the "+FILE_NAME+" file.");
+			logger.general().severe("WTF!: This error shouldn't happen. Unless you messed with the "+FILE_NAME+" file, some of the program is missing or saved data got corrupted: "+e);
+			logger.general().severe("WTF!: I'll try to overwrite, and hope you just messed around with the "+FILE_NAME+" file.");
 			instance = instantiateDefault();
 		}
 	}
@@ -50,11 +50,11 @@ class PersistLoader {
 	 * Save instance to file system.
 	 */
 	private static void persist() {
-		logger.warning("Writing file: "+FILE_NAME);
+		logger.application().warning("Writing file: "+FILE_NAME);
 		try(ObjectOutput oos = new ObjectOutputStream(new FileOutputStream(FILE_NAME))) {
 			oos.writeObject(instance);
 		} catch (IOException e) {
-			logger.severe("Error when trying to save application state to "+FILE_NAME+": "+e);
+			logger.application().severe("Error when trying to save application state to "+FILE_NAME+": "+e);
 		}
 	}
 	

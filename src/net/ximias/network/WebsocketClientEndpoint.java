@@ -42,7 +42,7 @@ public class WebsocketClientEndpoint {
 	 */
 	@OnOpen
 	public void onOpen(Session userSession) {
-		logger.info("Opening websocket");
+		logger.network().info("Opening websocket");
 		this.userSession = userSession;
 	}
 	
@@ -54,7 +54,7 @@ public class WebsocketClientEndpoint {
 	 */
 	@OnClose
 	public void onClose(Session userSession, CloseReason reason) {
-		logger.info("Closing websocket");
+		logger.network().info("Closing websocket");
 		this.userSession = null;
 	}
 	

@@ -127,15 +127,15 @@ public class CensusData extends ConditionData {
 				}
 			}
 		}
-		logger.severe("possible error in query. Target response was not produced:");
-		logger.severe("Query: " + queryString);
-		logger.severe("Response: " + response);
-		response.keySet().forEach(logger::info);
+		logger.network().severe("possible error in query. Target response was not produced:");
+		logger.network().severe("Query: " + queryString);
+		logger.network().severe("Response: " + response);
+		response.keySet().forEach(logger.network()::info);
 		return "";
 	}
 	
 	private JSONObject unpackSingleResponseFromArray(JSONObject response) {
-		logger.info("Census response: "+response);
+		logger.network().info("Census response: "+response);
 		if (response.keySet().stream().anyMatch(it -> it.contains("list"))) {
 			JSONArray responseList = response.getJSONArray(response.keySet().stream()
 					.filter(it -> it.contains("list"))

@@ -38,11 +38,11 @@ public class EffectData {
 	
 	public void linkEffectWithEvent(String eventName, String effectName){
 		if (!effects.containsKey(effectName) || !availableEvents.containsKey(eventName)) {
-			logger.warning("Effect could not be linked. One or more of the names does not exist");
+			logger.application().warning("Effect could not be linked. One or more of the names does not exist");
 			return;
 		}
 		if (linkedEvents.containsKey(eventName)){
-			logger.warning("Effect was already linked. Removing old link..");
+			logger.application().warning("Effect was already linked. Removing old link..");
 			connection.removeEvent(linkedEvents.get(eventName));
 		}
 		linkedEvents.put(eventName,availableEvents.get(eventName).linkWithEffect(effects.get(effectName),view, connection));

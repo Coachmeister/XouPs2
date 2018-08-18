@@ -15,13 +15,14 @@ import net.ximias.datastructures.collections.EvictingObservableList;
 import net.ximias.gui.MainController;
 import net.ximias.logging.Category;
 import net.ximias.logging.CollectionLogAppender;
+import net.ximias.logging.CollectionLogReciever;
 import net.ximias.logging.FileLogAppender;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.*;
 
-public class Log {
+public class Log implements CollectionLogReciever {
 	@FXML
 	public ListView<String> list;
 	@FXML
@@ -56,17 +57,17 @@ public class Log {
 	private final String[] WARNING_FILTER = {"SEVERE", "WARNING"};
 	private final String[] INFO_FILTER = {"SEVERE", "WARNING", "INFO"};
 	private String[] currentFilter = INFO_FILTER;
+	LinkedList<String> toRemove = new LinkedList<>();
 	
 	public void injectMainController(MainController controller, RandomAccessFile logFile){
 		this.mainController = controller;
 		fileReader = new RandomAccessFileTextReader(logFile, FileLogAppender.UTF16);
 		recentMessages.add("Log tab initializing...");
-		
 		populateFilters();
 		setupListView();
 		
 		
-		mainController.addProjectLevelLoggerHandler(new CollectionLogAppender(recentMessages));
+		mainController.addProjectLevelLoggerHandler(new CollectionLogAppender(this));
 	}
 	
 	private void populateFilters() {
@@ -95,7 +96,7 @@ public class Log {
 			}
 			applyFilter();
 		});
-		categoryChoice.valueProperty().addListener(observable -> System.out.println(recentMessages.size()));
+		categoryChoice.valueProperty().addListener(observable -> applyFilter());
 		filtersAnd.selectedProperty().addListener(observable -> applyFilter());
 		applyFilter();
 	}
@@ -152,11 +153,6 @@ public class Log {
 		});
 		
 		recentMessages.addListener((ListChangeListener<? super String>) (c) -> {
-			while (c.next()){
-				for (String s : c.getAddedSubList()) {
-					if (!inFilter(s)) Platform.runLater(()->recentMessages.remove(s));
-				}
-			}
 			if (autoscroll) verticalScroll.setValue(verticalScroll.getMax());
 		});
 		
@@ -294,6 +290,13 @@ public class Log {
 				list.scrollTo(firstItem);
 			}
 		});
+	}
+	
+	@Override
+	public void receiveMessage(String logMessage) {
+		if (inFilter(logMessage)){
+			Platform.runLater(()->recentMessages.addLast(logMessage));
+		}
 	}
 	
 	private boolean inFilter(String string){

@@ -198,7 +198,7 @@ public class HueTab {
 					
 					updateUI(UIState.BridgeDiscoveryResults, "Found " + results.size() + " bridge(s) in the network.");
 				} else if (returnCode == ReturnCode.STOPPED) {
-					logger.info("Bridge discovery stopped.");
+					logger.network().info("Bridge discovery stopped.");
 				} else {
 					updateUI(UIState.Idle, "Error doing bridge discovery: " + returnCode);
 				}
@@ -244,7 +244,7 @@ public class HueTab {
 	private BridgeConnectionCallback bridgeConnectionCallback = new BridgeConnectionCallback() {
 		@Override
 		public void onConnectionEvent(BridgeConnection bridgeConnection, ConnectionEvent connectionEvent) {
-			logger.info("Connection event: " + connectionEvent);
+			logger.network().info("Hue connection event: " + connectionEvent);
 			
 			switch (connectionEvent) {
 				case LINK_BUTTON_NOT_PRESSED:
@@ -275,7 +275,7 @@ public class HueTab {
 		@Override
 		public void onConnectionError(BridgeConnection bridgeConnection, List<HueError> list) {
 			for (HueError error : list) {
-				logger.info("Connection error: " + error.toString());
+				logger.network().severe("Connection error: " + error.toString());
 			}
 		}
 	};
@@ -286,7 +286,7 @@ public class HueTab {
 	private BridgeStateUpdatedCallback bridgeStateUpdatedCallback = new BridgeStateUpdatedCallback() {
 		@Override
 		public void onBridgeStateUpdated(Bridge bridge, BridgeStateUpdatedEvent bridgeStateUpdatedEvent) {
-			logger.info("Bridge state updated event: " + bridgeStateUpdatedEvent);
+			logger.network().info("Hue bridge state updated event: " + bridgeStateUpdatedEvent);
 			
 			switch (bridgeStateUpdatedEvent) {
 				case INITIALIZED:
@@ -328,11 +328,11 @@ public class HueTab {
 				@Override
 				public void handleCallback(Bridge bridge, ReturnCode returnCode, List<ClipResponse> list, List<HueError> errorList) {
 					if (returnCode == ReturnCode.SUCCESS) {
-						logger.info("Changed hue of light " + light.getIdentifier() + " to " + lightState.getHue());
+						logger.general().info("Changed hue of light " + light.getIdentifier() + " to " + lightState.getHue());
 					} else {
-						logger.severe("Error changing hue of light " + light.getIdentifier());
+						logger.general().severe("Error changing hue of light " + light.getIdentifier());
 						for (HueError error : errorList) {
-							logger.severe(error.toString());
+							logger.general().severe(error.toString());
 						}
 					}
 				}
@@ -376,7 +376,7 @@ public class HueTab {
 		List<LightPoint> validLights = getValidLights();
 		
 		if (validLights.isEmpty()) {
-			logger.severe("No color lights found for entertainment");
+			logger.general().severe("No color lights found for entertainment");
 			return;
 		}
 		
@@ -423,7 +423,7 @@ public class HueTab {
 				if (returnCode == ReturnCode.SUCCESS) {
 					createEntertainmentObject(responses.get(0).getStringValue());
 				} else {
-					logger.severe("Could not create entertainment group.");
+					logger.general().severe("Could not create entertainment group.");
 				}
 			}
 		});
@@ -449,7 +449,7 @@ public class HueTab {
 			@Override
 			public void onMessage(Message message) {
 				if (!message.getUserMessage().isEmpty()){
-					logger.info("Entertainment message: " + message.getType() + " " + message.getUserMessage());
+					logger.network().info("Entertainment message: " + message.getType() + " " + message.getUserMessage());
 				}
 			}
 		}, Message.Type.RENDER);
@@ -515,11 +515,11 @@ public class HueTab {
 				@Override
 				public void handleCallback(Bridge bridge, ReturnCode returnCode, List<ClipResponse> list, List<HueError> errorList) {
 					if (returnCode == ReturnCode.SUCCESS) {
-						logger.info("Turned on " + light.getIdentifier());
+						logger.general().info("Turned on " + light.getIdentifier());
 					} else {
-						logger.severe("Error turning on " + light.getIdentifier());
+						logger.general().severe("Error turning on " + light.getIdentifier());
 						for (HueError error : errorList) {
-							logger.severe(error.toString());
+							logger.general().severe(error.toString());
 						}
 					}
 				}
@@ -540,7 +540,7 @@ public class HueTab {
 	
 	private void updateUI(final UIState state, final String status) {
 		Platform.runLater(() -> {
-			logger.info("Status: " + status);
+			logger.general().info("Hue Status: " + status);
 			statusTextView.setText(status);
 			bridgeDiscoveryListView.setDisable(true);
 			bridgeIpTextView.setVisible(false);

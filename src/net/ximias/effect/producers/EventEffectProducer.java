@@ -29,7 +29,7 @@ public class EventEffectProducer extends EffectProducer{
 		this.name = name;
 		this.color = color;
 		if (color.getOpacity()==0) {
-			logger.severe("This effect producer is fully transparent!");
+			logger.effects().severe("This effect producer is fully transparent!");
 			//throw new Error("Event effects are backgrounds and shouldn't be fully transparent");
 		}
 	}

@@ -3,21 +3,23 @@ package net.ximias.logging;
 import javafx.application.Platform;
 
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
 public class CollectionLogAppender extends Handler {
-	Collection<String> collection;
+	LinkedList<CollectionLogReciever> collection;
 	
-	public CollectionLogAppender(Collection<String> collection) {
-		this.collection = collection;
+	public CollectionLogAppender(CollectionLogReciever collection) {
+		this.collection = new LinkedList<>();
+		this.collection.add(collection);
 		WebLogFormatter formatter = new WebLogFormatter();
 		setFormatter(formatter);
 	}
 	
 	@Override
 	public void publish(LogRecord record) {
-		Platform.runLater(() -> collection.add(getFormatter().format(record)));
+		collection.forEach(it->it.receiveMessage(getFormatter().formatMessage(record)));
 	}
 	
 	@Override

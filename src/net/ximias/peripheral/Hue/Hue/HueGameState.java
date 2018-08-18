@@ -51,20 +51,20 @@ public class HueGameState implements EffectAddListener {
 	}
 	
 	private void entertainmentStarted() {
-		logger.warning("Entertainment game state started");
+		logger.effects().warning("Entertainment game state started");
 		running.set(true);
 		effectContainer.addEffectAddListener(this);
 	}
 	
 	private void entertainmentStopped() {
-		logger.warning("Entertainment game state stopped");
+		logger.effects().warning("Entertainment game state stopped");
 		running.set(false);
 		effectContainer.removeEffectListener(this);
 	}
 	
 	@Override
 	public void onEffectAdded(Effect effect) {
-		logger.info("Effect received:"+effect.getName());
+		logger.effects().info("Hue effect received:"+effect.getName());
 		if (!running.get()) return;
 		
 		List<HueEffect> attachedEffects = effect.getProducer().getAllPeripheralEffectProducersBySuperclass(HueEffect.class);

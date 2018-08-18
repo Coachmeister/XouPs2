@@ -48,7 +48,7 @@ public class Ps2EventStreamingConnection {
 				lastMessageTime = System.currentTimeMillis();
 				messageHandlers.forEach(it->it.handleMessage(message));
 				JSONObject response = new JSONObject(message);
-				logger.info(response.toString());
+				logger.network().info(response.toString());
 				
 				if (!response.has("payload")) {
 					delegateNonPayloadedResponse(response);
@@ -72,7 +72,7 @@ public class Ps2EventStreamingConnection {
 			@Override
 			public void run() {
 				if (System.currentTimeMillis()> lastMessageTime + CONNECTION_TIMEOUT&&isAvailable.get()){
-					logger.warning("Event streaming connection unresponsive, reconnecting...");
+					logger.network().warning("Event streaming connection unresponsive, reconnecting...");
 					hasDisconnected.set(true);
 					lastMessageTime = System.currentTimeMillis();
 					initClientEndpoint();
@@ -89,11 +89,11 @@ public class Ps2EventStreamingConnection {
 	 * @param payload the event received.
 	 */
 	void delegatePayload(JSONObject payload) {
-		logger.fine(payload.toString());
+		logger.network().fine(payload.toString());
 		globalListenerActions(payload);
 		globalHandlers.forEach(it -> it.eventReceived(payload));
 		subscribedEvents.get(payload.getString("event_name")).parallelStream().forEach(it -> it.eventReceived(payload));
-		logger.fine("Affected: " + subscribedEvents.get(payload.getString("event_name")).size() + " Handlers");
+		logger.network().fine("Affected: " + subscribedEvents.get(payload.getString("event_name")).size() + " Handlers");
 	}
 	
 	private void globalListenerActions(JSONObject payload) {
@@ -116,7 +116,7 @@ public class Ps2EventStreamingConnection {
 	}
 	
 	public void resubscribeAllEvents(){
-		logger.warning("Clearing subscriptions");
+		logger.network().warning("Clearing subscriptions");
 		clientEndPoint.sendMessage(
 				"{" +
 				"\"action\":\"clearSubscribe\"," +
@@ -130,7 +130,7 @@ public class Ps2EventStreamingConnection {
 				JSONObject response = new JSONObject(message);
 				if (response.has("subscription") && response.getJSONObject("subscription").getInt("characterCount") == 0) {
 					removeMessageHandler(this);
-					logger.warning("Subscriptions cleared");
+					logger.network().warning("Subscriptions cleared");
 					ArrayList<ArrayList<Ps2EventHandler>> eventsToSubscribe = new ArrayList<>();
 					eventsToSubscribe.addAll(subscribedEvents.values());
 					eventsToSubscribe.add(globalHandlers);
@@ -234,7 +234,7 @@ public class Ps2EventStreamingConnection {
 	}
 	
 	public void registerGlobalEventListener(Ps2EventHandler globalHandler) {
-		logger.fine("Global handler added: " + globalHandlers.size());
+		logger.effects().fine("Global handler added: " + globalHandlers.size());
 		globalHandlers.remove(globalHandler);
 		globalHandlers.add(globalHandler);
 	}
@@ -267,7 +267,7 @@ public class Ps2EventStreamingConnection {
 	private void serviceUnavailable(boolean isUnavailable) {
 		isAvailable.set(!isUnavailable);
 		if (isUnavailable){
-			logger.severe("Planetside streaming servers are offline. Event streaming is unavailable until servers are back. The census and keybindings will remain functional.");
+			logger.general().severe("Planetside streaming servers are offline. Event streaming is unavailable until servers are back. The census and keybindings will remain functional.");
 			pollingService.start();
 		}else {
 			pollingService.stop();
