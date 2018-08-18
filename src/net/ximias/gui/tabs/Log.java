@@ -28,8 +28,8 @@ public class Log {
 	public ChoiceBox<String> categoryChoice;
 	@FXML
 	public ChoiceBox<String> levelChoice;
-	
-	private static final double REMAINING_LINES_THRESHOLD = 0.2;
+	@FXML
+	public CheckBox filtersAnd;
 	private static final int LINES_PR_SCREEN = 100;
 	private static final int BUFFERED_SCREENS = 1;
 	private static final int LINES_TO_READ = (BUFFERED_SCREENS*LINES_PR_SCREEN)/2;
@@ -74,7 +74,7 @@ public class Log {
 		categories.add("All");
 		Arrays.stream(Category.values()).forEach(it-> categories.add(it.getName()));
 		categoryChoice.setItems(FXCollections.observableList(categories));
-		
+		categoryChoice.getSelectionModel().select("All");
 		
 		levelChoice.setItems(FXCollections.observableArrayList("SEVERE","WARNING", "INFO"));
 		levelChoice.getSelectionModel().select("INFO");
@@ -96,6 +96,7 @@ public class Log {
 			applyFilter();
 		});
 		categoryChoice.valueProperty().addListener(observable -> System.out.println(recentMessages.size()));
+		filtersAnd.selectedProperty().addListener(observable -> applyFilter());
 		applyFilter();
 	}
 	
@@ -153,7 +154,7 @@ public class Log {
 		recentMessages.addListener((ListChangeListener<? super String>) (c) -> {
 			while (c.next()){
 				for (String s : c.getAddedSubList()) {
-					if (!containsFilter(s)) Platform.runLater(()->recentMessages.remove(s));
+					if (!inFilter(s)) Platform.runLater(()->recentMessages.remove(s));
 				}
 			}
 			if (autoscroll) verticalScroll.setValue(verticalScroll.getMax());
@@ -234,15 +235,11 @@ public class Log {
 				
 				
 				String line = fileReader.readNextLine();
-				boolean inFilter = false;
-				for (String s : currentFilter) {
-					if (line.contains("["+s+"]")) {
-						pastMessages.addLast(line);
-						inFilter =true;
-						break;
-					}
+				if (inFilter(line)) {
+					pastMessages.addLast(line);
+				}else {
+					i--;
 				}
-				if (!inFilter) i--;
 				
 				
 			}
@@ -283,15 +280,11 @@ public class Log {
 					break;
 				}
 				String line = fileReader.readPreviousLine();
-				boolean inFilter = false;
-				for (String s : currentFilter) {
-					if (line.contains("["+s+"]")) {
-						pastMessages.addFirst(line);
-						inFilter =true;
-						break;
-					}
+				if (inFilter(line)) {
+					pastMessages.addFirst(line);
+				}else {
+					i--;
 				}
-				if (!inFilter) i--;
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -301,5 +294,27 @@ public class Log {
 				list.scrollTo(firstItem);
 			}
 		});
+	}
+	
+	private boolean inFilter(String string){
+		if (filtersAnd.isSelected()){
+			return inLevelFilter(string) && inCategoryFilter(string);
+		}else{
+			return inLevelFilter(string) || inCategoryFilter(string);
+		}
+	}
+	
+	private boolean inLevelFilter(String string) {
+		for (String s : currentFilter) {
+			if (string.contains("["+s+"]")) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private boolean inCategoryFilter(String string){
+		if (categoryChoice.getValue().equals("All")) return true;
+		return string.contains("["+categoryChoice.getValue().toUpperCase()+"]");
 	}
 }
