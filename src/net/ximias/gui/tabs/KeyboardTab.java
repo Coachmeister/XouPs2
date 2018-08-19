@@ -13,18 +13,16 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
+import net.ximias.effect.producers.MultiEffectProducer;
 import net.ximias.fileSearch.PsDirectoryLocator;
 import net.ximias.gui.MainController;
 import net.ximias.datastructures.gui.nodes.ResizableCanvas;
 import net.ximias.datastructures.gui.nodes.SortedStringColorTable;
-import net.ximias.peripheral.keyboard.effects.MulticolorWaveProducer;
+import net.ximias.peripheral.keyboard.effects.*;
 import net.ximias.peripheral.keyboard.hardware.KeyboardEmulator;
 import net.ximias.peripheral.keyboard.hardware.logitech.Logitech;
 import net.ximias.peripheral.keyboard.KeyEffect;
 import net.ximias.peripheral.keyboard.Keyboard;
-import net.ximias.peripheral.keyboard.effects.KeymapColoring;
-import net.ximias.peripheral.keyboard.effects.WaveEffectDirection;
-import net.ximias.peripheral.keyboard.effects.WaveEffectProducer;
 import net.ximias.persistence.Persisted;
 
 import java.io.File;
@@ -107,7 +105,7 @@ public class KeyboardTab {
 	 * @param direction the direction of the wave.
 	 */
 	private void addEffect(WaveEffectDirection direction) {
-		//addWaveEffect(direction);
+		//addTestEffect(direction);
 		addMultiWaveEffect(direction);
 	}
 	
@@ -128,16 +126,22 @@ public class KeyboardTab {
 		}
 	}
 	
-	private void addWaveEffect(WaveEffectDirection direction) {
-		Color rnd = new Color(Math.random() > 0.5 ? 0.0 : 1.0, Math.random() > 0.5 ? 0.0 : 1.0, Math.random() > 0.5 ? 0.0 : 1.0, 1);
-		KeyEffect effect = new WaveEffectProducer(rnd, 5_000, 4, direction).build();
+	private void addTestEffect(WaveEffectDirection direction) {
+		
+		WaveEffectProducer ke0 = new WaveEffectProducer(Color.BLACK, 200,2,WaveEffectDirection.CENTER_OUT);
+		DelayProducer del = new DelayProducer(50);
+		
+		MultiKeyEffectProducer keyExplosion = new MultiKeyEffectProducer( del,ke0,del,ke0);
+		
 		if (keyboard != null) {
 			if (keyboard.getEffectContainer() != null) {
-				keyboard.getEffectContainer().addEffect(effect);
+				keyboard.getEffectContainer().addEffect(keyExplosion.build());
+				keyboard.getEffectContainer().addEffect(ke0.build());
 			}
 		}
 		if (emulator != null) {
-			emulator.getEffectContainer().addEffect(effect);
+			emulator.getEffectContainer().addEffect(keyExplosion.build());
+			emulator.getEffectContainer().addEffect(ke0.build());
 		}
 	}
 	

@@ -26,12 +26,12 @@ public class SingleEventHandler extends Ps2EventHandler {
 	private final EventCondition condition;
 	private final Ps2EventType type;
 	private final String eventName;
-	public SingleEventHandler(EffectView view, EffectProducer effect, EventCondition condition, Ps2EventType type, String event , String name) {
+	public SingleEventHandler(EffectView view, EffectProducer effect, EventCondition condition, Ps2EventType type, String planetsideEventName , String name) {
 		super(effect);
 		this.name = name;
 		this.condition = condition;
 		this.type = type;
-		eventName = event;
+		eventName = planetsideEventName;
 		setView(view);
 	}
 	

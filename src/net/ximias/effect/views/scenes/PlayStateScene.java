@@ -65,6 +65,7 @@ public class PlayStateScene implements EffectScene {
 		vehicleDied();
 		achievement();
 		facility();
+		maxKill();
 		
 		//Version 0.0.6
 		// Logging used.
@@ -116,6 +117,10 @@ public class PlayStateScene implements EffectScene {
 		MultiEffectProducer rainbow = new MultiEffectProducer(rainbow1, rainbow2, rainbow3, rainbow4, rainbow5, rainbow6, rainbowEnd);
 		MultiEffectProducer doubleRainbow = new MultiEffectProducer(rainbow, rainbow);
 		
+		Color light = new Color(1,1,1,.3);
+		MultiKeyEffectProducer outIn = new MultiKeyEffectProducer(new WaveEffectProducer(light,400,1,WaveEffectDirection.CENTER_OUT),new WaveEffectProducer(light,400,1,WaveEffectDirection.OUT_CENTER));
+		doubleRainbow.attachPeripheralEffect(new MultiKeyEffectProducer(outIn, outIn, outIn));
+		
 		SingleEventHandler ximias = new SingleEventHandler(view, doubleRainbow, isXimias(), Ps2EventType.PLAYER, "Death", "Ximias easter egg");
 		ximias.register(connection);
 	}
@@ -153,11 +158,7 @@ public class PlayStateScene implements EffectScene {
 		FadingEffectProducer facilityfade = new FadingEffectProducer(mutedFaction, 500);
 		MultiEffectProducer facility = new MultiEffectProducer(facilityBegin, facilityfade);
 		
-		facility.attachPeripheralEffect(new WaveEffectProducer(Color.WHITE,400,2,WaveEffectDirection.CENTER_OUT));
-		facility.attachPeripheralEffect(new MultiKeyEffectProducer(
-				new DelayProducer(40),
-				new WaveEffectProducer(new Color(1,1,1,0.5),400,2,WaveEffectDirection.CENTER_OUT)
-		));
+		facility.attachPeripheralEffect(new MulticolorWaveProducer(new Color[]{Color.WHITE, Color.TRANSPARENT, Color.TRANSPARENT,Color.WHITE},400,WaveEffectDirection.CENTER_OUT));
 		
 		SingleEventHandler facilityCap = new SingleEventHandler(view, facility, isPlayer, Ps2EventType.PLAYER, "PlayerFacilityCapture", "Facility capture");
 		SingleEventHandler facilityDef = new SingleEventHandler(view, facility, isPlayer, Ps2EventType.PLAYER, "PlayerFacilityDefend", "Facility capture");
@@ -171,8 +172,8 @@ public class PlayStateScene implements EffectScene {
 		MultiEffectProducer ribbon = new MultiEffectProducer(start, end);
 		
 		ribbon.attachPeripheralEffect(new MultiKeyEffectProducer(
-				new WaveEffectProducer(Color.ORANGE, 800,5,WaveEffectDirection.CENTER_OUT),
-				new WaveEffectProducer(Color.ORANGE, 800,5,WaveEffectDirection.OUT_CENTER)));
+				new MulticolorWaveProducer(new Color[]{Color.ORANGE, Color.WHITE}, 800,WaveEffectDirection.CENTER_OUT),
+				new MulticolorWaveProducer(new Color[]{Color.ORANGE, Color.WHITE}, 800,WaveEffectDirection.OUT_CENTER)));
 		
 		SingleEventHandler achievement = new SingleEventHandler(view, ribbon, isPlayer, Ps2EventType.PLAYER, "AchievementEarned", "Ribbon earned");
 		achievement.register(connection);
@@ -190,12 +191,10 @@ public class PlayStateScene implements EffectScene {
 		
 		MultiEffectProducer explosion = new MultiEffectProducer(e0, e1, e2, e1, e2, e1, e2, e3);
 		
-		WaveEffectProducer ke0 = new WaveEffectProducer(Color.BLACK, 200,2,WaveEffectDirection.CENTER_OUT);
-		DelayProducer del = new DelayProducer(200);
 		
-		MultiKeyEffectProducer keyExplosion = new MultiKeyEffectProducer( del,ke0,del,ke0);
+		Color light = new Color(1,1,1,.3);
+		ContinualWaveEffectProducer keyExplosion = new ContinualWaveEffectProducer(new MulticolorWaveProducer(new Color[]{Color.BLACK, light , Color.LIGHTSKYBLUE, light}, 300,WaveEffectDirection.CENTER_OUT),5);
 		explosion.attachPeripheralEffect(keyExplosion);
-		explosion.attachPeripheralEffect(ke0);
 		
 		SingleCondition isNotDeath = new SingleCondition(Condition.NOT_EQUALS,
 				new EventData("character_id", ConditionDataSource.EVENT),
@@ -214,6 +213,9 @@ public class PlayStateScene implements EffectScene {
 		TimedEffectProducer vehicleBegin = new TimedEffectProducer(Color.WHITE, 600);
 		FadingEffectProducer vehicleDestroy = new FadingEffectProducer(Color.WHITE, 1000);
 		MultiEffectProducer vehicleDied = new MultiEffectProducer(vehicleBegin, vehicleDestroy);
+		
+		WaveEffectProducer blackIn = new WaveEffectProducer(Color.BLACK, 800,1,WaveEffectDirection.OUT_CENTER);
+		vehicleDied.attachPeripheralEffect(blackIn);
 		
 		SingleEventHandler vehicleLost = new SingleEventHandler(view, vehicleDied, isPlayer, Ps2EventType.PLAYER, "VehicleDestroy", "Vehicle Lost");
 		vehicleLost.register(connection);
@@ -413,6 +415,17 @@ public class PlayStateScene implements EffectScene {
 		AllCondition isRepair = new AllCondition(isPlayer, containsRepair, isNotHive);
 		SingleEventHandler repairEvent = new SingleEventHandler(view, repairing, isRepair, Ps2EventType.PLAYER, "GainExperience", "repair");
 		repairEvent.register(connection);
+	}
+	
+	private void maxKill() {
+		TimedEffectProducer delay = new TimedEffectProducer(Color.TRANSPARENT, 250);
+		FadingEffectProducer flash = new FadingEffectProducer(Color.WHITE, 250);
+		MultiEffectProducer maxKill = new MultiEffectProducer(delay, flash, delay,delay,flash,delay,flash, flash);
+		maxKill.attachPeripheralEffect(new ContinualWaveEffectProducer(new WaveEffectProducer(Color.YELLOW, 250,2,WaveEffectDirection.DOWN_TO_UP),3));
+		
+		SingleCondition containsMax = experienceDescriptionContains("MAX Kill");
+		SingleEventHandler maxKillEvent = new SingleEventHandler(view, maxKill, containsMax, Ps2EventType.PLAYER, "GainExperience", "Max kill");
+		maxKillEvent.register(connection);
 	}
 	
 	private void death() {
