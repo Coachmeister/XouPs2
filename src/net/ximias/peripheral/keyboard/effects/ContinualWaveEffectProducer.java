@@ -5,38 +5,38 @@ import net.ximias.peripheral.keyboard.KeyEffect;
 import net.ximias.peripheral.keyboard.KeyEffectProducer;
 
 public class ContinualWaveEffectProducer implements KeyEffectProducer {
-	private Color color;
-	private long duration;
-	private int iterations;
-	private int effectWidth;
-	private WaveEffectDirection direction;
+	private final IWaveEffectProducer producer;
+	private final int iterations;
 	
-	public ContinualWaveEffectProducer(Color color, long duration, int iterations, int effectWidth, WaveEffectDirection direction) {
-		this.color = color;
-		this.duration = duration;
+	public ContinualWaveEffectProducer(IWaveEffectProducer producer, int iterations) {
+		this.producer = producer;
 		this.iterations = iterations;
-		this.effectWidth = effectWidth;
-		this.direction = direction;
 	}
 	
 	@Override
 	public KeyEffect build() {
-		return new ContinualWaveEffect(color, duration, iterations, effectWidth, direction);
+		return new ContinualWaveEffect(iterations, producer.build());
 	}
 	
 	@Override
 	public void setColor(Color color) {
-		this.color = color;
 	}
 }
-class ContinualWaveEffect extends WaveEffect{
-	private int iterations;
+class ContinualWaveEffect implements KeyEffect {
+	private final WaveEffect effect;
 	private final long startTime = System.currentTimeMillis();
+	private final int iterations;
 	private final long duration;
-	ContinualWaveEffect(Color color, long duration, int iterations ,int effectWidth, WaveEffectDirection direction) {
-		super(color, duration, effectWidth, direction);
-		this.duration = duration;
+	
+	ContinualWaveEffect(int iterations, WaveEffect effect) {
+		this.effect = effect;
 		this.iterations = iterations;
+		this.duration = effect.getDuration();
+	}
+	
+	@Override
+	public Color[][] getKeyColors(int width, int height) {
+		return effect.getKeyColors(width, height);
 	}
 	
 	@Override

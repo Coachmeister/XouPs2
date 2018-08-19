@@ -19,7 +19,7 @@ import java.util.concurrent.ExecutionException;
  */
 public class CensusConnection {
 	private static final Logger staticLogger = Logger.getLogger(CensusConnection.class.getName());
-	private static final LeastRecentlyUsedCache<String, CompletableFuture<JSONObject>> recentQueries = new LeastRecentlyUsedCache<>(512); // Guesstimated to be large enough to contain the common queries and experience id name mappings.
+	private static final LeastRecentlyUsedCache<String, CompletableFuture<JSONObject>> recentQueries = new LeastRecentlyUsedCache<>(256); // Guesstimated to be large enough to contain the common queries and experience id name mappings.
 	
 	private static JSONObject sendAndCacheCensusQuery(String urlParameters) throws IOException {
 		CompletableFuture<JSONObject> cached;
@@ -73,6 +73,7 @@ public class CensusConnection {
 		}
 		
 		JSONObject result = new JSONObject(response.toString());
+		connection.disconnect();
 		return result;
 	}
 	

@@ -17,6 +17,7 @@ import net.ximias.fileSearch.PsDirectoryLocator;
 import net.ximias.gui.MainController;
 import net.ximias.datastructures.gui.nodes.ResizableCanvas;
 import net.ximias.datastructures.gui.nodes.SortedStringColorTable;
+import net.ximias.peripheral.keyboard.effects.MulticolorWaveProducer;
 import net.ximias.peripheral.keyboard.hardware.KeyboardEmulator;
 import net.ximias.peripheral.keyboard.hardware.logitech.Logitech;
 import net.ximias.peripheral.keyboard.KeyEffect;
@@ -106,8 +107,30 @@ public class KeyboardTab {
 	 * @param direction the direction of the wave.
 	 */
 	private void addEffect(WaveEffectDirection direction) {
+		//addWaveEffect(direction);
+		addMultiWaveEffect(direction);
+	}
+	
+	private void addMultiWaveEffect(WaveEffectDirection direction) {
+		Color rnd1 = new Color(Math.random() > 0.5 ? 0.0 : 1.0, Math.random() > 0.5 ? 0.0 : 1.0, Math.random() > 0.5 ? 0.0 : 1.0, 1);
+		Color rnd2 = new Color(Math.random() > 0.5 ? 0.0 : 1.0, Math.random() > 0.5 ? 0.0 : 1.0, Math.random() > 0.5 ? 0.0 : 1.0, 1);
+		Color rnd3 = new Color(Math.random() > 0.5 ? 0.0 : 1.0, Math.random() > 0.5 ? 0.0 : 1.0, Math.random() > 0.5 ? 0.0 : 1.0, 1);
+		Color rnd4 = new Color(Math.random() > 0.5 ? 0.0 : 1.0, Math.random() > 0.5 ? 0.0 : 1.0, Math.random() > 0.5 ? 0.0 : 1.0, 1);
+		
+		KeyEffect effect = new MulticolorWaveProducer(new Color[]{rnd1, rnd2, rnd3, rnd4}, 5_000, direction).build();
+		if (keyboard != null) {
+			if (keyboard.getEffectContainer() != null) {
+				keyboard.getEffectContainer().addEffect(effect);
+			}
+		}
+		if (emulator != null) {
+			emulator.getEffectContainer().addEffect(effect);
+		}
+	}
+	
+	private void addWaveEffect(WaveEffectDirection direction) {
 		Color rnd = new Color(Math.random() > 0.5 ? 0.0 : 1.0, Math.random() > 0.5 ? 0.0 : 1.0, Math.random() > 0.5 ? 0.0 : 1.0, 1);
-		KeyEffect effect = new WaveEffectProducer(rnd, 10_000L, 4, direction).build();
+		KeyEffect effect = new WaveEffectProducer(rnd, 5_000, 4, direction).build();
 		if (keyboard != null) {
 			if (keyboard.getEffectContainer() != null) {
 				keyboard.getEffectContainer().addEffect(effect);
