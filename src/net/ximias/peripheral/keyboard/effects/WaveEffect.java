@@ -5,6 +5,7 @@ import net.ximias.peripheral.keyboard.KeyEffect;
 
 import java.util.Arrays;
 
+@SuppressWarnings("MismatchedReadAndWriteOfArray")
 class WaveEffect implements KeyEffect {
 	public Color getColor() {
 		return color;
@@ -26,11 +27,11 @@ class WaveEffect implements KeyEffect {
 		return direction;
 	}
 	
-	private Color color;
-	private int duration;
-	private int effectWidth;
-	private long startTime;
-	private WaveEffectDirection direction;
+	private final Color color;
+	private final int duration;
+	private final int effectWidth;
+	private final long startTime;
+	private final WaveEffectDirection direction;
 	
 	WaveEffect(Color color, int duration, int effectWidth, WaveEffectDirection direction) {
 		this.color = color;
@@ -117,7 +118,7 @@ class WaveEffect implements KeyEffect {
 	}
 	
 	protected final double getStartRadius(int width, int height){
-		return mapProgress(getProgress(), 0, (int) (Math.ceil(dist(0,0, width / 2, height / 2)) + effectWidth + 1));
+		return mapProgress(getProgress(), 0, (int) (Math.ceil(dist(0,0, width / 2.0, height / 2.0)) + effectWidth + 1));
 	}
 	
 	

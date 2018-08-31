@@ -3,7 +3,7 @@ package net.ximias.psEvent.condition;
 import java.util.function.BiPredicate;
 
 public enum Condition {
-	EQUALS((a,b)->a.equals(b)),
+	EQUALS(String::equals),
 	NOT_EQUALS((a,b)->!a.equals(b)),
 	CONTAINS((a,b)->a.toLowerCase().contains(b.toLowerCase())),
 	NOT_CONTAINS((a,b)->!a.toLowerCase().contains(b.toLowerCase())),

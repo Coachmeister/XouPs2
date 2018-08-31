@@ -9,7 +9,7 @@ import net.ximias.peripheral.Hue.Hue.examples.HueExampleEffect;
 
 public class EffectExamples {
 	
-	private Entertainment entertainment;
+	private final Entertainment entertainment;
 	private SimpleBooleanProperty isPlaying = new SimpleBooleanProperty(false);
 	
 	public EffectExamples(Entertainment entertainment) {
@@ -47,33 +47,22 @@ public class EffectExamples {
 	}
 	
 	private void startEntertainmentSystem(HueExampleEffect effect) {
-		entertainment.start(new StartCallback() {
-			@Override
-			public void handleCallback(StartStatus startStatus) {
-				if (startStatus != StartStatus.Success) return;
-				isPlaying.set(true);
-				playEffect(effect);
-			}
+		entertainment.start(startStatus -> {
+			if (startStatus != StartCallback.StartStatus.Success) return;
+			isPlaying.set(true);
+			playEffect(effect);
 		});
 	}
 	
 	private void turnOffEntertainmentAfterDelayOf(int duration) {
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					Thread.sleep(duration);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				
-				entertainment.stop(new Callback() {
-					@Override
-					public void handleCallback() {
-						isPlaying.set(false);
-					}
-				});
+		new Thread(() -> {
+			try {
+				Thread.sleep(duration);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
+			
+			entertainment.stop(() -> isPlaying.set(false));
 		}).run();
 	}
 }

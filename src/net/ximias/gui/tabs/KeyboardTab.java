@@ -13,7 +13,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
-import net.ximias.effect.producers.MultiEffectProducer;
 import net.ximias.fileSearch.PsDirectoryLocator;
 import net.ximias.gui.MainController;
 import net.ximias.datastructures.gui.nodes.ResizableCanvas;
@@ -78,8 +77,8 @@ public class KeyboardTab {
 	@FXML
 	private Button manualSearch;
 	
-	private SortedStringColorTable<Map.Entry<String, Color>> sortedActionColorTable = new SortedStringColorTable<>();
-	private Canvas emulationCanvas = new ResizableCanvas();
+	private final SortedStringColorTable<Map.Entry<String, Color>> sortedActionColorTable = new SortedStringColorTable<>();
+	private final Canvas emulationCanvas = new ResizableCanvas();
 	private KeyboardEmulator emulator;
 	private Keyboard keyboard;
 	private KeymapColoring keyColor;
@@ -243,7 +242,7 @@ public class KeyboardTab {
 	 * @param event the action event. may be null.
 	 */
 	@FXML
-	public void restartSearch(ActionEvent event) {
+	private void restartSearch(ActionEvent event) {
 		PsDirectoryLocator psDirectoryLocator = PsDirectoryLocator.getInstance();
 		Thread directoryLocatorThread = new Thread(psDirectoryLocator);
 		directoryLocatorThread.setDaemon(true);

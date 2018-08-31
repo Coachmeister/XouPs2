@@ -20,11 +20,11 @@ import net.ximias.logging.Logger;
 public class Logitech extends AbstractKeyboard implements Renderer {
 	private static final int FRAME_RATE_MS = 33; //Appears to work better at 30 fps
 	private final HashMap<Integer, Color> exemptKeys = new HashMap<>(32);
-	private KeyboardEffectContainer effectContainer;
+	private final KeyboardEffectContainer effectContainer;
 	private boolean multiKey;
 	private static final String ANIMATION_TIMER_NAME = "Logitech animation timer";
 	private Timer animationTimer = new Timer(ANIMATION_TIMER_NAME,true);
-	private Logger logger = Logger.getLogger(getClass().getName());
+	private final Logger logger = Logger.getLogger(getClass().getName());
 	private boolean gFlashOn = true;
 	private boolean isStarted = false;
 	private long lastRender = System.currentTimeMillis();
@@ -169,8 +169,7 @@ public class Logitech extends AbstractKeyboard implements Renderer {
 		
 		if (multiKey) {
 			LogiLED.LogiLedSetTargetDevice(LogiLED.LOGI_DEVICETYPE_PERKEY_RGB);
-			setAllNonBitmapKeys(gFlashOn ? globalColor : globalColor.invert());
-			gFlashOn = !gFlashOn;
+			setAllNonBitmapKeys(globalColor);
 			LogiLED.LogiLedSetLightingFromBitmap(getFormattedColorArray());
 		}
 		if (effectContainer.isPausable()) stop();

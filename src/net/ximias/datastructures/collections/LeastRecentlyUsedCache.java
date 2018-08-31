@@ -6,8 +6,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class LeastRecentlyUsedCache<K, V> extends LinkedHashMap<K, V>{
-	private int cacheSize;
-	Logger logger = Logger.getLogger(getClass().getName());
+	private final int cacheSize;
+	private final Logger logger = Logger.getLogger(getClass().getName());
 	/**
 	 * @param cacheSize The maximum amount of elements in the cache.
 	 */

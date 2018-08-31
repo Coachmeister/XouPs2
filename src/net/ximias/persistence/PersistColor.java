@@ -5,9 +5,12 @@ import javafx.scene.paint.Color;
 import java.io.Serializable;
 
 public class PersistColor implements Serializable {
-	private double r,g,b,a;
+	private final double r;
+	private final double g;
+	private final double b;
+	private final double a;
 	
-	public PersistColor(double r, double g, double b, double a) {
+	private PersistColor(double r, double g, double b, double a) {
 		this.r = r;
 		this.g = g;
 		this.b = b;

@@ -9,7 +9,7 @@ import net.ximias.effect.producers.MultiEffectProducer;
 
 public class ExplosionEffectExample implements HueExampleEffect {
 	
-	private HueEffect hueEffect;
+	private final HueEffect hueEffect;
 	
 	public ExplosionEffectExample() {
 		javafx.scene.paint.Color ex1 = new javafx.scene.paint.Color(1, 1, 0.3, 1);

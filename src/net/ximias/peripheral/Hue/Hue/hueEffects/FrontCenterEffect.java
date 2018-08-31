@@ -9,9 +9,9 @@ import javafx.scene.paint.Color;
 
 
 public class FrontCenterEffect implements AreaEffectProducer {
-	private Color startColor;
-	private Color endColor;
-	private int duration;
+	private final Color startColor;
+	private final Color endColor;
+	private final int duration;
 	private double opacityMultiplier = 1;
 	
 	public FrontCenterEffect(Color startColor, Color endColor, int duration) {

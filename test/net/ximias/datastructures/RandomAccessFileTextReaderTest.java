@@ -1,13 +1,10 @@
 package net.ximias.datastructures;
 
-import net.ximias.logging.FileLogAppender;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
@@ -17,17 +14,18 @@ import java.util.Comparator;
 import static org.junit.jupiter.api.Assertions.*;
 
 class RandomAccessFileTextReaderTest {
-	static final File fileName = new File("files/randomAccessReaderTest");
-	final RandomAccessFile file = new RandomAccessFile(fileName,"rw");
-	final Charset charset = Charset.forName("utf16");
-	final RandomAccessFileTextReader reader = new RandomAccessFileTextReader(file, charset);
-	static String lastLine = "9";
-	static String firstLine;
+	private static final File fileName = new File("files/randomAccessReaderTest");
+	private final RandomAccessFile file = new RandomAccessFile(fileName,"rw");
+	private final Charset charset = Charset.forName("utf16");
+	private final RandomAccessFileTextReader reader = new RandomAccessFileTextReader(file, charset);
+	private static String lastLine = "9";
+	private static String firstLine;
 	private static boolean isSetup = true;
 	
 	RandomAccessFileTextReaderTest() throws IOException {
 	}
 
+	@SuppressWarnings("ResultOfMethodCallIgnored") // File stuff returns a boolean.
 	@BeforeAll
 	static void setUpAll() {
 		fileName.getParentFile().mkdirs();
@@ -68,8 +66,6 @@ class RandomAccessFileTextReaderTest {
 			}
 			lastLine= i;
 			file.seek(file.length());
-			for (char c : toWrite.toCharArray()) {
-			}
 			ByteBuffer buf = charset.encode(toWrite);
 			while (buf.hasRemaining()){
 				byte b = buf.get();

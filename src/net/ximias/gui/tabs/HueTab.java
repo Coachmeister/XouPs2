@@ -14,7 +14,6 @@ import com.philips.lighting.hue.sdk.wrapper.domain.device.light.LightPoint;
 import com.philips.lighting.hue.sdk.wrapper.domain.device.light.LightState;
 import com.philips.lighting.hue.sdk.wrapper.domain.resource.*;
 import com.philips.lighting.hue.sdk.wrapper.entertainment.*;
-import com.philips.lighting.hue.sdk.wrapper.entertainment.Observer;
 import com.philips.lighting.hue.sdk.wrapper.knownbridges.KnownBridge;
 import com.philips.lighting.hue.sdk.wrapper.knownbridges.KnownBridges;
 import javafx.application.Platform;
@@ -36,20 +35,34 @@ import net.ximias.logging.Logger;
 
 public class HueTab {
 	
-	public Label statusTextView;
-	public Label bridgeIpTextView;
-	public Button randomizeLightsButton;
-	public Button explosionEffectButton;
-	public Button bridgeDiscoveryButton;
-	public ChoiceBox<BridgeDiscoveryResult> bridgeDiscoveryListView;
-	public ImageView pushlinkImage;
-	public Button areaEffectButton;
-	public Button alertEffectButton;
-	public Button multiChannelButton;
-	public Button lightSourceButton;
-	public Button bridgeDiscoverySelect;
-	public CheckBox hueEnable;
-	public ToggleButton startGameEffectsButton;
+	@FXML
+	private Label statusTextView;
+	@FXML
+	private Label bridgeIpTextView;
+	@FXML
+	private Button randomizeLightsButton;
+	@FXML
+	private Button explosionEffectButton;
+	@FXML
+	private Button bridgeDiscoveryButton;
+	@FXML
+	private ChoiceBox<BridgeDiscoveryResult> bridgeDiscoveryListView;
+	@FXML
+	private ImageView pushlinkImage;
+	@FXML
+	private Button areaEffectButton;
+	@FXML
+	private Button alertEffectButton;
+	@FXML
+	private Button multiChannelButton;
+	@FXML
+	private Button lightSourceButton;
+	@FXML
+	private Button bridgeDiscoverySelect;
+	@FXML
+	private CheckBox hueEnable;
+	@FXML
+	private ToggleButton startGameEffectsButton;
 	
 	private HueGameState gameState;
 	private MainController mainController;
@@ -64,7 +77,7 @@ public class HueTab {
 	private BridgeDiscovery bridgeDiscovery;
 	
 	private List<BridgeDiscoveryResult> bridgeDiscoveryResults;
-	private Logger logger = Logger.getLogger(getClass().getName());
+	private final Logger logger = Logger.getLogger(getClass().getName());
 	private Group affectedEntertainmentLightes;
 	
 	
@@ -89,6 +102,7 @@ public class HueTab {
 	public void injectMainController(MainController mainController) {
 		this.mainController = mainController;
 		File data = new File("data");
+		//noinspection ResultOfMethodCallIgnored
 		data.mkdir();
 		Persistence.setStorageLocation(data.getAbsolutePath(), "HueQuickStart");
 		HueLog.setConsoleLogLevel(HueLog.LogLevel.INFO);
@@ -96,7 +110,7 @@ public class HueTab {
 		updateUI(UIState.Off,"Philips hue disabled.");
 	}
 	
-	public void setup() {
+	private void setup() {
 		pushlinkImage.setImage(new Image("file:res/pushlink_image.png"));
 		bindButtonToExplosion(areaEffectButton);
 		bindButtonToExplosion(alertEffectButton);
@@ -150,12 +164,7 @@ public class HueTab {
 			return null;
 		}
 		
-		return Collections.max(bridges, new Comparator<KnownBridge>() {
-			@Override
-			public int compare(KnownBridge a, KnownBridge b) {
-				return a.getLastConnected().compareTo(b.getLastConnected());
-			}
-		}).getIpAddress();
+		return Collections.max(bridges, Comparator.comparing(KnownBridge::getLastConnected)).getIpAddress();
 	}
 	
 	/**
@@ -185,7 +194,7 @@ public class HueTab {
 	/**
 	 * The callback that receives the results of the bridge discovery
 	 */
-	private BridgeDiscoveryCallback bridgeDiscoveryCallback = new BridgeDiscoveryCallback() {
+	private final BridgeDiscoveryCallback bridgeDiscoveryCallback = new BridgeDiscoveryCallback() {
 		@Override
 		public void onFinished(final List<BridgeDiscoveryResult> results, final ReturnCode returnCode) {
 			// Set to null to prevent stopBridgeDiscovery from stopping it
@@ -241,7 +250,7 @@ public class HueTab {
 	/**
 	 * The callback that receives bridge connection events
 	 */
-	private BridgeConnectionCallback bridgeConnectionCallback = new BridgeConnectionCallback() {
+	private final BridgeConnectionCallback bridgeConnectionCallback = new BridgeConnectionCallback() {
 		@Override
 		public void onConnectionEvent(BridgeConnection bridgeConnection, ConnectionEvent connectionEvent) {
 			logger.network().info("Hue connection event: " + connectionEvent);
@@ -283,7 +292,7 @@ public class HueTab {
 	/**
 	 * The callback the receives bridge state update events
 	 */
-	private BridgeStateUpdatedCallback bridgeStateUpdatedCallback = new BridgeStateUpdatedCallback() {
+	private final BridgeStateUpdatedCallback bridgeStateUpdatedCallback = new BridgeStateUpdatedCallback() {
 		@Override
 		public void onBridgeStateUpdated(Bridge bridge, BridgeStateUpdatedEvent bridgeStateUpdatedEvent) {
 			logger.network().info("Hue bridge state updated event: " + bridgeStateUpdatedEvent);
@@ -389,8 +398,8 @@ public class HueTab {
 	 * @param validLights List of supported lights
 	 */
 	private void createEntertainmentGroup(List<LightPoint> validLights) {
-		ArrayList<String> lightIds = new ArrayList<String>();
-		ArrayList<GroupLightLocation> lightLocations = new ArrayList<GroupLightLocation>();
+		ArrayList<String> lightIds = new ArrayList<>();
+		ArrayList<GroupLightLocation> lightLocations = new ArrayList<>();
 		Random rand = new Random();
 		
 		for (LightPoint light : validLights) {
@@ -445,12 +454,9 @@ public class HueTab {
 				updateUI(UIState.EntertainmentReady, "Connected, entertainment ready.");
 			}
 		});
-		entertainment.registerObserver(new Observer() {
-			@Override
-			public void onMessage(Message message) {
-				if (!message.getUserMessage().isEmpty()){
-					logger.network().info("Entertainment message: " + message.getType() + " " + message.getUserMessage());
-				}
+		entertainment.registerObserver(message -> {
+			if (!message.getUserMessage().isEmpty()){
+				logger.network().info("Entertainment message: " + message.getType() + " " + message.getUserMessage());
 			}
 		}, Message.Type.RENDER);
 		
@@ -463,7 +469,7 @@ public class HueTab {
 	 * @return Valid lights
 	 */
 	private List<LightPoint> getValidLights() {
-		ArrayList<LightPoint> validLights = new ArrayList<LightPoint>();
+		ArrayList<LightPoint> validLights = new ArrayList<>();
 		for (final LightPoint light : bridge.getBridgeState().getLights()) {
 			if (light.getInfo().getSupportedFeatures().contains(SupportedFeature.STREAM_PROXYING)) {
 				validLights.add(light);
@@ -534,8 +540,10 @@ public class HueTab {
 	
 	@FXML
 	public void onItemClick() {
-		String bridgeIp = bridgeDiscoveryListView.getSelectionModel().getSelectedItem().getIP();
-		connectToBridge(bridgeIp);
+		if (bridgeDiscoveryListView.getSelectionModel().getSelectedItem() != null) {
+			String bridgeIp = bridgeDiscoveryListView.getSelectionModel().getSelectedItem().getIP();
+			connectToBridge(bridgeIp);
+		}
 	}
 	
 	private void updateUI(final UIState state, final String status) {

@@ -131,8 +131,7 @@ public class Ps2EventStreamingConnection {
 				if (response.has("subscription") && response.getJSONObject("subscription").getInt("characterCount") == 0) {
 					removeMessageHandler(this);
 					logger.network().warning("Subscriptions cleared");
-					ArrayList<ArrayList<Ps2EventHandler>> eventsToSubscribe = new ArrayList<>();
-					eventsToSubscribe.addAll(subscribedEvents.values());
+					ArrayList<ArrayList<Ps2EventHandler>> eventsToSubscribe = new ArrayList<>(subscribedEvents.values());
 					eventsToSubscribe.add(globalHandlers);
 					subscribedEvents.clear();
 					globalHandlers.clear();

@@ -4,7 +4,6 @@ import javafx.scene.paint.Color;
 import net.ximias.logging.Logger;
 import net.ximias.persistence.ApplicationConstants;
 import net.ximias.persistence.Persisted;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class CurrentPlayer {

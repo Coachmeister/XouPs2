@@ -16,8 +16,8 @@ public class Ps2BackupPollingService {
 	private final String POLL_TIMER_NAME = "PS2 polling timer";
 	private Timer pollTimer = new Timer(POLL_TIMER_NAME,true);
 	private String lastTimestamp = "";
-	private Ps2EventStreamingConnection receiver;
-	private Logger logger = Logger.getLogger(getClass().getName());
+	private final Ps2EventStreamingConnection receiver;
+	private final Logger logger = Logger.getLogger(getClass().getName());
 	private static final String STATUS_STRING = "Event streaming servers offline. Polling census for events. Expect slowness (potato mode activated).";
 	
 	public Ps2BackupPollingService(Ps2EventStreamingConnection receiver) {

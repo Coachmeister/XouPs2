@@ -13,7 +13,7 @@ import java.util.Comparator;
 public class RandomAccessFileTextReader {
 	private final RandomAccessFile file;
 	private long charPos;
-	private Charset charset;
+	private final Charset charset;
 	
 	public RandomAccessFileTextReader(RandomAccessFile file, Charset charset) {
 		this.file = file;

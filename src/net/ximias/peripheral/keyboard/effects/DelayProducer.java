@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 public class DelayProducer implements KeyEffectProducer {
 	
-	private long duration;
+	private final long duration;
 	
 	public DelayProducer(long duration) {
 		this.duration = duration;
@@ -22,6 +22,7 @@ public class DelayProducer implements KeyEffectProducer {
 	@Override
 	public void setColor(Color color) { }
 }
+@SuppressWarnings("MismatchedReadAndWriteOfArray")
 class Delay implements KeyEffect{
 	private final long startTime = System.currentTimeMillis();
 	private final long delay;

@@ -18,10 +18,10 @@ import java.util.Map;
 public class KeyboardEmulator extends AbstractKeyboard implements Renderer {
 	
 	private static final int SPACING = 5;
-	private Canvas canvas;
-	private KeyboardEffectContainer effectContainer;
-	private int rows;
-	private int cols;
+	private final Canvas canvas;
+	private final KeyboardEffectContainer effectContainer;
+	private final int rows;
+	private final int cols;
 	
 	public KeyboardEmulator(Canvas canvas, EffectContainer container, int rows, int columns) {
 		super(container);
@@ -31,7 +31,7 @@ public class KeyboardEmulator extends AbstractKeyboard implements Renderer {
 		this.effectContainer = new KeyboardEffectContainer(container, rows, cols);
 	}
 	
-	AnimationTimer animationTimer = new AnimationTimer() {
+	private final AnimationTimer animationTimer = new AnimationTimer() {
 		@Override
 		public void handle(long now) {
 			animateFrame();
@@ -54,7 +54,7 @@ public class KeyboardEmulator extends AbstractKeyboard implements Renderer {
 			for (int column = 0; column < perKey.length; column++) {
 				Color color = perKey[column][row];
 				ctx.setFill(color);
-				ctx.fillRect(SPACING/2+column*(width+SPACING), SPACING/2+row*(height+SPACING),width, height);
+				ctx.fillRect(SPACING/2.0+column*(width+SPACING), SPACING/2.0+row*(height+SPACING),width, height);
 			}
 		}
 	}

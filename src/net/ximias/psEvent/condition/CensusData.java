@@ -30,7 +30,7 @@ public class CensusData extends ConditionData {
 	private String resolve;
 	private HashMap<String, String> searchTerms;
 	private HashMap<String, String> eventSearchTerms;
-	private Logger logger = Logger.getLogger(getClass().getName());
+	private final Logger logger = Logger.getLogger(getClass().getName());
 	/**
 	 * Example:
 	 * HashMap<String, String> params = new HashMap<>();
@@ -98,7 +98,7 @@ public class CensusData extends ConditionData {
 		
 		//form queryString
 		String queryString = lookup + "/?" + String.join("&", terms);
-		JSONObject response = null;
+		JSONObject response;
 		
 		if (resolve == null) {
 			queryString += "&c:show=" + get;
@@ -130,13 +130,16 @@ public class CensusData extends ConditionData {
 		logger.network().severe("possible error in query. Target response was not produced:");
 		logger.network().severe("Query: " + queryString);
 		logger.network().severe("Response: " + response);
-		response.keySet().forEach(logger.network()::info);
+		if (response != null) {
+			response.keySet().forEach(logger.network()::info);
+		}
 		return "";
 	}
 	
 	private JSONObject unpackSingleResponseFromArray(JSONObject response) {
 		logger.network().info("Census response: "+response);
 		if (response.keySet().stream().anyMatch(it -> it.contains("list"))) {
+			@SuppressWarnings("OptionalGetWithoutIsPresent") // Check ifPresent performed above
 			JSONArray responseList = response.getJSONArray(response.keySet().stream()
 					.filter(it -> it.contains("list"))
 					.findFirst().get());

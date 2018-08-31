@@ -14,7 +14,8 @@ public class MultiFrontCenterEffect implements AreaEffectProducer {
 	private SequenceAnimation g;
 	private SequenceAnimation b;
 	private SequenceAnimation a;
-	private AreaEffectProducer[] effects;
+	private final AreaEffectProducer[] effects;
+	@SuppressWarnings("FieldCanBeLocal")
 	private final Logger logger = Logger.getLogger(getClass().getName());
 	
 	public MultiFrontCenterEffect(AreaEffectProducer[] effects) {

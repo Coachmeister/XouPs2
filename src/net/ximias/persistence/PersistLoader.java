@@ -8,7 +8,7 @@ import net.ximias.logging.Logger;
  * Used to save and restore persisted data as a serialized file or create one if needed.
  */
 class PersistLoader {
-	private static Logger logger = Logger.getLogger(PersistLoader.class.getName());
+	private static final Logger logger = Logger.getLogger(PersistLoader.class.getName());
 	private static final String FILE_NAME = "applicationData.ser";
 	private static Persisted instance;
 	

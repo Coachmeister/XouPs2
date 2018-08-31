@@ -4,7 +4,6 @@ import javafx.scene.paint.Color;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -26,8 +25,8 @@ public class Persisted implements Serializable {
 		BACKGROUND_BRIGHTNESS_SLIDER = ApplicationConstants.DEFAULT_BACKGROUND_BRIGHTENS;
 		BACKGROUND_TRANSPARENCY_SLIDER = ApplicationConstants.DEFAULT_BACKGROUND_INTENSITY;
 		EFFECT_TRANSPARENCY_SLIDER = ApplicationConstants.DEFAULT_EFFECT_INTENSITY;
-		APPLICATION_WIDTH = 600;
-		APPLICATION_HEIGHT = 450;
+		APPLICATION_WIDTH = 800;
+		APPLICATION_HEIGHT = 600;
 		PLANETSIDE_INPUT_PROFILE = new HashSet<>(6);
 		ACTION_COLORING = populateActionColoring();
 		
@@ -62,6 +61,7 @@ public class Persisted implements Serializable {
 	
 	private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException{
 		in.defaultReadObject();
+		@SuppressWarnings("unchecked")
 		HashMap<String, PersistColor> actionColorPersist = (HashMap<String, PersistColor>) in.readObject();
 		ACTION_COLORING = new HashMap<>();
 		actionColorPersist.forEach((s, persistColor) -> ACTION_COLORING.put(s, persistColor.toColor()));

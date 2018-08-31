@@ -9,7 +9,7 @@ import net.ximias.logging.Logger;
 
 
 public class Searcher {
-	private SearchProperties properties;
+	private final SearchProperties properties;
 	private int currentDepth = 0;
 	public Searcher(SearchProperties properties) {
 		this.properties = properties;

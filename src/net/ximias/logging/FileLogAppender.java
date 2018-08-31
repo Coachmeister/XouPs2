@@ -11,7 +11,7 @@ import java.util.logging.LogRecord;
 public class FileLogAppender extends Handler {
 	private final RandomAccessFile logFile;
 	public static final Charset UTF16 = Charset.forName("UTF16");
-	private long pos;
+	@SuppressWarnings("ResultOfMethodCallIgnored") // File stuff returns a boolean.
 	public FileLogAppender() {
 		WebLogFormatter formatter = new WebLogFormatter();
 		setFormatter(formatter);
@@ -19,14 +19,14 @@ public class FileLogAppender extends Handler {
 		File log = new File("logs/" + dateFormatter.format(new Date()) + ".log");
 		log.getParentFile().mkdirs();
 		File[] logs = log.getParentFile().listFiles();
-		while (logs.length > 5) {
+		while (Objects.requireNonNull(logs).length > 5) {
+			//noinspection OptionalGetWithoutIsPresent Check performed above.
 			Arrays.stream(logs).min(Comparator.comparing(File::getName)).get().delete();
 			logs = log.getParentFile().listFiles();
 		}
 		try {
 			log.createNewFile();
 			logFile = new RandomAccessFile(log, "rw");
-			pos = logFile.length();
 		} catch (IOException e) {
 			throw new Error("Could not create log file: " + e);
 		}

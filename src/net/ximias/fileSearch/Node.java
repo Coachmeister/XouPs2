@@ -9,7 +9,7 @@ import java.util.TreeMap;
  */
 public class Node {
 	private final SearchProperties searchProperties;
-	private File nodeFile;
+	private final File nodeFile;
 	private boolean hasExpandedPriority = false;
 	private File goalFile;
 	private TreeMap<Integer, ArrayList<Node>> priorityDirs = new TreeMap<>();

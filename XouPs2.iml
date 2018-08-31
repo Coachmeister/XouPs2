@@ -14,7 +14,6 @@
     <orderEntry type="library" name="org.glassfish.tyrus.bundles:tyrus-standalone-client-jdk:1.12" level="project" />
     <orderEntry type="library" name="logiled" level="project" />
     <orderEntry type="library" name="huecppsdk-wrapper-javadoc" level="project" />
-    <orderEntry type="library" name="commons-collections4-4" level="application" />
     <orderEntry type="module-library" scope="TEST">
       <library name="JUnit5.0">
         <CLASSES>

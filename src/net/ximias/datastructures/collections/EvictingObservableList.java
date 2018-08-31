@@ -2,13 +2,11 @@ package net.ximias.datastructures.collections;
 
 import javafx.collections.ModifiableObservableListBase;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedList;
 
-public class EvictingObservableList<E> extends ModifiableObservableListBase {
-	final LinkedList<E> list = new LinkedList<>();
-	final int maxSize;
+public class EvictingObservableList<E> extends ModifiableObservableListBase<E> {
+	private final LinkedList<E> list = new LinkedList<>();
+	private final int maxSize;
 	
 	public EvictingObservableList(int size) {
 		this.maxSize = size;
@@ -25,18 +23,18 @@ public class EvictingObservableList<E> extends ModifiableObservableListBase {
 	}
 	
 	@Override
-	protected void doAdd(int index, Object element) {
-		list.add(index, (E) element);
+	protected void doAdd(int index, E element) {
+		list.add(index, element);
 		if (size()>maxSize) removeFirst();
 	}
 	
 	@Override
-	protected E doSet(int index, Object element) {
-		return list.set(index, (E) element);
+	protected E doSet(int index, E element) {
+		return list.set(index, element);
 	}
 	
 	@Override
-	protected Object doRemove(int index) {
+	protected E doRemove(int index) {
 		return list.remove(index);
 	}
 	

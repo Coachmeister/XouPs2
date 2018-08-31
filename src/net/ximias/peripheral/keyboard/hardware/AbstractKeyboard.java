@@ -11,8 +11,8 @@ import net.ximias.logging.Logger;
 
 
 public abstract class AbstractKeyboard implements EffectAddListener, Keyboard {
-	private Logger logger = Logger.getLogger(getClass().getName());
-	public AbstractKeyboard(EffectContainer globalEffectContainer) {
+	private final Logger logger = Logger.getLogger(getClass().getName());
+	protected AbstractKeyboard(EffectContainer globalEffectContainer) {
 		globalEffectContainer.addEffectAddListener(this);
 	}
 	

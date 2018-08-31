@@ -137,7 +137,7 @@ public class EffectContainer extends PauseableContainer implements EffectView {
 	public void addEffectAddListener(EffectAddListener listener) {
 		effectAddListeners.add(listener);
 		synchronized (effects){
-			effects.forEach(it -> listener.onEffectAdded(it));
+			effects.forEach(listener::onEffectAdded);
 		}
 	}
 	

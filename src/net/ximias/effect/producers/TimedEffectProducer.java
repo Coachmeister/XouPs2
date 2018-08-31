@@ -49,7 +49,7 @@ public class TimedEffectProducer extends EffectProducer {
 class TimedColorEffect implements FixedEffect{
 	private final long startTime;
 	private final long duration;
-	protected final Color color;
+	private final Color color;
 	private final EffectProducer parent;
 	
 	TimedColorEffect(long duration_milliseconds, Color color_javafx, EffectProducer parent){

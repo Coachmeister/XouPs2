@@ -15,12 +15,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class StatusIndicator {
-	MainController mainController;
-	Circle statusCircle;
-	Rectangle tooltipRectangle = new Rectangle();
-	Text tooltipText;
-	String text;
-	HashMap<String, StatusSeverity> statuses = new HashMap<>();
+	private MainController mainController;
+	private Circle statusCircle;
+	private Rectangle tooltipRectangle = new Rectangle();
+	private Text tooltipText;
+	private String text;
+	private final HashMap<String, StatusSeverity> statuses = new HashMap<>();
 	private static StatusIndicator instance;
 	
 	private StatusIndicator(){

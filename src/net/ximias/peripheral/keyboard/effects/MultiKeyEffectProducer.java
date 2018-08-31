@@ -1,7 +1,6 @@
 package net.ximias.peripheral.keyboard.effects;
 
 import javafx.scene.paint.Color;
-import net.ximias.effect.EffectProducer;
 import net.ximias.peripheral.keyboard.KeyEffect;
 import net.ximias.peripheral.keyboard.KeyEffectProducer;
 

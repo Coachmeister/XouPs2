@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
@@ -28,14 +29,17 @@ import net.ximias.logging.Logger;
 
 
 public class LoginTab {
-	public static final String LOGIN_NAME_CHANGE_TIMER = "Login name change timer";
-	public ChoiceBox<JSONObject> characterChoice;
-	public TextField nameField;
-	public Button selectionButton;
+	@FXML
+	private ChoiceBox<JSONObject> characterChoice;
+	@FXML
+	private TextField nameField;
+	@FXML
+	private Button selectionButton;
+	private static final String LOGIN_NAME_CHANGE_TIMER = "Login name change timer";
 	private static final SimpleBooleanProperty init = new SimpleBooleanProperty(true);
-	MainController mainController;
-	private ArrayList<String> errors = new ArrayList<>(5);
-	private Logger logger = Logger.getLogger(getClass().getName());
+	private MainController mainController;
+	private final ArrayList<String> errors = new ArrayList<>(5);
+	private final Logger logger = Logger.getLogger(getClass().getName());
 	private Timer nameUpdateTimer = new Timer(LOGIN_NAME_CHANGE_TIMER,true);
 	
 	public void injectMainController(MainController controller) {

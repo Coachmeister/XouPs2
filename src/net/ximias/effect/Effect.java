@@ -1,6 +1,5 @@
 package net.ximias.effect;
 
-import javafx.scene.effect.Blend;
 import javafx.scene.paint.Color;
 
 /**

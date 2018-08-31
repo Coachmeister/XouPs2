@@ -1,14 +1,10 @@
 package net.ximias.datastructures.collections;
 
-import javafx.collections.ObservableList;
-import javafx.collections.ObservableListBase;
-
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingDeque;
 
 public class EvictingDeque<E> extends AbstractSequentialList<E> implements Deque<E> {
-	private int maxSize;
+	private final int maxSize;
 	
 	private final LinkedBlockingDeque<E> deque;
 	
@@ -52,6 +48,7 @@ public class EvictingDeque<E> extends AbstractSequentialList<E> implements Deque
 			index++;
 			E val = iter.next();
 			if (c.contains(val)){
+				b=true;
 				iter.remove();
 			}
 		}
@@ -67,6 +64,7 @@ public class EvictingDeque<E> extends AbstractSequentialList<E> implements Deque
 			index++;
 			E val = iter.next();
 			if (!c.contains(val)){
+				b=true;
 				iter.remove();
 			}
 		}
@@ -82,29 +80,25 @@ public class EvictingDeque<E> extends AbstractSequentialList<E> implements Deque
 	@Override
 	public E removeFirst() {
 		errIfEmpty();
-		E e = deque.removeFirst();
-		return e;
+		return deque.removeFirst();
 	}
 	
 	@Override
 	public E removeLast() {
 		errIfEmpty();
-		E e = deque.removeLast();
-		return e;
+		return deque.removeLast();
 	}
 	
 	@Override
 	public E pollFirst() {
 		errIfEmpty();
-		E e = deque.pollFirst();
-		return e;
+		return deque.pollFirst();
 	}
 	
 	@Override
 	public E pollLast() {
 		errIfEmpty();
-		E e = deque.pollLast();
-		return e;
+		return deque.pollLast();
 	}
 	
 	@Override
@@ -253,7 +247,7 @@ public class EvictingDeque<E> extends AbstractSequentialList<E> implements Deque
 		return maxSize;
 	}
 	class Iter implements Iterator<E>{
-		Iterator<E> chitor;
+		final Iterator<E> chitor;
 		int index = 0;
 		E current;
 		
@@ -281,8 +275,8 @@ public class EvictingDeque<E> extends AbstractSequentialList<E> implements Deque
 	
 	class Liter implements ListIterator<E> {
 		
-		LinkedList<E> lst = new LinkedList<>();
-		ListIterator<E> chiter;
+		final LinkedList<E> lst = new LinkedList<>();
+		final ListIterator<E> chiter;
 		
 		public Liter(int index) {
 			chiter = lst.listIterator(index);

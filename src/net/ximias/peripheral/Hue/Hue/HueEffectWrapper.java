@@ -22,7 +22,7 @@ import net.ximias.logging.Logger;
  * Wrapper for displaying the standard effects on the hue lights.
  */
 public class HueEffectWrapper {
-	Logger logger = Logger.getLogger(getClass().getName());
+	private final Logger logger = Logger.getLogger(getClass().getName());
 	
 	public HueEffect getAsHueEffect(Effect effectToWrap){
 		EffectProducer producer = effectToWrap.getProducer();
@@ -43,10 +43,9 @@ public class HueEffectWrapper {
 	
 	private HueEffect handleMultiEffect(MultiEffectProducer producer) {
 		logger.effects().fine("Wrapping multi effect");
-		MultiEffectProducer mEffect = producer;
-		ArrayList<AreaEffectProducer> effectProducers = new ArrayList<>(mEffect.getEffects().length);
+		ArrayList<AreaEffectProducer> effectProducers = new ArrayList<>(producer.getEffects().length);
 		
-		for (EffectProducer effectProducer : mEffect.getEffects()) {
+		for (EffectProducer effectProducer : producer.getEffects()) {
 			effectProducers.add((AreaEffectProducer) getAsHueEffect(effectProducer.build()));
 		}
 		logger.effects().fine("MultiEffect size: "+effectProducers.size());

@@ -1,8 +1,6 @@
 package net.ximias.peripheral.keyboard.effects;
 
 import javafx.scene.paint.Color;
-import net.ximias.peripheral.keyboard.KeyEffect;
-import net.ximias.peripheral.keyboard.KeyEffectProducer;
 
 import java.util.Arrays;
 
@@ -27,6 +25,7 @@ public class MulticolorWaveProducer implements IWaveEffectProducer {
 		colors[0] = color;
 	}
 	
+	@SuppressWarnings("MismatchedReadAndWriteOfArray")
 	class MulticoloredWaveEffect extends WaveEffect{
 		private final Color[] colors;
 		MulticoloredWaveEffect(int duration, WaveEffectDirection direction, Color[] colors) {
@@ -58,9 +57,7 @@ public class MulticolorWaveProducer implements IWaveEffectProducer {
 		}
 		
 		void fillColors(Color[] destination, int startLocation, int endLocation){
-			for (int i = startLocation; i < endLocation; i++) {
-				destination[i] = colors[i-startLocation];
-			}
+			if (endLocation - startLocation >= 0) System.arraycopy(colors, 0, destination, startLocation, endLocation - startLocation);
 		}
 		
 		@Override

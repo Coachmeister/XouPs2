@@ -14,8 +14,6 @@ import net.ximias.logging.Logger;
 
 public class GlobalHandler extends Ps2EventHandler {
 	private final EventCondition condition;
-	private Ps2EventType type;
-	private EffectProducer effect;
 	private final Logger logger = Logger.getLogger(getClass().getName());
 	
 	public GlobalHandler(EventCondition con, EffectProducer effect, EffectView view){
@@ -29,8 +27,9 @@ public class GlobalHandler extends Ps2EventHandler {
 		if (o.getString("condition").equals("all")) condition = null;
 		else condition = new SingleCondition(o.getJSONObject("condition"));
 		
+		/*
 		if (o.getString("type").equals("player")) type = Ps2EventType.PLAYER;
-		else type = Ps2EventType.WORLD;
+		else type = Ps2EventType.WORLD;*/
 		
 		if (o.has("effect")) effect = Initializer.effectProducerFromNameWhileInit(o.getString("effect"));
 	}

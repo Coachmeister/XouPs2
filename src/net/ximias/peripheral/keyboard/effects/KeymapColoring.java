@@ -11,8 +11,8 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 public class KeymapColoring {
-	private HashMap<String, Color> actionColorMap;
-	private File userSettings;
+	private final HashMap<String, Color> actionColorMap;
+	private final File userSettings;
 	private HashMap<String, Color> keyColorMap;
 	private static final int[] USABLE_INDICES_FROM_KEYBIND_FILE = new int[]{0, 4};
 	private final HashSet<String> unusedActions = new HashSet<>(48);

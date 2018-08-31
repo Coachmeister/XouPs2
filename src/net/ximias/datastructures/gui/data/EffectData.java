@@ -14,13 +14,13 @@ import net.ximias.logging.Logger;
 
 
 public class EffectData {
-	private HashMap<String, EffectProducer> effects = new HashMap<>();
-	private HashMap<String, UnlinkedEvent> availableEvents = new HashMap<>();
-	private HashMap<String, String> linkedEventNames = new HashMap<>();
-	private HashMap<String, Ps2EventHandler> linkedEvents = new HashMap<>();
-	private HashMap<String, EventCondition> conditions = new HashMap<>();
-	private Logger logger = Logger.getLogger(getClass().getName());
-	private EffectView view;
+	private final HashMap<String, EffectProducer> effects = new HashMap<>();
+	private final HashMap<String, UnlinkedEvent> availableEvents = new HashMap<>();
+	private final HashMap<String, String> linkedEventNames = new HashMap<>();
+	private final HashMap<String, Ps2EventHandler> linkedEvents = new HashMap<>();
+	private final HashMap<String, EventCondition> conditions = new HashMap<>();
+	private final Logger logger = Logger.getLogger(getClass().getName());
+	private final EffectView view;
 	
 	private final Ps2EventStreamingConnection connection = new Ps2EventStreamingConnection();
 	private final PlayStateScene scene;

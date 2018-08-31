@@ -15,7 +15,7 @@ import java.util.HashMap;
 
 public class PlayStateScene implements EffectScene {
 	private final EffectView view;
-	private Ps2EventStreamingConnection connection;
+	private final Ps2EventStreamingConnection connection;
 	
 	private PlayStateBackground background;
 	private final HashMap<String, String> experienceid = new HashMap<>(4);
@@ -90,13 +90,22 @@ public class PlayStateScene implements EffectScene {
 		// Persistence
 		// Keymap import? from InputProfile_User.xml
 		
-		// Version 0.2.0
+		// Version 0.3.0
+		// Separate peripheral effects.
+		// Hue integration.
+		
+		// Version 0.4.0
+		// Effect editor.
+		// More sliders.
+		
+		// Version 0.5.0
+		// Peripheral effect editor
+		// Effect creation tutorial.
+		
+		// Version 1.0.0
 		// Configuration files
 		// Bug reporting
 
-		
-		// Version 0.3.0
-		// Hue integration
 		
 		*/
 		

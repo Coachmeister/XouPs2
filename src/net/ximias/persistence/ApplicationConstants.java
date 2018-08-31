@@ -33,7 +33,7 @@ public interface ApplicationConstants {
 	JSONObject EMPTY_JSON = new JSONObject("{}");
 	
 	String VERSION_NAME = "Beta";
-	String VERSION = "0.1.8";
+	String VERSION = "0.3.0";
 	
 	String INTRO_TEXT = "Welcome to Xou "+VERSION_NAME+".\n" +
 	                    "This is an early version of the application. Expect kinks, bugs and sharp edges.\n" +
@@ -45,7 +45,7 @@ public interface ApplicationConstants {
 	                    "\n" +
 	                    "Have fun on the continents of Auraxis. Now with ambient lighting.\n" +
 	                    "~Ximias.";
-	long EXP_DATE = new GregorianCalendar(2018,9,1,0,1).getTime().getTime();
+	long EXP_DATE = new GregorianCalendar(2019,1,1,0,1).getTime().getTime();
 	String EXP_MESSAGE = "This is a friendly reminder that your version is pretty old by now.\n" +
 	                     "Updates and fixes has been made, so there is no longer a reason to run this old, archaic monstrosity.\n" +
 	                     "Me being me, I'm not going to stop you.. -I'll assume you have your reasons.\n" +
@@ -56,9 +56,9 @@ public interface ApplicationConstants {
 			"KeyboardTab effects. Planned support for Logitech, probably Razer chroma, and maybe Steelseries.",
 			"Possibly hardware-specific effects, like ripple or waves. Though those would not render correctly on the Hue",
 			"Philips Hue Entertainment support",
+			"Incorporating character select into the nice user interface",
 			"On the to-do:",
 			"Finding a name that is not the working title of the project (Feel free to send in ideas)",
-			"Incorporating character select into the nice user interface (This is complicated for technical reasons)",
 			"Individual continent properties and the option to modify continent ambient colors",
 			"Effect settings window where effects can be modified and created from scratch",
 			"Probably a tutorial for the above. PlanetSide2 events are quirky.", //Effect for getting killed with The Commissioner
@@ -76,6 +76,6 @@ public interface ApplicationConstants {
 			"THE FOLLOWING features I can't be bothered to do. If you _really_ want them, go bother me. If enough people do, I might be asked:",
 			"Playing any sound. \"Recursion\" already does this, if you want sound with your PlanetSide events",
 			"Displaying images or multicolored effects on the screen. I might do text, but the app is designed to display effects on Philips Hue or keyboards.",
-			"There is a very slim chance that this app will support other games, as the PlanetSide API is pretty... Unique",
+			"There is a very slim chance that this app will ever support other games, as the PlanetSide API is pretty... Unique",
 	};
 }

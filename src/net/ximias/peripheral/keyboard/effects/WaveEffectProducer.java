@@ -1,10 +1,6 @@
 package net.ximias.peripheral.keyboard.effects;
 
 import javafx.scene.paint.Color;
-import net.ximias.peripheral.keyboard.KeyEffect;
-import net.ximias.peripheral.keyboard.KeyEffectProducer;
-
-import java.util.Arrays;
 
 public class WaveEffectProducer implements IWaveEffectProducer {
 	private Color color;

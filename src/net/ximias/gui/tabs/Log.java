@@ -45,11 +45,10 @@ public class Log implements CollectionLogReciever {
 	* 10% of screen pr scrollInAbove
 	* */
 	private VirtualFlow<IndexedCell<String>> visibleItems;
-	private MainController mainController;
 	private RandomAccessFileTextReader fileReader;
 	private ScrollBar verticalScroll;
-	private EvictingObservableList<String> recentMessages = new EvictingObservableList<>(LINES_PR_SCREEN);
-	private EvictingObservableList<String> pastMessages = new EvictingObservableList<>(BUFFERED_SCREENS * LINES_PR_SCREEN);
+	private final EvictingObservableList<String> recentMessages = new EvictingObservableList<>(LINES_PR_SCREEN);
+	private final EvictingObservableList<String> pastMessages = new EvictingObservableList<>(BUFFERED_SCREENS * LINES_PR_SCREEN);
 	private boolean autoscroll = true;
 	private boolean cached = true;
 	private boolean topReached = false;
@@ -60,14 +59,13 @@ public class Log implements CollectionLogReciever {
 	LinkedList<String> toRemove = new LinkedList<>();
 	
 	public void injectMainController(MainController controller, RandomAccessFile logFile){
-		this.mainController = controller;
 		fileReader = new RandomAccessFileTextReader(logFile, FileLogAppender.UTF16);
 		recentMessages.add("Log tab initializing...");
 		populateFilters();
 		setupListView();
 		
 		
-		mainController.addProjectLevelLoggerHandler(new CollectionLogAppender(this));
+		controller.addProjectLevelLoggerHandler(new CollectionLogAppender(this));
 	}
 	
 	private void populateFilters() {
@@ -165,6 +163,7 @@ public class Log implements CollectionLogReciever {
 				topReached();
 			}
 		});
+		// I left the warning until I know that this will always work.
 		visibleItems = (VirtualFlow<IndexedCell<String>>) ((ListViewSkin<?>)list.getSkin()).getChildren().get(0);
 		
 		list.setItems(recentMessages);

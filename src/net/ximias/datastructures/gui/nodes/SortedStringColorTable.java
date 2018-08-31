@@ -56,10 +56,9 @@ public class SortedStringColorTable<S extends Map.Entry<String, Color>> extends 
 			
 			requestFocus();
 			getSelectionModel().clearSelection();
-			for (int i = 0; i < data.size(); i++) {
-				S s = data.get(i);
+			for (S s : data) {
 				if (selectedActions.contains(s.getKey())) {
-					logger.application().info("Selected "+s.getKey());
+					logger.application().info("Selected " + s.getKey());
 					getSelectionModel().select(s);
 				}
 			}
@@ -124,8 +123,11 @@ public class SortedStringColorTable<S extends Map.Entry<String, Color>> extends 
 			}
 		});
 		getColumns().clear();
-		getColumns().addAll(actionColumn, colorColumn);
+		getColumns().add(actionColumn);
+		getColumns().add(colorColumn);
+		// AddAll changed to add
 		getSortOrder().clear();
+		//noinspection unchecked
 		getSortOrder().setAll(actionColumn);
 	}
 }

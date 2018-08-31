@@ -16,7 +16,7 @@ import java.util.TimerTask;
 public class ConsoleView implements EffectView {
 	private final ArrayList<Effect> effects;
 	
-	public ConsoleView(){
+	private ConsoleView(){
 		effects = new ArrayList<>(60);
 		new Timer("Console view timer").scheduleAtFixedRate(new TimerTask() {
 			@Override

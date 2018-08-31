@@ -11,7 +11,7 @@ import net.ximias.logging.Logger;
 
 public class GlobalConstantEffect implements HueEffect {
 	private Color color;
-	private String name;
+	private final String name;
 	private static final HashMap<String, AreaEffect> constantEffects = new HashMap<>();
 	private double opacityMultiplier;
 	private final Logger logger = Logger.getLogger(getClass().getName());

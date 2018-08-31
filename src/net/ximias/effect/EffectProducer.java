@@ -7,11 +7,10 @@ import net.ximias.peripheral.keyboard.KeyEffect;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.ximias.logging.Logger;
 import java.util.stream.Collectors;
 
 public abstract class EffectProducer extends JsonSerializable{
-	private ArrayList<PeripheralEffectProducer> peripheralEffects = new ArrayList<>(6);
+	private final ArrayList<PeripheralEffectProducer> peripheralEffects = new ArrayList<>(6);
 	public abstract Effect build();
 	
 	public abstract void setColor(Color color);

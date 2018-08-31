@@ -13,7 +13,7 @@ public class WebLogFormatter extends Formatter {
 	private final Date date = new Date();
 	private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 	private static final String format = LoggingSupport.getSimpleFormat();
-	public static boolean verbose = false;
+	private static boolean verbose = false;
 	
 	@Override
 	public String format(LogRecord recordIn) {

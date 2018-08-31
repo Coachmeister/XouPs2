@@ -6,7 +6,7 @@ public enum Category {
 	EFFECTS("Effects"),
 	NETWORK("Network");
 	
-	private String name;
+	private final String name;
 	Category(String name) {
 		this.name = name;
 	}

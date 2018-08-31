@@ -19,11 +19,11 @@ import net.ximias.logging.Logger;
 
 public class HueGameState implements EffectAddListener {
 	private final Entertainment entertainment;
-	private HueEffectWrapper effectWrapper = new HueEffectWrapper();
-	private SimpleBooleanProperty running = new SimpleBooleanProperty(false);
-	private Logger logger = Logger.getLogger(getClass().getName());
-	private Timer cancellationTimer = new Timer("HueEffect cancellation timer.",true);
-	private EffectContainer effectContainer;
+	private final HueEffectWrapper effectWrapper = new HueEffectWrapper();
+	private final SimpleBooleanProperty running = new SimpleBooleanProperty(false);
+	private final Logger logger = Logger.getLogger(getClass().getName());
+	private final Timer cancellationTimer = new Timer("HueEffect cancellation timer.",true);
+	private final EffectContainer effectContainer;
 	
 	public HueGameState(Entertainment entertainment, EffectContainer effectContainer) {
 		this.entertainment = entertainment;
@@ -32,22 +32,14 @@ public class HueGameState implements EffectAddListener {
 	}
 	
 	private void startEntertainmentSystem() {
-		entertainment.start(new StartCallback() {
-			@Override
-			public void handleCallback(StartStatus startStatus) {
-				if (startStatus != StartStatus.Success) return;
-				entertainmentStarted();
-			}
+		entertainment.start(startStatus -> {
+			if (startStatus != StartCallback.StartStatus.Success) return;
+			entertainmentStarted();
 		});
 	}
 	
 	public void endGameState(){
-		entertainment.stop(new Callback() {
-			@Override
-			public void handleCallback() {
-				entertainmentStopped();
-			}
-		});
+		entertainment.stop(this::entertainmentStopped);
 	}
 	
 	private void entertainmentStarted() {

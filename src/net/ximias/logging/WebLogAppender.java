@@ -34,18 +34,16 @@ public class WebLogAppender extends Handler {
 	public void append(LogRecord record) {
 		if (errorState) return;
 		if (doc != null) {
-			Platform.runLater(() -> {
-				engine.executeScript(
-						//Append paragraph
-						"var e = document.createElement(\"p\");" +
-						" e.setAttribute(\"class\",\"" + record.getLevel() + "\");" +
-						" e.innerHTML = \"" + paragraphText(record).replace("\"","\\\"") + "\"; " +
-						"document.body.appendChild(e);" +
-						//Append hr
-						"document.body.appendChild(document.createElement(\"hr\"));"+
-						//Scroll to bottom
-						"window.scrollTo(0, document.body.scrollHeight);");
-			});
+			Platform.runLater(() -> engine.executeScript(
+					//Append paragraph
+					"var e = document.createElement(\"p\");" +
+					" e.setAttribute(\"class\",\"" + record.getLevel() + "\");" +
+					" e.innerHTML = \"" + paragraphText(record).replace("\"","\\\"") + "\"; " +
+					"document.body.appendChild(e);" +
+					//Append hr
+					"document.body.appendChild(document.createElement(\"hr\"));"+
+					//Scroll to bottom
+					"window.scrollTo(0, document.body.scrollHeight);"));
 		} else {
 			buffer.add(record);
 		}

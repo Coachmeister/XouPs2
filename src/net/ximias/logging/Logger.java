@@ -1,7 +1,6 @@
 package net.ximias.logging;
 
 import java.util.MissingResourceException;
-import java.util.logging.LogRecord;
 
 public class Logger {
 	private final java.util.logging.Logger logger;

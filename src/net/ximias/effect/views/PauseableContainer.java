@@ -9,7 +9,7 @@ import net.ximias.logging.Logger;
 
 
 public abstract class PauseableContainer {
-	private ArrayList<Renderer> renderers = new ArrayList<>(9);
+	private final ArrayList<Renderer> renderers = new ArrayList<>(9);
 	private final Timer resumeTimer = new Timer("Resume rendering timer"+getClass().getSimpleName(), true);
 	private TimerTask resumeTask = resumeTask();
 	private final Logger logger = Logger.getLogger(getClass().getName());
@@ -59,7 +59,7 @@ public abstract class PauseableContainer {
 	}
 	
 	private void resumeAll() {
-		logger.effects().warning("Resuming all renderers...");
+		logger.effects().info("Resuming all renderers...");
 		renderers.forEach(Renderer::resumeRendering);
 	}
 	

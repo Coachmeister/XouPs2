@@ -38,7 +38,7 @@ class MultiEffect implements Effect{
 	private final EffectProducer[] effects;
 	private Effect current;
 	private int count;
-	private EffectProducer parent;
+	private final EffectProducer parent;
 	
 	public MultiEffect(EffectProducer[] effects, EffectProducer parent) {
 		this.effects = effects;

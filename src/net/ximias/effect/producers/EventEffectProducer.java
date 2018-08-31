@@ -21,6 +21,7 @@ import net.ximias.logging.Logger;
  */
 public class EventEffectProducer extends EffectProducer{
 	private static final HashMap<String, WeakReference<EventColorEffect>> eventEffects = new HashMap<>(12);
+	@SuppressWarnings("FieldCanBeLocal")
 	private final Logger logger = Logger.getLogger(getClass().getName());
 	private final String name;
 	private Color color;
@@ -82,8 +83,8 @@ public class EventEffectProducer extends EffectProducer{
 class EventColorEffect implements FixedEffect {
 	private boolean done = false;
 	private Color color;
-	private String name;
-	private EffectProducer parent;
+	private final String name;
+	private final EffectProducer parent;
 	EventColorEffect(Color color_javafx, String name, EffectProducer parent) {
 		color = color_javafx;
 		this.parent = parent;

@@ -41,13 +41,13 @@ import java.util.logging.*;
 public class MainController extends Application implements Renderer{
 	
 	private static final java.util.logging.Logger PROJECT_LEVEL_LOGGER = java.util.logging.Logger.getLogger("net.ximias");
-	private net.ximias.logging.Logger logger = net.ximias.logging.Logger.getLogger(getClass().getName());
+	private final net.ximias.logging.Logger logger = net.ximias.logging.Logger.getLogger(getClass().getName());
 	private static final FileLogAppender fileLogAppender = new FileLogAppender();
 	private static boolean logDisabled = false;
 	private final EffectContainer effectContainer = new EffectContainer(ApplicationConstants.DEFAULT_EFFECT_INTENSITY, this);
 	private AnimationTimer animationTimer;
 	private Rectangle statusArea;
-	private StatusIndicator statusIndicatorController = StatusIndicator.getInstance() ;
+	private final StatusIndicator statusIndicatorController = StatusIndicator.getInstance() ;
 	
 	@FXML
 	private MainEffectView effectViewController;

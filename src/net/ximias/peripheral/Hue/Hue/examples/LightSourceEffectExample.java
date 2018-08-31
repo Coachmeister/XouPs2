@@ -28,14 +28,14 @@ public class LightSourceEffectExample implements HueExampleEffect {
 		positionX.append(new TweenAnimation(-1,1,QUADRANT_SPEED, TYPE),"SineIn");
 		positionX.append(hold1,"Hold 1");
 		
-		positionX.setRepeatCount(Math.ceil(DURATION/(QUADRANT_SPEED*4)));
+		positionX.setRepeatCount(Math.ceil(DURATION/(QUADRANT_SPEED*4.0)));
 		
 		SequenceAnimation positionY = new SequenceAnimation();
 		positionY.append(hold1,"Hold 1");
 		positionY.append(new TweenAnimation(1,-1,QUADRANT_SPEED, TYPE),"SineIn");
 		positionY.append(holdMinus1, "Hold -1");
 		positionY.append(new TweenAnimation(-1,1,QUADRANT_SPEED, TYPE),"SineOut");
-		positionY.setRepeatCount(Math.ceil(DURATION/(QUADRANT_SPEED*4)));
+		positionY.setRepeatCount(Math.ceil(DURATION/(QUADRANT_SPEED*4.0)));
 		
 		effect.setPositionAnimation(positionX, positionY);
 		effect.setRadiusAnimation(new ConstantAnimation(1.4));

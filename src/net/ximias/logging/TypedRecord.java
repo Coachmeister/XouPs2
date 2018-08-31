@@ -4,7 +4,7 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 public class TypedRecord extends LogRecord {
-	Category category = Category.GENERAL;
+	private Category category = Category.GENERAL;
 	/**
 	 * Construct a LogRecord with the given level and message values.
 	 * <p>

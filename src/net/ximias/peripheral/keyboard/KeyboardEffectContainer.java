@@ -5,17 +5,18 @@ import net.ximias.effect.Renderer;
 import net.ximias.effect.views.EffectContainer;
 import net.ximias.effect.views.PauseableContainer;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import net.ximias.logging.Logger;
 
 
+@SuppressWarnings("MismatchedReadAndWriteOfArray")
 public class KeyboardEffectContainer extends PauseableContainer implements Renderer {
 	private final EffectContainer globalContainer;
 	private final LinkedList<KeyEffect> effects = new LinkedList<>();
-	private int rows,columns;
-	private Logger logger = Logger.getLogger(getClass().getName());
+	private final int rows;
+	private final int columns;
+	private final Logger logger = Logger.getLogger(getClass().getName());
 	
 	public KeyboardEffectContainer(EffectContainer globalContainer, int columns, int rows) {
 		this.globalContainer = globalContainer;

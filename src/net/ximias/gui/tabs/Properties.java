@@ -27,8 +27,8 @@ public class Properties {
 	private int oldZone;
 	private boolean worldWasModified = false;
 	private TreeMap<String, Integer> selections;
-	private FadingEffectProducer exampleEffect = new FadingEffectProducer(Color.LIME,1500);
-	private FadingEffectProducer exampleDarkEffect = new FadingEffectProducer(Color.BLACK,1500);
+	private final FadingEffectProducer exampleEffect = new FadingEffectProducer(Color.LIME,1500);
+	private final FadingEffectProducer exampleDarkEffect = new FadingEffectProducer(Color.BLACK,1500);
 	
 	@FXML
 	private Canvas propertiesPreview = new ResizableCanvas();
