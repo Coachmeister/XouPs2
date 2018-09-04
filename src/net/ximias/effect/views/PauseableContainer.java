@@ -59,7 +59,6 @@ public abstract class PauseableContainer {
 	}
 	
 	private void resumeAll() {
-		logger.effects().info("Resuming all renderers...");
 		renderers.forEach(Renderer::resumeRendering);
 	}
 	

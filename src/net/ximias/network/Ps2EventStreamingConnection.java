@@ -48,7 +48,6 @@ public class Ps2EventStreamingConnection {
 				lastMessageTime = System.currentTimeMillis();
 				messageHandlers.forEach(it->it.handleMessage(message));
 				JSONObject response = new JSONObject(message);
-				logger.network().info(response.toString());
 				
 				if (!response.has("payload")) {
 					delegateNonPayloadedResponse(response);
@@ -89,7 +88,9 @@ public class Ps2EventStreamingConnection {
 	 * @param payload the event received.
 	 */
 	void delegatePayload(JSONObject payload) {
-		logger.network().fine(payload.toString());
+		if (!payload.getString("event_name").equals("PlayerLogout")) {
+			logger.network().info(payload.toString());
+		}
 		globalListenerActions(payload);
 		globalHandlers.forEach(it -> it.eventReceived(payload));
 		subscribedEvents.get(payload.getString("event_name")).parallelStream().forEach(it -> it.eventReceived(payload));
@@ -239,6 +240,7 @@ public class Ps2EventStreamingConnection {
 	}
 	
 	private void delegateNonPayloadedResponse(JSONObject response) {
+		logger.network().info(response.toString());
 		if (responseIsEventWithType(response)) {
 			String eventType = response.getString("type");
 			if (eventType.equals("serviceStateChanged")) {

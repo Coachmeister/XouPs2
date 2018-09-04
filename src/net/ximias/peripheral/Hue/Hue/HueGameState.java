@@ -56,7 +56,7 @@ public class HueGameState implements EffectAddListener {
 	
 	@Override
 	public void onEffectAdded(Effect effect) {
-		logger.effects().info("Hue effect received:"+effect.getName());
+		logger.effects().info("Hue effect received: "+effect.getName());
 		if (!running.get()) return;
 		
 		List<HueEffect> attachedEffects = effect.getProducer().getAllPeripheralEffectProducersBySuperclass(HueEffect.class);
@@ -65,19 +65,16 @@ public class HueGameState implements EffectAddListener {
 		if (attachedEffects.isEmpty()) {
 			effects.add(effectWrapper.getAsHueEffect(effect));
 		}else{
-			for (HueEffect attachedEffect : attachedEffects) {
-				if (attachedEffect instanceof GlobalConstantEffect){
-					attachedEffect.setOpacity(1);
-					effects.add(attachedEffect);
-				}else{
-					attachedEffect.setOpacity(effectContainer.getEffectIntensity());
-					effects.add(attachedEffect);
-				}
-				
-			}
+			logger.effects().info(effect.getName() + " Had "+attachedEffects.size()+" peripheral effects.");
+			effects.addAll(attachedEffects);
 		}
 		
 		for (HueEffect hueEffect : effects) {
+			if (hueEffect instanceof GlobalConstantEffect){
+				hueEffect.setOpacity(1);
+			}else{
+				hueEffect.setOpacity(effectContainer.getEffectIntensity());
+			}
 			com.philips.lighting.hue.sdk.wrapper.entertainment.effect.Effect entertainmentEffect = hueEffect.getEffect();
 			synchronized (entertainment){
 				entertainment.lockMixer();

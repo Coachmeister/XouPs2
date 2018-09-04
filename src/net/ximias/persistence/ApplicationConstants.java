@@ -33,7 +33,7 @@ public interface ApplicationConstants {
 	JSONObject EMPTY_JSON = new JSONObject("{}");
 	
 	String VERSION_NAME = "Beta";
-	String VERSION = "0.3.0";
+	String VERSION = "0.3.1";
 	
 	String INTRO_TEXT = "Welcome to Xou "+VERSION_NAME+".\n" +
 	                    "This is an early version of the application. Expect kinks, bugs and sharp edges.\n" +
