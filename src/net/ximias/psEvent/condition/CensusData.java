@@ -137,7 +137,6 @@ public class CensusData extends ConditionData {
 	}
 	
 	private JSONObject unpackSingleResponseFromArray(JSONObject response) {
-		logger.network().info("Census response: "+response);
 		if (response.keySet().stream().anyMatch(it -> it.contains("list"))) {
 			@SuppressWarnings("OptionalGetWithoutIsPresent") // Check ifPresent performed above
 			JSONArray responseList = response.getJSONArray(response.keySet().stream()

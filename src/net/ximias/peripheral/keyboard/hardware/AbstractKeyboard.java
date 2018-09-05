@@ -20,8 +20,7 @@ public abstract class AbstractKeyboard implements EffectAddListener, Keyboard {
 	public void onEffectAdded(Effect effect) {
 		List<? extends KeyEffectProducer> attached = effect.getProducer().getAllPeripheralEffectProducersBySuperclass(getPeripheralEffectType());
 		logger.effects().fine("Looking for attached effects in: "+effect.getClass().getSimpleName());
-		if (attached == null||!isMultiKey()) {
-			logger.effects().fine("no attached effects found in: "+effect.getName());
+		if (attached.isEmpty()||!isMultiKey()) {
 			return;
 		}
 		logger.effects().info("Adding peripheral effect(s) found in: "+effect.getName());

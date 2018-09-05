@@ -19,7 +19,7 @@ public class LeastRecentlyUsedCache<K, V> extends LinkedHashMap<K, V>{
 	@Override
 	protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
 		boolean remove = size() > cacheSize;
-		if (remove) logger.network().warning("Cache at capacity.");
+		if (remove) logger.network().warning("Cache at capacity. Evicting: "+eldest.getValue());
 		return remove;
 	}
 }

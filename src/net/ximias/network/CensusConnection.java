@@ -48,6 +48,7 @@ public class CensusConnection {
 		try{
 			JSONObject response = establishConnectionAndQuery(urlParameters);
 			cached.complete(response);
+			System.out.println("Census response: "+response);
 			return response;
 		}catch (Error e){
 			cached.completeExceptionally(e);
