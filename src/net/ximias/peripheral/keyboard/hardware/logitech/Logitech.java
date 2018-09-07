@@ -23,7 +23,8 @@ public class Logitech extends AbstractKeyboard implements Renderer {
 	private final KeyboardEffectContainer effectContainer;
 	private boolean multiKey;
 	private static final String ANIMATION_TIMER_NAME = "Logitech animation timer";
-	private Timer animationTimer = new Timer(ANIMATION_TIMER_NAME,true);
+	private final Timer animationTimer = new Timer(ANIMATION_TIMER_NAME,true);
+	private TimerTask renderTask;
 	private final Logger logger = Logger.getLogger(getClass().getName());
 	private boolean gFlashOn = true;
 	private boolean isStarted = false;
@@ -34,7 +35,7 @@ public class Logitech extends AbstractKeyboard implements Renderer {
 		multiKey = enableMultiKey;
 		effectContainer = new KeyboardEffectContainer(globalEffectContainer, LogiLED.LOGI_LED_BITMAP_WIDTH, LogiLED.LOGI_LED_BITMAP_HEIGHT);
 		effectContainer.subscribeResumeRendering(this);
-		Timer animationMonitor = new Timer(ANIMATION_TIMER_NAME,true);
+		Timer animationMonitor = new Timer("Logitech animation monitor",true);
 		animationMonitor.scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
@@ -240,28 +241,32 @@ public class Logitech extends AbstractKeyboard implements Renderer {
 	/**
 	 * Starts the rendering.
 	 */
-	private synchronized void start() {
-		if (!isStarted){
-			logger.effects().info("Keyboard rendering started/resumed");
-			isStarted = true;
-			animationTimer.scheduleAtFixedRate(new TimerTask() {
-				@Override
-				public void run() {
-					lastRender = System.currentTimeMillis();
-					drawFrame();
-				}
-			}, 0, FRAME_RATE_MS);
+	private void start() {
+		synchronized (animationTimer){
+			if (!isStarted){
+				logger.effects().info("Keyboard rendering started/resumed");
+				isStarted = true;
+				renderTask = new TimerTask() {
+					@Override
+					public void run() {
+						lastRender = System.currentTimeMillis();
+						drawFrame();
+					}
+				};
+				animationTimer.scheduleAtFixedRate(renderTask, 0, FRAME_RATE_MS);
+			}
 		}
 	}
 	
 	/**
 	 * Stops the rendering.
 	 */
-	private synchronized void stop() {
-		logger.effects().info("Keyboard rendering stopped/paused");
-		isStarted = false;
-		animationTimer.cancel();
-		animationTimer = new Timer(ANIMATION_TIMER_NAME,true);
+	private void stop() {
+		synchronized (animationTimer){
+			logger.effects().info("Keyboard rendering stopped/paused");
+			isStarted = false;
+			renderTask.cancel();
+		}
 	}
 	
 	/**
