@@ -4,6 +4,8 @@ import net.ximias.logging.Logger;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 public class LeastRecentlyUsedCache<K, V> extends LinkedHashMap<K, V>{
 	private final int cacheSize;
@@ -19,7 +21,18 @@ public class LeastRecentlyUsedCache<K, V> extends LinkedHashMap<K, V>{
 	@Override
 	protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
 		boolean remove = size() > cacheSize;
-		if (remove) logger.network().warning("Cache at capacity. Evicting: "+eldest.getValue());
+		if (remove) {
+			if (eldest.getValue() instanceof Future){
+				try {
+					//TODO Remove this mess.
+					logger.network().warning("Cache at capacity. Evicting: "+ ((Future) eldest.getValue()).get());
+				} catch (InterruptedException | ExecutionException e) {
+					e.printStackTrace();
+				}
+			}else{
+				logger.network().warning("Cache at capacity. Evicting: " + eldest.getValue());
+			}
+		}
 		return remove;
 	}
 }

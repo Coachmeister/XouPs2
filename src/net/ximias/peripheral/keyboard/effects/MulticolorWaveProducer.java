@@ -86,7 +86,7 @@ public class MulticolorWaveProducer implements IWaveEffectProducer {
 				for (int x = 0; x < width; x++) {
 					double distanceFromCenter = dist(width / 2.0, height / 2.0, x+0.5, y+0.5);
 					if (distanceFromCenter <= outerRadius && distanceFromCenter >= innerRadius){
-						result[x][y] = colors[(int) Math.floor(outerRadius-distanceFromCenter)];
+						result[x][y] = colors[(int) Math.min(Math.floor(outerRadius-distanceFromCenter),colors.length-1)];
 					}else{
 						result[x][y] = Color.TRANSPARENT;
 					}

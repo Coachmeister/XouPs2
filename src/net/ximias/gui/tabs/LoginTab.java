@@ -40,20 +40,26 @@ public class LoginTab {
 	private MainController mainController;
 	private final ArrayList<String> errors = new ArrayList<>(5);
 	private final Logger logger = Logger.getLogger(getClass().getName());
-	private Timer nameUpdateTimer = new Timer(LOGIN_NAME_CHANGE_TIMER,true);
+	private final Timer nameUpdateTimer = new Timer(LOGIN_NAME_CHANGE_TIMER,true);
+	private TimerTask nameUpdateTask = new TimerTask() {
+		@Override
+		public void run() {
+			nameChanged();
+		}
+	};
 	
 	public void injectMainController(MainController controller) {
 		this.mainController = controller;
 		nameField.textProperty().addListener((observable, oldValue, newValue) -> {
-			nameUpdateTimer.cancel();
-			nameUpdateTimer = new Timer(LOGIN_NAME_CHANGE_TIMER,true);
-			characterChoice.setDisable(true);
-			nameUpdateTimer.schedule(new TimerTask() {
+			nameUpdateTask.cancel();
+			nameUpdateTask = new TimerTask() {
 				@Override
 				public void run() {
-					Platform.runLater(() -> nameChanged());
+					Platform.runLater(()->nameChanged());
 				}
-			}, 300);
+			};
+			characterChoice.setDisable(true);
+			nameUpdateTimer.schedule(nameUpdateTask, 300);
 		});
 		selectionButton.setDisable(true);
 		characterChoice.setDisable(true);

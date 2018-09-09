@@ -244,7 +244,7 @@ public class Logitech extends AbstractKeyboard implements Renderer {
 	private void start() {
 		synchronized (animationTimer){
 			if (!isStarted){
-				logger.effects().info("Keyboard rendering started/resumed");
+				logger.effects().fine("Keyboard rendering started/resumed");
 				isStarted = true;
 				renderTask = new TimerTask() {
 					@Override
@@ -263,7 +263,7 @@ public class Logitech extends AbstractKeyboard implements Renderer {
 	 */
 	private void stop() {
 		synchronized (animationTimer){
-			logger.effects().info("Keyboard rendering stopped/paused");
+			logger.effects().fine("Keyboard rendering stopped/paused");
 			isStarted = false;
 			renderTask.cancel();
 		}
