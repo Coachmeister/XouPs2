@@ -5,6 +5,10 @@ import net.ximias.effect.EffectView;
 import net.ximias.effect.producers.*;
 import net.ximias.network.CurrentPlayer;
 import net.ximias.network.Ps2EventStreamingConnection;
+import net.ximias.peripheral.Hue.Hue.hueEffects.CircularEffect;
+import net.ximias.peripheral.Hue.Hue.hueEffects.ExplosionEffect;
+import net.ximias.peripheral.Hue.Hue.hueEffects.MovementEffect;
+import net.ximias.peripheral.Hue.Hue.hueEffects.MultiLightSourceEffect;
 import net.ximias.peripheral.keyboard.effects.*;
 import net.ximias.persistence.ApplicationConstants;
 import net.ximias.persistence.Persisted;
@@ -128,7 +132,9 @@ public class PlayStateScene implements EffectScene {
 		
 		Color light = new Color(1,1,1,.3);
 		MultiKeyEffectProducer outIn = new MultiKeyEffectProducer(new WaveEffectProducer(light,400,1,WaveEffectDirection.CENTER_OUT),new WaveEffectProducer(light,400,1,WaveEffectDirection.OUT_CENTER));
-		doubleRainbow.attachPeripheralEffect(new MultiKeyEffectProducer(outIn, outIn, outIn));
+		doubleRainbow.attachPeripheralEffect(new MultiKeyEffectProducer(outIn, outIn, outIn,outIn,outIn));
+		
+		doubleRainbow.attachPeripheralEffect(new CircularEffect(4000,300,Color.WHITE, Color.WHITE,1));
 		
 		SingleEventHandler ximias = new SingleEventHandler(view, doubleRainbow, isXimias(), Ps2EventType.PLAYER, "Death", "Ximias easter egg");
 		ximias.register(connection);
@@ -168,6 +174,7 @@ public class PlayStateScene implements EffectScene {
 		MultiEffectProducer facility = new MultiEffectProducer(facilityBegin, facilityfade);
 		
 		facility.attachPeripheralEffect(new MulticolorWaveProducer(new Color[]{Color.WHITE, Color.TRANSPARENT, Color.TRANSPARENT,Color.WHITE},400,WaveEffectDirection.CENTER_OUT));
+		facility.attachPeripheralEffect(new ExplosionEffect(1000,Color.WHITE,bias(Color.WHITE,0.5)));
 		
 		SingleEventHandler facilityCap = new SingleEventHandler(view, facility, isPlayer, Ps2EventType.PLAYER, "PlayerFacilityCapture", "Facility capture");
 		SingleEventHandler facilityDef = new SingleEventHandler(view, facility, isPlayer, Ps2EventType.PLAYER, "PlayerFacilityDefend", "Facility capture");
@@ -205,6 +212,9 @@ public class PlayStateScene implements EffectScene {
 		ContinualWaveEffectProducer keyExplosion = new ContinualWaveEffectProducer(new MulticolorWaveProducer(new Color[]{Color.BLACK, light , Color.LIGHTSKYBLUE, light}, 300,WaveEffectDirection.CENTER_OUT),5);
 		explosion.attachPeripheralEffect(keyExplosion);
 		
+		ExplosionEffect hueEffect = new ExplosionEffect(2000, bias(Color.PALEGOLDENROD,0.8), bias(Color.RED,0.5));
+		explosion.attachPeripheralEffect(hueEffect);
+		
 		SingleCondition isNotDeath = new SingleCondition(Condition.NOT_EQUALS,
 				new EventData("character_id", ConditionDataSource.EVENT),
 				new EventData(CurrentPlayer.getInstance().getPlayerID(), ConditionDataSource.CONSTANT));
@@ -225,6 +235,7 @@ public class PlayStateScene implements EffectScene {
 		
 		WaveEffectProducer blackIn = new WaveEffectProducer(Color.BLACK, 800,1,WaveEffectDirection.OUT_CENTER);
 		vehicleDied.attachPeripheralEffect(blackIn);
+		vehicleDied.attachPeripheralEffect(new ExplosionEffect(1000,Color.WHITE, Color.RED));
 		
 		SingleEventHandler vehicleLost = new SingleEventHandler(view, vehicleDied, isPlayer, Ps2EventType.PLAYER, "VehicleDestroy", "Vehicle Lost");
 		vehicleLost.register(connection);
@@ -232,13 +243,16 @@ public class PlayStateScene implements EffectScene {
 	
 	private void alert() {
 		Color alert = bias(Color.RED, 0.1);
-		FadingEffectProducer whoop = new FadingEffectProducer(alert, 300);
+		FadingEffectProducer whoop = new FadingEffectProducer(alert, 400);
 		
 		MultiEffectProducer alertEffect = new MultiEffectProducer(whoop, whoop, whoop, whoop, whoop);
 		
-		MulticolorWaveProducer keyWhoop = new MulticolorWaveProducer(new Color[]{Color.RED,Color.INDIANRED, Color.WHITE,Color.INDIANRED, Color.RED},300,WaveEffectDirection.RIGHT_TO_LEFT);
+		MulticolorWaveProducer keyWhoop = new MulticolorWaveProducer(new Color[]{Color.RED,Color.INDIANRED, Color.WHITE,Color.INDIANRED, Color.RED},400,WaveEffectDirection.RIGHT_TO_LEFT);
 		ContinualWaveEffectProducer keyAlertEffect = new ContinualWaveEffectProducer(keyWhoop, 5);
 		alertEffect.attachPeripheralEffect(keyAlertEffect);
+		
+		CircularEffect hueEffect = new CircularEffect(2300,400, Color.RED, Color.PINK,1.5);
+		alertEffect.attachPeripheralEffect(hueEffect);
 		
 		SingleCondition isPlayerWorld = new SingleCondition(Condition.EQUALS,
 				new EventData("world_id", ConditionDataSource.EVENT),
@@ -284,6 +298,7 @@ public class PlayStateScene implements EffectScene {
 		
 		
 		revive.attachPeripheralEffect(new MultiKeyEffectProducer(new DelayProducer(250),new WaveEffectProducer(Color.WHITE, 500,3,WaveEffectDirection.DOWN_TO_UP)));
+		revive.attachPeripheralEffect(new ExplosionEffect(800,Color.WHITE, Color.WHITE));
 		
 		SingleCondition isReviveExperience = experienceDescriptionContains("revive");
 		AllCondition isRevive = new AllCondition(isReviveExperience, isPlayer, isNotHive);
@@ -299,9 +314,10 @@ public class PlayStateScene implements EffectScene {
 		BlendingEffectProducer pentaReverse = new BlendingEffectProducer(Color.YELLOW, Color.ORANGE, 100);
 		FadingEffectProducer fadeout = new FadingEffectProducer(Color.ORANGE, 200);
 		
-		MultiEffectProducer pentaKill = new MultiEffectProducer(delay, penta, pentaReverse, fadeout);
+		MultiEffectProducer pentaKill = new MultiEffectProducer(delay, penta, pentaReverse, penta, pentaReverse, penta, pentaReverse, fadeout);
 		
-		pentaKill.attachPeripheralEffect(new MulticolorWaveProducer(new Color[]{Color.ORANGE, Color.YELLOW, Color.ORANGE, Color.ORANGE},800, WaveEffectDirection.CENTER_OUT));
+		pentaKill.attachPeripheralEffect(new MulticolorWaveProducer(new Color[]{Color.WHITE , Color.TRANSPARENT, Color.TRANSPARENT, Color.WHITE,Color.TRANSPARENT, Color.TRANSPARENT, Color.WHITE},1000, WaveEffectDirection.CENTER_OUT));
+		pentaKill.attachPeripheralEffect(new CircularEffect(1000,500,Color.ORANGE, Color.YELLOW, 2));
 		
 		SingleCondition isKill = new SingleCondition(Condition.EQUALS,
 				new EventData(CurrentPlayer.getInstance().getPlayerID(), ConditionDataSource.CONSTANT),
@@ -419,6 +435,11 @@ public class PlayStateScene implements EffectScene {
 		repairing.attachPeripheralEffect(new ContinualWaveEffectProducer(new WaveEffectProducer(Color.CYAN, 500,2,WaveEffectDirection.LEFT_TO_RIGHT),2));
 		repairing.attachPeripheralEffect(new ContinualWaveEffectProducer(new WaveEffectProducer(Color.BLUE, 500,2,WaveEffectDirection.RIGHT_TO_LEFT),2));
 		
+		MovementEffect cyanEffect = MovementEffect.fromLeftToRight(500, Color.CYAN, Color.CYAN);
+		MovementEffect blueEffect = MovementEffect.fromRightToLeft(500, Color.BLUE, Color.BLUE);
+		repairing.attachPeripheralEffect(new MultiLightSourceEffect(cyanEffect, cyanEffect));
+		repairing.attachPeripheralEffect(new MultiLightSourceEffect(blueEffect, blueEffect));
+		
 		SingleCondition containsRepair = experienceDescriptionContains("repair");
 		
 		AllCondition isRepair = new AllCondition(isPlayer, containsRepair, isNotHive);
@@ -432,7 +453,7 @@ public class PlayStateScene implements EffectScene {
 		MultiEffectProducer maxKill = new MultiEffectProducer(delay, flash, delay,delay,flash,delay,flash, flash);
 		maxKill.attachPeripheralEffect(new ContinualWaveEffectProducer(new WaveEffectProducer(Color.YELLOW, 250,2,WaveEffectDirection.DOWN_TO_UP),3));
 		
-		SingleCondition containsMax = experienceDescriptionContains("MAX Kill");
+		SingleCondition containsMax = experienceDescriptionContains("Kill Player Class MAX");
 		SingleEventHandler maxKillEvent = new SingleEventHandler(view, maxKill, containsMax, Ps2EventType.PLAYER, "GainExperience", "Max kill");
 		maxKillEvent.register(connection);
 	}
@@ -467,6 +488,10 @@ public class PlayStateScene implements EffectScene {
 		VSDeath.attachPeripheralEffect(keyDeathEffect);
 		NCDeath.attachPeripheralEffect(keyDeathEffect);
 		TRDeath.attachPeripheralEffect(keyDeathEffect);
+		MovementEffect hueDeathEffect = MovementEffect.fromBackToFront(1250,Color.BLACK, Color.BLACK);
+		VSDeath.attachPeripheralEffect(hueDeathEffect);
+		NCDeath.attachPeripheralEffect(hueDeathEffect);
+		TRDeath.attachPeripheralEffect(hueDeathEffect);
 		
 		HashMap<String, String> eventPlayer = new HashMap<>(4);
 		eventPlayer.put("character_id", "attacker_character_id");

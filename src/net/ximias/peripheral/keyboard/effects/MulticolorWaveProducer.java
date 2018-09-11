@@ -97,3 +97,17 @@ public class MulticolorWaveProducer implements IWaveEffectProducer {
 		}
 	}
 }
+/*
+Exception in thread "Logitech animation timer" java.lang.ArrayIndexOutOfBoundsException: 2
+	at net.ximias.peripheral.keyboard.effects.MulticolorWaveProducer$MulticoloredWaveEffect.getCircularColors(MulticolorWaveProducer.java:89)
+	at net.ximias.peripheral.keyboard.effects.WaveEffect.getKeyColors(WaveEffect.java:58)
+	at net.ximias.peripheral.keyboard.effects.MultiKeyEffect.getKeyColors(MultiKeyEffectProducer.java:41)
+	at net.ximias.peripheral.keyboard.KeyboardEffectContainer.getColorsFromAndClearEffects(KeyboardEffectContainer.java:67)
+	at net.ximias.peripheral.keyboard.KeyboardEffectContainer.getPerKeyColor(KeyboardEffectContainer.java:52)
+	at net.ximias.peripheral.keyboard.hardware.logitech.Logitech.getFormattedColorArray(Logitech.java:224)
+	at net.ximias.peripheral.keyboard.hardware.logitech.Logitech.drawFrame(Logitech.java:174)
+	at net.ximias.peripheral.keyboard.hardware.logitech.Logitech.access$200(Logitech.java:20)
+	at net.ximias.peripheral.keyboard.hardware.logitech.Logitech$2.run(Logitech.java:253)
+	at java.util.TimerThread.mainLoop(Timer.java:555)
+	at java.util.TimerThread.run(Timer.java:505)
+ */
