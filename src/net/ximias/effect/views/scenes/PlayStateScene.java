@@ -5,10 +5,7 @@ import net.ximias.effect.EffectView;
 import net.ximias.effect.producers.*;
 import net.ximias.network.CurrentPlayer;
 import net.ximias.network.Ps2EventStreamingConnection;
-import net.ximias.peripheral.Hue.Hue.hueEffects.CircularEffect;
-import net.ximias.peripheral.Hue.Hue.hueEffects.ExplosionEffect;
-import net.ximias.peripheral.Hue.Hue.hueEffects.MovementEffect;
-import net.ximias.peripheral.Hue.Hue.hueEffects.MultiLightSourceEffect;
+import net.ximias.peripheral.Hue.Hue.hueEffects.*;
 import net.ximias.peripheral.keyboard.effects.*;
 import net.ximias.persistence.ApplicationConstants;
 import net.ximias.persistence.Persisted;
@@ -175,6 +172,7 @@ public class PlayStateScene implements EffectScene {
 		
 		facility.attachPeripheralEffect(new MulticolorWaveProducer(new Color[]{Color.WHITE, Color.TRANSPARENT, Color.TRANSPARENT,Color.WHITE},400,WaveEffectDirection.CENTER_OUT));
 		facility.attachPeripheralEffect(new ExplosionEffect(1000,Color.WHITE,bias(Color.WHITE,0.5)));
+		facility.attachPeripheralEffect(new FrontCenterEffect(mutedFaction, Color.TRANSPARENT, 1200));
 		
 		SingleEventHandler facilityCap = new SingleEventHandler(view, facility, isPlayer, Ps2EventType.PLAYER, "PlayerFacilityCapture", "Facility capture");
 		SingleEventHandler facilityDef = new SingleEventHandler(view, facility, isPlayer, Ps2EventType.PLAYER, "PlayerFacilityDefend", "Facility capture");
@@ -235,7 +233,8 @@ public class PlayStateScene implements EffectScene {
 		
 		WaveEffectProducer blackIn = new WaveEffectProducer(Color.BLACK, 800,1,WaveEffectDirection.OUT_CENTER);
 		vehicleDied.attachPeripheralEffect(blackIn);
-		vehicleDied.attachPeripheralEffect(new ExplosionEffect(1000,Color.WHITE, Color.RED));
+		vehicleDied.attachPeripheralEffect(new ExplosionEffect(500,Color.WHITE, Color.YELLOW));
+		vehicleDied.attachPeripheralEffect(new MultiLightSourceEffect(new HueDelayEffect(300),new ExplosionEffect(600,Color.YELLOW, Color.RED)));
 		
 		SingleEventHandler vehicleLost = new SingleEventHandler(view, vehicleDied, isPlayer, Ps2EventType.PLAYER, "VehicleDestroy", "Vehicle Lost");
 		vehicleLost.register(connection);
@@ -251,7 +250,7 @@ public class PlayStateScene implements EffectScene {
 		ContinualWaveEffectProducer keyAlertEffect = new ContinualWaveEffectProducer(keyWhoop, 5);
 		alertEffect.attachPeripheralEffect(keyAlertEffect);
 		
-		CircularEffect hueEffect = new CircularEffect(2300,400, Color.RED, Color.PINK,1.5);
+		CircularEffect hueEffect = new CircularEffect(2300,600, Color.RED, Color.PINK,1.5);
 		alertEffect.attachPeripheralEffect(hueEffect);
 		
 		SingleCondition isPlayerWorld = new SingleCondition(Condition.EQUALS,
@@ -298,7 +297,8 @@ public class PlayStateScene implements EffectScene {
 		
 		
 		revive.attachPeripheralEffect(new MultiKeyEffectProducer(new DelayProducer(250),new WaveEffectProducer(Color.WHITE, 500,3,WaveEffectDirection.DOWN_TO_UP)));
-		revive.attachPeripheralEffect(new ExplosionEffect(800,Color.WHITE, Color.WHITE));
+		revive.attachPeripheralEffect(new ExplosionEffect(800,Color.WHITE, Color.TRANSPARENT));
+		revive.attachPeripheralEffect(MovementEffect.fromBackToFront(600,Color.GREEN, Color.LIME));
 		
 		SingleCondition isReviveExperience = experienceDescriptionContains("revive");
 		AllCondition isRevive = new AllCondition(isReviveExperience, isPlayer, isNotHive);
@@ -435,8 +435,10 @@ public class PlayStateScene implements EffectScene {
 		repairing.attachPeripheralEffect(new ContinualWaveEffectProducer(new WaveEffectProducer(Color.CYAN, 500,2,WaveEffectDirection.LEFT_TO_RIGHT),2));
 		repairing.attachPeripheralEffect(new ContinualWaveEffectProducer(new WaveEffectProducer(Color.BLUE, 500,2,WaveEffectDirection.RIGHT_TO_LEFT),2));
 		
-		MovementEffect cyanEffect = MovementEffect.fromLeftToRight(500, Color.CYAN, Color.CYAN);
-		MovementEffect blueEffect = MovementEffect.fromRightToLeft(500, Color.BLUE, Color.BLUE);
+		Color lowCyan = bias(Color.CYAN,0.125);
+		Color lowBlue = bias(Color.BLUE,0.125);
+		MovementEffect cyanEffect = MovementEffect.fromLeftToRight(500, lowCyan, lowCyan);
+		MovementEffect blueEffect = MovementEffect.fromRightToLeft(500, lowBlue, lowBlue);
 		repairing.attachPeripheralEffect(new MultiLightSourceEffect(cyanEffect, cyanEffect));
 		repairing.attachPeripheralEffect(new MultiLightSourceEffect(blueEffect, blueEffect));
 		
@@ -450,8 +452,10 @@ public class PlayStateScene implements EffectScene {
 	private void maxKill() {
 		TimedEffectProducer delay = new TimedEffectProducer(Color.TRANSPARENT, 250);
 		FadingEffectProducer flash = new FadingEffectProducer(Color.WHITE, 250);
-		MultiEffectProducer maxKill = new MultiEffectProducer(delay, flash, delay,delay,flash,delay,flash, flash);
+		MultiEffectProducer maxKill = new MultiEffectProducer(delay, flash, delay,delay,flash,delay,flash,delay, flash,flash,flash,flash);
 		maxKill.attachPeripheralEffect(new ContinualWaveEffectProducer(new WaveEffectProducer(Color.YELLOW, 250,2,WaveEffectDirection.DOWN_TO_UP),3));
+		MovementEffect movementEffect = MovementEffect.fromFrontToBack(300, Color.YELLOW, Color.WHITE);
+		maxKill.attachPeripheralEffect(new MultiLightSourceEffect(movementEffect,movementEffect,movementEffect,movementEffect));
 		
 		SingleCondition containsMax = experienceDescriptionContains("Kill Player Class MAX");
 		SingleEventHandler maxKillEvent = new SingleEventHandler(view, maxKill, containsMax, Ps2EventType.PLAYER, "GainExperience", "Max kill");

@@ -1,6 +1,7 @@
 package net.ximias.peripheral.Hue.Hue;
 
 import com.philips.lighting.hue.sdk.wrapper.entertainment.Entertainment;
+import com.philips.lighting.hue.sdk.wrapper.entertainment.Message;
 import com.philips.lighting.hue.sdk.wrapper.entertainment.StartCallback;
 import javafx.beans.property.SimpleBooleanProperty;
 import net.ximias.peripheral.Hue.Hue.hueEffects.HueEffect;
@@ -36,6 +37,9 @@ public class HueGameState implements EffectAddListener {
 			if (startStatus != StartCallback.StartStatus.Success) return;
 			entertainmentStarted();
 		});
+		entertainment.registerObserver(message -> logger.effects().info("Hue USER message: "+message.getUserMessage()), Message.Type.USER);
+		entertainment.registerObserver(message -> logger.effects().info("Hue INFO message: "+message.getUserMessage()), Message.Type.INFO);
+		entertainment.registerObserver(message -> logger.effects().info("Hue TIMELINE message: "+message.getUserMessage()), Message.Type.TIMELINE);
 	}
 	
 	public void endGameState() {
