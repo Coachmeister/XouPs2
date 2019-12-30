@@ -20,13 +20,13 @@ public class WebLogFormatter extends Formatter {
 		TypedRecord record;
 		if (!(recordIn instanceof TypedRecord)) {
 			record = TypedRecord.toTypedRecord(recordIn);
-		}else{
+		} else {
 			record = (TypedRecord) recordIn;
 		}
 		date.setTime(record.getMillis());
 		String source;
 		if (record.getSourceClassName() != null) {
-			source = verbose ? record.getSourceClassName() : record.getSourceClassName().substring(record.getSourceClassName().lastIndexOf('.')+1);
+			source = verbose ? record.getSourceClassName() : record.getSourceClassName().substring(record.getSourceClassName().lastIndexOf('.') + 1);
 			if (record.getSourceMethodName() != null) {
 				source += " at " + record.getSourceMethodName();
 			}
@@ -45,11 +45,12 @@ public class WebLogFormatter extends Formatter {
 			throwable = sw.toString();
 		}
 		
-		return (dateFormatter.format(date)+" "+
-		        "["+record.getCategory().getName().toUpperCase()+"] "+
-		        "["+record.getLevel()+"]"+" "+
-				"["+source+"]"+ " "+
-				message+" "+
+		return (
+				dateFormatter.format(date) + " " +
+				"[" + record.getCategory().getName().toUpperCase() + "] " +
+				"[" + record.getLevel() + "]" + " " +
+				"[" + source + "]" + " " +
+				message + " " +
 				throwable);
 	}
 }

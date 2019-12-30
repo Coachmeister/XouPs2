@@ -3,14 +3,46 @@ package net.ximias.effect.producers;
 import javafx.scene.paint.Color;
 import net.ximias.effect.Effect;
 import net.ximias.effect.EffectProducer;
-
-import java.util.HashMap;
+import net.ximias.fileParser.Initializer;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class MultiEffectProducer extends EffectProducer {
 	private final EffectProducer[] effects;
 	
-	public MultiEffectProducer(EffectProducer... effects) {
+	public MultiEffectProducer(String name, EffectProducer... effects) {
+		this.name = name;
 		this.effects = effects;
+	}
+	
+	public MultiEffectProducer(JSONObject json) {
+		this(json.getString("name"), getEffectsFromNames(json));
+	}
+	
+	private static EffectProducer[] getEffectsFromNames(JSONObject json) {
+		JSONArray jsonEffects = json.getJSONArray("effects");
+		EffectProducer[] producers = new EffectProducer[jsonEffects.length()];
+		for (int i = 0; i < jsonEffects.length(); i++) {
+			producers[i] = Initializer.effectProducerFromNameWhileInit(jsonEffects.getString(i));
+		}
+		return producers;
+	}
+	
+	@Override
+	public JSONObject toJson() {
+		JSONObject ret = new JSONObject();
+		ret.put("name", name);
+		ret.put("type", "Multi");
+		JSONArray JSONEffects = new JSONArray();
+		for (EffectProducer effect : effects) {
+			JSONEffects.put(effect.getName());
+		}
+		ret.put("effects", JSONEffects);
+		return ret;
+	}
+	
+	public EffectProducer[] getContainedEffects() {
+		return effects;
 	}
 	
 	@Override
@@ -24,17 +56,9 @@ public class MultiEffectProducer extends EffectProducer {
 			effect.setColor(color);
 		}
 	}
-	
-	public EffectProducer[] getEffects() {
-		return effects;
-	}
-	
-	@Override
-	public HashMap<String, String> toJson() {
-		return null;
-	}
 }
-class MultiEffect implements Effect{
+
+class MultiEffect implements Effect {
 	private final EffectProducer[] effects;
 	private Effect current;
 	private int count;
@@ -49,7 +73,7 @@ class MultiEffect implements Effect{
 	
 	@Override
 	public Color getColor() {
-		if (current.isDone() && count != effects.length-1){
+		if (current.isDone() && count != effects.length - 1) {
 			current = effects[++count].build();
 		}
 		return current.getColor();
@@ -57,7 +81,7 @@ class MultiEffect implements Effect{
 	
 	@Override
 	public boolean isDone() {
-		return count == effects.length-1 && current.isDone();
+		return count == effects.length - 1 && current.isDone();
 	}
 	
 	@Override

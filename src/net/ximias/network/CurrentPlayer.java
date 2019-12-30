@@ -9,20 +9,21 @@ import org.json.JSONObject;
 public class CurrentPlayer {
 	private static CurrentPlayer ourInstance;
 	private final Logger logger = Logger.getLogger(getClass().getName());
+	
 	public static CurrentPlayer getInstance() {
 		return ourInstance;
 	}
 	
 	
-	public static void initCurrentPlayer(String playerID){
+	public static void initCurrentPlayer(String playerID) {
 		if (ourInstance == null) {
 			ourInstance = new CurrentPlayer(playerID);
-		}else{
+		} else {
 			throw new Error("Player already initialized");
 		}
 	}
 	
-	private CurrentPlayer(String playerID){
+	private CurrentPlayer(String playerID) {
 		setPlayerID(playerID);
 		setZoneId(-1);
 	}
@@ -39,7 +40,7 @@ public class CurrentPlayer {
 			playerInfo = playerObject.getJSONArray("character_list").getJSONObject(0);
 			setZoneId(zoneId);
 		} else {
-			logger.network().warning("No character list returned: "+ playerObject.toString());
+			logger.network().warning("No character list returned: " + playerObject.toString());
 		}
 	}
 	
@@ -62,11 +63,11 @@ public class CurrentPlayer {
 	
 	public void setZoneId(int zoneId) {
 		this.zoneId = zoneId;
-		playerInfo.put("zone_id",String.valueOf(zoneId));
-		logger.effects().info("Zone id updated: "+zoneId);
+		playerInfo.put("zone_id", String.valueOf(zoneId));
+		logger.effects().info("Zone id updated: " + zoneId);
 	}
 	
-	public Color getFactionColor(){
+	public Color getFactionColor() {
 		if (getValue("faction_id").equals(String.valueOf(ApplicationConstants.VS_ID))) return Persisted.getInstance().VS;
 		if (getValue("faction_id").equals(String.valueOf(ApplicationConstants.NC_ID))) return Persisted.getInstance().NC;
 		if (getValue("faction_id").equals(String.valueOf(ApplicationConstants.TR_ID))) return Persisted.getInstance().TR;

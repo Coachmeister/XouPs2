@@ -4,9 +4,9 @@ import com.philips.lighting.hue.sdk.wrapper.entertainment.Area;
 import com.philips.lighting.hue.sdk.wrapper.entertainment.effect.AreaEffect;
 import com.philips.lighting.hue.sdk.wrapper.entertainment.effect.Effect;
 import javafx.scene.paint.Color;
+import net.ximias.logging.Logger;
 
 import java.util.HashMap;
-import net.ximias.logging.Logger;
 
 
 public class GlobalConstantEffect implements HueEffect {
@@ -23,7 +23,7 @@ public class GlobalConstantEffect implements HueEffect {
 	
 	public void setColor(Color color) {
 		AreaEffect thisEffect = constantEffects.get(name);
-		logger.effects().info("Color of "+name+" changed to: "+color);
+		logger.effects().info("Color of " + name + " changed to: " + color);
 		if (thisEffect != null) {
 			thisEffect.setFixedColor(new com.philips.lighting.hue.sdk.wrapper.entertainment.Color(color.getRed(), color.getGreen(), color.getBlue()));
 			thisEffect.setFixedOpacity(color.getOpacity() * opacityMultiplier);
@@ -41,7 +41,7 @@ public class GlobalConstantEffect implements HueEffect {
 		thisEffect = new AreaEffect();
 		thisEffect.setArea(Area.Predefine.All);
 		thisEffect.setFixedColor(new com.philips.lighting.hue.sdk.wrapper.entertainment.Color(color.getRed(), color.getGreen(), color.getBlue()));
-		thisEffect.setFixedOpacity(color.getOpacity()*opacityMultiplier);
+		thisEffect.setFixedOpacity(color.getOpacity() * opacityMultiplier);
 		constantEffects.put(name, thisEffect);
 		return thisEffect;
 	}

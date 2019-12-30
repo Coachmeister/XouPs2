@@ -4,18 +4,17 @@ import com.philips.lighting.hue.sdk.wrapper.entertainment.Entertainment;
 import com.philips.lighting.hue.sdk.wrapper.entertainment.Message;
 import com.philips.lighting.hue.sdk.wrapper.entertainment.StartCallback;
 import javafx.beans.property.SimpleBooleanProperty;
-import net.ximias.peripheral.Hue.Hue.hueEffects.HueEffect;
-import net.ximias.peripheral.Hue.Hue.hueEffects.GlobalConstantEffect;
 import net.ximias.effect.Effect;
 import net.ximias.effect.EffectAddListener;
 import net.ximias.effect.views.EffectContainer;
+import net.ximias.logging.Logger;
+import net.ximias.peripheral.Hue.Hue.hueEffects.GlobalConstantEffect;
+import net.ximias.peripheral.Hue.Hue.hueEffects.HueEffect;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import net.ximias.logging.Logger;
 
 
 public class HueGameState implements EffectAddListener {
@@ -37,9 +36,9 @@ public class HueGameState implements EffectAddListener {
 			if (startStatus != StartCallback.StartStatus.Success) return;
 			entertainmentStarted();
 		});
-		entertainment.registerObserver(message -> logger.effects().info("Hue USER message: "+message.getUserMessage()), Message.Type.USER);
-		entertainment.registerObserver(message -> logger.effects().info("Hue INFO message: "+message.getUserMessage()), Message.Type.INFO);
-		entertainment.registerObserver(message -> logger.effects().info("Hue TIMELINE message: "+message.getUserMessage()), Message.Type.TIMELINE);
+		entertainment.registerObserver(message -> logger.effects().info("Hue USER message: " + message.getUserMessage()), Message.Type.USER);
+		entertainment.registerObserver(message -> logger.effects().info("Hue INFO message: " + message.getUserMessage()), Message.Type.INFO);
+		entertainment.registerObserver(message -> logger.effects().info("Hue TIMELINE message: " + message.getUserMessage()), Message.Type.TIMELINE);
 	}
 	
 	public void endGameState() {

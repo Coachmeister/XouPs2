@@ -4,13 +4,16 @@ import com.logitech.gaming.LogiLED;
 import javafx.scene.paint.Color;
 import net.ximias.effect.Renderer;
 import net.ximias.effect.views.EffectContainer;
+import net.ximias.logging.Logger;
 import net.ximias.peripheral.keyboard.Keyboard;
 import net.ximias.peripheral.keyboard.KeyboardEffectContainer;
 import net.ximias.peripheral.keyboard.hardware.AbstractKeyboard;
 
 import java.lang.reflect.Field;
-import java.util.*;
-import net.ximias.logging.Logger;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 /**
@@ -23,7 +26,7 @@ public class Logitech extends AbstractKeyboard implements Renderer {
 	private final KeyboardEffectContainer effectContainer;
 	private boolean multiKey;
 	private static final String ANIMATION_TIMER_NAME = "Logitech animation timer";
-	private final Timer animationTimer = new Timer(ANIMATION_TIMER_NAME,true);
+	private final Timer animationTimer = new Timer(ANIMATION_TIMER_NAME, true);
 	private TimerTask renderTask;
 	private final Logger logger = Logger.getLogger(getClass().getName());
 	private boolean gFlashOn = true;
@@ -35,15 +38,15 @@ public class Logitech extends AbstractKeyboard implements Renderer {
 		multiKey = enableMultiKey;
 		effectContainer = new KeyboardEffectContainer(globalEffectContainer, LogiLED.LOGI_LED_BITMAP_WIDTH, LogiLED.LOGI_LED_BITMAP_HEIGHT);
 		effectContainer.subscribeResumeRendering(this);
-		Timer animationMonitor = new Timer("Logitech animation monitor",true);
+		Timer animationMonitor = new Timer("Logitech animation monitor", true);
 		animationMonitor.scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
-				if (System.currentTimeMillis() > lastRender+61_000){
+				if (System.currentTimeMillis() > lastRender + 61_000) {
 					logger.effects().severe("Keyboard renderer stopped for over 1 minute");
 				}
 			}
-		},1000,1000);
+		}, 1000, 1000);
 	}
 	
 	@Override
@@ -71,7 +74,8 @@ public class Logitech extends AbstractKeyboard implements Renderer {
 	
 	/**
 	 * Used to set and exempt a single key from effects.
-	 * @param name the name of the key.
+	 *
+	 * @param name  the name of the key.
 	 * @param color the color of the key.
 	 */
 	private void setAndExemptKeyByName(String name, Color color) {
@@ -91,16 +95,17 @@ public class Logitech extends AbstractKeyboard implements Renderer {
 	
 	/**
 	 * Used to translate PlanetSide2 specific keynames into Logitech ones.
+	 *
 	 * @param name the name of a key, as PlanetSide2 names it.
 	 * @return the Logitech equivalent of that key.
 	 */
-	private String getLogitechNameForKey(String name){
+	private String getLogitechNameForKey(String name) {
 		// No key combos
 		if (name.contains("+")) return "UNDEFINED";
 		
 		// Keypad names: KP_2 should be NUM_TWO
-		if (name.startsWith("KP")){
-			return "NUM_"+Keyboard.convertNumberToWord(name.substring(name.indexOf("_")+1));
+		if (name.startsWith("KP")) {
+			return "NUM_" + Keyboard.convertNumberToWord(name.substring(name.indexOf("_") + 1));
 		}
 		
 		// 1 should be ONE
@@ -108,10 +113,10 @@ public class Logitech extends AbstractKeyboard implements Renderer {
 		if (!convertedNum.equals("UNDEFINED")) return convertedNum;
 		
 		//Bracket_Left should be OPEN_BRACKET
-		if (name.contains("Bracket")){
-			if (name.contains("left")){
+		if (name.contains("Bracket")) {
+			if (name.contains("left")) {
 				return "OPEN_BRACKET";
-			}else return "CLOSE_BRACKET";
+			} else return "CLOSE_BRACKET";
 		}
 		
 		// They explain themselves. Must come before use of name.contains("Left")
@@ -121,11 +126,11 @@ public class Logitech extends AbstractKeyboard implements Renderer {
 		if (name.equals("Right")) return "ARROW_RIGHT";
 		
 		// Alt_Left should be LEFT_ALT
-		if (name.contains("Left")){
-			return "LEFT_"+name.substring(0,name.indexOf("_")).toUpperCase();
+		if (name.contains("Left")) {
+			return "LEFT_" + name.substring(0, name.indexOf("_")).toUpperCase();
 		}
-		if (name.contains("Right")){
-			return "RIGHT_"+name.substring(0,name.indexOf("_")).toUpperCase();
+		if (name.contains("Right")) {
+			return "RIGHT_" + name.substring(0, name.indexOf("_")).toUpperCase();
 		}
 		// Delete should be KEYBOARD_DELETE
 		if (name.equals("Delete")) return "KEYBOARD_DELETE";
@@ -182,7 +187,7 @@ public class Logitech extends AbstractKeyboard implements Renderer {
 	private void setExemptKeyColors() {
 		if (!multiKey) return;
 		LogiLED.LogiLedSetTargetDevice(LogiLED.LOGI_DEVICETYPE_PERKEY_RGB);
-		int keys[] = new int[exemptKeys.size()];
+		int[] keys = new int[exemptKeys.size()];
 		int index = 0;
 		
 		for (Integer keyName : exemptKeys.keySet()) {
@@ -205,6 +210,7 @@ public class Logitech extends AbstractKeyboard implements Renderer {
 	 * Sets all keys not included in the bitmap.
 	 * This includes the G-Keys and logos.
 	 * A bit of possible future proofing has been added, by having the loops go higher than strictly needed.
+	 *
 	 * @param color the color to set the keys.
 	 */
 	private void setAllNonBitmapKeys(Color color) {
@@ -218,6 +224,7 @@ public class Logitech extends AbstractKeyboard implements Renderer {
 	
 	/**
 	 * Used to obtain a logitech specific bitmap array of BGRA color values for each key.
+	 *
 	 * @return a byte array with color codes for each key.
 	 */
 	private byte[] getFormattedColorArray() {
@@ -242,8 +249,8 @@ public class Logitech extends AbstractKeyboard implements Renderer {
 	 * Starts the rendering.
 	 */
 	private void start() {
-		synchronized (animationTimer){
-			if (!isStarted){
+		synchronized (animationTimer) {
+			if (!isStarted) {
 				logger.effects().fine("Keyboard rendering started/resumed");
 				isStarted = true;
 				renderTask = new TimerTask() {
@@ -262,7 +269,7 @@ public class Logitech extends AbstractKeyboard implements Renderer {
 	 * Stops the rendering.
 	 */
 	private void stop() {
-		synchronized (animationTimer){
+		synchronized (animationTimer) {
 			logger.effects().fine("Keyboard rendering stopped/paused");
 			isStarted = false;
 			renderTask.cancel();
@@ -271,6 +278,7 @@ public class Logitech extends AbstractKeyboard implements Renderer {
 	
 	/**
 	 * Sets whether the multikey specific calculations should occur.
+	 *
 	 * @param multiKey true, if a per-key RGB hardware is among the peripherals.
 	 */
 	public void setMultiKey(boolean multiKey) {
@@ -280,6 +288,7 @@ public class Logitech extends AbstractKeyboard implements Renderer {
 	
 	/**
 	 * Returns whether the multikey property is set or not.
+	 *
 	 * @return the value of the multikey property.
 	 */
 	@Override

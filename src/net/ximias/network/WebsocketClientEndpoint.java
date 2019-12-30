@@ -1,17 +1,10 @@
 package net.ximias.network;
 
-import java.io.IOException;
-import java.net.URI;
 import net.ximias.logging.Logger;
 
-import javax.websocket.ClientEndpoint;
-import javax.websocket.CloseReason;
-import javax.websocket.ContainerProvider;
-import javax.websocket.OnClose;
-import javax.websocket.OnMessage;
-import javax.websocket.OnOpen;
-import javax.websocket.Session;
-import javax.websocket.WebSocketContainer;
+import javax.websocket.*;
+import java.io.IOException;
+import java.net.URI;
 
 /**
  * ChatServer Client
@@ -50,7 +43,7 @@ public class WebsocketClientEndpoint {
 	 * Callback hook for Connection close events.
 	 *
 	 * @param userSession the userSession which is getting closed.
-	 * @param reason the reason for connection close
+	 * @param reason      the reason for connection close
 	 */
 	@OnClose
 	public void onClose(Session userSession, CloseReason reason) {
@@ -88,7 +81,7 @@ public class WebsocketClientEndpoint {
 		this.userSession.getAsyncRemote().sendText(message);
 	}
 	
-	public void sendBlockingMessage(String message){
+	public void sendBlockingMessage(String message) {
 		try {
 			this.userSession.getBasicRemote().sendText(message);
 		} catch (IOException e) {

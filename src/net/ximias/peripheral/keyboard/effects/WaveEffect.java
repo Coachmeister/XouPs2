@@ -43,8 +43,9 @@ class WaveEffect implements KeyEffect {
 	
 	@Override
 	public boolean isDone() {
-		return System.currentTimeMillis() >= startTime+duration;
+		return System.currentTimeMillis() >= startTime + duration;
 	}
+	
 	@Override
 	public Color[][] getKeyColors(int width, int height) {
 		switch (direction) {
@@ -59,7 +60,7 @@ class WaveEffect implements KeyEffect {
 		}
 	}
 	
-	protected Color[][] getHorizontalColors(int width, int height){
+	protected Color[][] getHorizontalColors(int width, int height) {
 		Color[][] result = new Color[width][height];
 		Color[] empty = new Color[height];
 		Arrays.fill(empty, Color.TRANSPARENT);
@@ -78,10 +79,10 @@ class WaveEffect implements KeyEffect {
 	protected Color[][] getVerticalColors(int width, int height) {
 		Color[][] result = new Color[width][height];
 		Color[] column = new Color[height];
-		Arrays.fill(column,Color.TRANSPARENT);
+		Arrays.fill(column, Color.TRANSPARENT);
 		
 		int startLocation = getStartHorizontalLocation(height);
-		int endLocation = startLocation+effectWidth;
+		int endLocation = startLocation + effectWidth;
 		endLocation = Math.min(endLocation, height);
 		startLocation = Math.max(startLocation, 0);
 		Arrays.fill(column, startLocation, endLocation, color);
@@ -97,10 +98,10 @@ class WaveEffect implements KeyEffect {
 		
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
-				double distanceFromCenter = dist(width / 2.0, height / 2.0, x+0.5, y+0.5);
-				if (distanceFromCenter <= outerRadius && distanceFromCenter >= innerRadius){
+				double distanceFromCenter = dist(width / 2.0, height / 2.0, x + 0.5, y + 0.5);
+				if (distanceFromCenter <= outerRadius && distanceFromCenter >= innerRadius) {
 					result[x][y] = color;
-				}else{
+				} else {
 					result[x][y] = Color.TRANSPARENT;
 				}
 			}
@@ -109,44 +110,44 @@ class WaveEffect implements KeyEffect {
 		return result;
 	}
 	
-	protected final int getStartVerticalLocation(int width){
-		return (int) Math.floor(mapProgress(getProgress(), -effectWidth,width));
+	protected final int getStartVerticalLocation(int width) {
+		return (int) Math.floor(mapProgress(getProgress(), -effectWidth, width));
 	}
 	
-	protected final int getStartHorizontalLocation(int height){
+	protected final int getStartHorizontalLocation(int height) {
 		return (int) Math.floor(mapProgress(getProgress(), -effectWidth, height));
 	}
 	
-	protected final double getStartRadius(int width, int height){
-		return mapProgress(getProgress(), 0, (int) (Math.ceil(dist(0,0, width / 2.0, height / 2.0)) + effectWidth + 1));
+	protected final double getStartRadius(int width, int height) {
+		return mapProgress(getProgress(), 0, (int) (Math.ceil(dist(0, 0, width / 2.0, height / 2.0)) + effectWidth + 1));
 	}
 	
 	
 	protected double getProgress() {
 		double progress;
-		if (direction == WaveEffectDirection.LEFT_TO_RIGHT || direction == WaveEffectDirection.UP_TO_DOWN ||direction == WaveEffectDirection.CENTER_OUT){
-			progress = Math.min(((double)getCurrentDuration())%duration / (duration), 1);
-		}else{
-			progress = Math.min( ((double) duration-getCurrentDuration()%duration)/duration, 1);
-
+		if (direction == WaveEffectDirection.LEFT_TO_RIGHT || direction == WaveEffectDirection.UP_TO_DOWN || direction == WaveEffectDirection.CENTER_OUT) {
+			progress = Math.min(((double) getCurrentDuration()) % duration / (duration), 1);
+		} else {
+			progress = Math.min(((double) duration - getCurrentDuration() % duration) / duration, 1);
+			
 		}
 		return progress;
 	}
 	
 	protected long getCurrentDuration() {
-		return System.currentTimeMillis()-startTime;
+		return System.currentTimeMillis() - startTime;
 	}
 	
-	protected double mapProgress(double progress, int start, int end){
-		double delta = end-start;
+	protected double mapProgress(double progress, int start, int end) {
+		double delta = end - start;
 		return (progress * delta + start);
 	}
 	
-	protected double dist(double x1, double y1, double x2, double y2){
+	protected double dist(double x1, double y1, double x2, double y2) {
 		return (Math.sqrt(sqr(x2 - x1) + sqr(y2 - y1)));
 	}
 	
-	protected double sqr(double a){
-		return a*a;
+	protected double sqr(double a) {
+		return a * a;
 	}
 }

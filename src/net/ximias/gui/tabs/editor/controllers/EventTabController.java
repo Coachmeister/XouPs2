@@ -13,7 +13,7 @@ public class EventTabController {
 	public TextField eventNameField;
 	public Button addButton;
 	
-	public void injectEditorController(EffectEditorTab editorController){
+	public void injectEditorController(EffectEditorTab editorController) {
 	
 	}
 	

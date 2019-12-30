@@ -14,11 +14,11 @@ public class MainEffectView {
 	private MainController mainController;
 	
 	@FXML
-	private void initialize(){
+	private void initialize() {
 	
 	}
 	
-	private void setupResize(){
+	private void setupResize() {
 		canvas.widthProperty().bind(effectViewRoot.widthProperty());
 		canvas.heightProperty().bind(effectViewRoot.heightProperty());
 		effectViewRoot.widthProperty().addListener(observable -> mainController.resumeRendering());

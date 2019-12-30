@@ -17,7 +17,7 @@ public class WaveEffectProducer implements IWaveEffectProducer {
 	
 	@Override
 	public WaveEffect build() {
-		return new WaveEffect(color,duration,effectWidth, direction);
+		return new WaveEffect(color, duration, effectWidth, direction);
 	}
 	
 	@Override

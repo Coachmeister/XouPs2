@@ -2,9 +2,9 @@ package net.ximias.effect.views;
 
 import javafx.scene.paint.Color;
 import net.ximias.effect.*;
+import net.ximias.logging.Logger;
 
 import java.util.ArrayList;
-import net.ximias.logging.Logger;
 
 
 /**
@@ -46,7 +46,7 @@ public class EffectContainer extends PauseableContainer implements EffectView {
 	 * Where the color blending happens.
 	 */
 	private Color getColorAndClearFinishedEffects() {
-		synchronized (effects){
+		synchronized (effects) {
 			effects.removeIf(Effect::isDone);
 			Color result = Effect.blend(effectIntensity, effects.toArray(new Effect[0]));
 			if (result.equals(Color.BLACK) || result.getOpacity() == 0) {
@@ -63,7 +63,7 @@ public class EffectContainer extends PauseableContainer implements EffectView {
 	 */
 	public void addEffect(Effect effect) {
 		resumeNow();
-		synchronized (effects){
+		synchronized (effects) {
 			if (!effects.contains(effect)) {
 				effects.add(effect);
 				logger.effects().info(effect.getClass().getName() + " added. current effect size: " + effects.size());
@@ -84,7 +84,7 @@ public class EffectContainer extends PauseableContainer implements EffectView {
 	 */
 	@Override
 	public boolean canPauseRendering() {
-		synchronized (effects){
+		synchronized (effects) {
 			return effects.stream().allMatch(it -> it instanceof FixedEffect);
 		}
 	}
@@ -94,7 +94,7 @@ public class EffectContainer extends PauseableContainer implements EffectView {
 	 */
 	@Override
 	protected long calculateResumeTime() {
-		synchronized (effects){
+		synchronized (effects) {
 			if (!canPauseRendering()) return 0;
 			if (effects.isEmpty()) {
 				return -1;
@@ -116,7 +116,7 @@ public class EffectContainer extends PauseableContainer implements EffectView {
 	
 	@Override
 	public String toString() {
-		synchronized (effects){
+		synchronized (effects) {
 			final StringBuilder effectsNames = new StringBuilder();
 			effects.forEach(it -> effectsNames.append(it.getName()).append(" color: ").append(it.getColor()).append("\n"));
 			return "Effects: " + effectsNames.toString();
@@ -136,7 +136,7 @@ public class EffectContainer extends PauseableContainer implements EffectView {
 	 */
 	public void addEffectAddListener(EffectAddListener listener) {
 		effectAddListeners.add(listener);
-		synchronized (effects){
+		synchronized (effects) {
 			effects.forEach(listener::onEffectAdded);
 		}
 	}

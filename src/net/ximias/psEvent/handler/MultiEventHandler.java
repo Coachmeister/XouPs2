@@ -2,13 +2,13 @@ package net.ximias.psEvent.handler;
 
 import net.ximias.effect.EffectProducer;
 import net.ximias.effect.EffectView;
-import net.ximias.fileParser.InitializationException;
 import net.ximias.fileParser.Initializer;
 import net.ximias.network.Ps2EventStreamingConnection;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.LinkedList;
 
 public class MultiEventHandler extends Ps2EventHandler {
 	/*
@@ -33,48 +33,65 @@ public class MultiEventHandler extends Ps2EventHandler {
 		eventsHasBeenSatisfied = new boolean[handlers.length];
 		this.resetters = resetters;
 		this.eventsInOrder = eventsInOrder;
+		this.repeat = repeat;
 		setView(view);
 	}
 	
 	public MultiEventHandler(JSONObject o) {
-		checkParameters(o);
 		if (o.has("effect")) effect = Initializer.effectProducerFromNameWhileInit(o.getString("effect"));
 		name = o.getString("name");
-		eventsInOrder = o.optBoolean("inOrder",false);
+		eventsInOrder = o.optBoolean("inOrder", false);
 		repeat = o.optBoolean("repeat", false);
 		
-		JSONArray events =o.getJSONArray("events");
+		JSONArray events = o.getJSONArray("events");
 		eventsHasBeenSatisfied = new boolean[events.length()];
 		handlers = new Ps2EventHandler[events.length()];
 		for (int i = 0; i < events.length(); i++) {
 			Object event = events.get(i);
-			if (event instanceof JSONObject){
-				handlers[i] = new SingleEventHandler((JSONObject) event);
-			}else if (event instanceof String){
-				handlers[i] = Initializer.eventHandlerFromNameWhileInit((String)event);
-			}
+			handlers[i] = Initializer.eventHandlerFromNameWhileInit((String) event);
 		}
 		
 		JSONArray reevents = o.getJSONArray("resetters");
 		resetters = new Ps2EventHandler[reevents.length()];
 		for (int i = 0; i < reevents.length(); i++) {
-			Object r =reevents.get(i);
-			if (r instanceof JSONObject){
-				resetters[i] = new SingleEventHandler((JSONObject) r);
-			}else if (r instanceof String){
-				resetters[i] = Initializer.eventHandlerFromNameWhileInit((String)r);
-			}
+			Object r = reevents.get(i);
+			resetters[i] = Initializer.eventHandlerFromNameWhileInit((String) r);
 		}
 	}
 	
-	private void checkParameters(JSONObject o){
-		if (o.has("type")&&o.has("condition")&&o.has("events")&&o.has("resetters")){
-			if (!o.getString("type").equals("player") && !o.getString("type").equals("world")) {
-				throw new InitializationException("Invalid type. Allowed types are player and world");
-			}
-		}else {
-			throw new InitializationException("Missing parameters. Required parameters are: type, condition, events, and resetters.");
+	@Override
+	public JSONObject toJson() {
+		JSONObject ret = new JSONObject();
+		if (effect != null) ret.put("effect", effect.getName());
+		ret.put("type", "Multi");
+		ret.put("name", name);
+		ret.put("inOrder", eventsInOrder);
+		ret.put("repeat", eventsInOrder);
+		JSONArray events = new JSONArray();
+		for (Ps2EventHandler handler : handlers) {
+			events.put(handler.name);
 		}
+		JSONArray resetEvents = new JSONArray();
+		for (Ps2EventHandler resetter : resetters) {
+			resetEvents.put(resetter.name);
+		}
+		ret.put("events", events);
+		ret.put("resetters", resetEvents);
+		return ret;
+	}
+	
+	public LinkedList<Ps2EventHandler> getAllHandlers() {
+		LinkedList<Ps2EventHandler> ret = new LinkedList<>();
+		LinkedList<Ps2EventHandler> handlersToProcess = new LinkedList<>();
+		Collections.addAll(handlersToProcess, handlers);
+		Collections.addAll(handlersToProcess, resetters);
+		for (Ps2EventHandler handler : handlersToProcess) {
+			if (handler instanceof MultiEventHandler) {
+				ret.addAll(((MultiEventHandler) handler).getAllHandlers());
+			}
+			ret.add(handler);
+		}
+		return ret;
 	}
 	
 	@Override
@@ -113,7 +130,7 @@ public class MultiEventHandler extends Ps2EventHandler {
 	
 	private boolean reset(JSONObject payload) {
 		for (Ps2EventHandler resetter : resetters) {
-			if (shouldFire && repeat && isAllEventsSatisfied()){
+			if (shouldFire && repeat && isAllEventsSatisfied()) {
 				eventsHasBeenSatisfied = new boolean[handlers.length];
 				return false;
 			}
@@ -132,10 +149,5 @@ public class MultiEventHandler extends Ps2EventHandler {
 		}
 		shouldFire = false;
 		return true;
-	}
-	
-	@Override
-	public HashMap<String, String> toJson() {
-		return null;
 	}
 }

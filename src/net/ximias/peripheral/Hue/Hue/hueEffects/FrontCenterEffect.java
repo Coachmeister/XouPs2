@@ -1,8 +1,6 @@
 package net.ximias.peripheral.Hue.Hue.hueEffects;
 
 import com.philips.lighting.hue.sdk.wrapper.entertainment.Area;
-import com.philips.lighting.hue.sdk.wrapper.entertainment.TweenType;
-import com.philips.lighting.hue.sdk.wrapper.entertainment.animation.TweenAnimation;
 import com.philips.lighting.hue.sdk.wrapper.entertainment.effect.AreaEffect;
 import com.philips.lighting.hue.sdk.wrapper.entertainment.effect.Effect;
 import javafx.scene.paint.Color;

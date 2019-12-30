@@ -17,7 +17,8 @@ public class Node {
 	
 	/**
 	 * Used as a representation of a directory to be searched through.
-	 * @param nodeFile The File object representing the directory to search through.
+	 *
+	 * @param nodeFile   The File object representing the directory to search through.
 	 * @param properties The search Properties. Containing priorities and exclusions.
 	 *                   Use "filename" for exact match and "filename*" for contains operation. On priorities and exclusions.
 	 */
@@ -28,13 +29,14 @@ public class Node {
 	
 	/**
 	 * Expands priority directories.
+	 *
 	 * @return true, if the goal has been reached.
 	 */
-	public boolean expandPriority(){
+	public boolean expandPriority() {
 		if (hasExpandedPriority) return false;
 		hasExpandedPriority = true;
 		if (!populatePriority()) return false;
-		if (goalFile !=null) return true;
+		if (goalFile != null) return true;
 		
 		for (ArrayList<Node> nodes : priorityDirs.values()) {
 			for (Node node : nodes) {
@@ -50,6 +52,7 @@ public class Node {
 	
 	/**
 	 * Populates priorityDirs with all directories matching the priority search property.
+	 *
 	 * @return true, if operation was successful.
 	 */
 	private boolean populatePriority() {
@@ -58,9 +61,9 @@ public class Node {
 		
 		for (File file : subFiles) {
 			if (file.isHidden()) continue;
-			if (file.isDirectory()){
+			if (file.isDirectory()) {
 				addDirectoryByPriority(file);
-			}else{
+			} else {
 				if (file.getName().equals(searchProperties.goal)) {
 					goalFile = file;
 				}
@@ -71,23 +74,24 @@ public class Node {
 	
 	/**
 	 * Expands none-priority nodes.
+	 *
 	 * @return true, if goal is found.
 	 */
-	public boolean expand(){
+	public boolean expand() {
 		dirs = new ArrayList<>(50);
 		File[] subfiles = nodeFile.listFiles();
 		if (subfiles != null) {
 			for (File subfile : subfiles) {
 				if (subfile.isHidden()) continue;
-				if (subfile.isDirectory()){
+				if (subfile.isDirectory()) {
 					addDirectoryIfNotExcluded(subfile);
 				}
 			}
 		}
 		
 		for (Node dir : dirs) {
-			if (dir.hasPriority()){
-				if (dir.expandPriority()){
+			if (dir.hasPriority()) {
+				if (dir.expandPriority()) {
 					goalFile = dir.getGoalFile();
 					return true;
 				}
@@ -98,15 +102,17 @@ public class Node {
 	
 	/**
 	 * Used for obtaining all children nodes, after expansion.
+	 *
 	 * @return All child nodes
 	 */
-	public ArrayList<Node> getAllChildren(){
+	public ArrayList<Node> getAllChildren() {
 		if (dirs == null) throw new IllegalStateException("expand must be called before getAllChrildren");
 		return dirs;
 	}
 	
 	/**
 	 * Used to determine if expandPriority has already been called.
+	 *
 	 * @return true, if expandPriority has been called on this node before.
 	 */
 	public boolean hasPriority() {
@@ -117,25 +123,26 @@ public class Node {
 	private void addDirectoryByPriority(File subFile) {
 		for (int i = 0; i < searchProperties.priorities.length; i++) {
 			String priority = searchProperties.priorities[i];
-			if (applyRegex(priority, subFile.getName())){
-				addToMap(new Node(subFile,searchProperties), i);
+			if (applyRegex(priority, subFile.getName())) {
+				addToMap(new Node(subFile, searchProperties), i);
 			}
 		}
 	}
 	
 	private void addDirectoryIfNotExcluded(File subFile) {
 		for (String exclusion : searchProperties.exclusions) {
-			if (applyRegex(exclusion, subFile.getName())){
+			if (applyRegex(exclusion, subFile.getName())) {
 				return;
 			}
 		}
-		dirs.add(new Node(subFile,searchProperties));
+		dirs.add(new Node(subFile, searchProperties));
 	}
 	
 	/**
 	 * Initializes arraylist in map, and inserts node at location, if it is not already present.
+	 *
 	 * @param node the node to insert in the list.
-	 * @param i the index to insert at.
+	 * @param i    the index to insert at.
 	 */
 	private void addToMap(Node node, int i) {
 		priorityDirs.computeIfAbsent(i, k -> new ArrayList<>());
@@ -146,15 +153,16 @@ public class Node {
 	/**
 	 * Used to apply the special kind of regex used for searching.
 	 */
-	private boolean applyRegex(String regex, String applicant){
-		if (regex.endsWith("*")){
-			return applicant.toLowerCase().contains(regex.substring(0,regex.length()-1).toLowerCase());
-		}else return applicant.equalsIgnoreCase(regex);
+	private boolean applyRegex(String regex, String applicant) {
+		if (regex.endsWith("*")) {
+			return applicant.toLowerCase().contains(regex.substring(0, regex.length() - 1).toLowerCase());
+		} else return applicant.equalsIgnoreCase(regex);
 		
 	}
 	
 	/**
 	 * used to obtain the goal file, if there is any.
+	 *
 	 * @return the goal, if found. Null otherwise.
 	 */
 	public File getGoalFile() {

@@ -13,7 +13,8 @@ import com.philips.lighting.hue.sdk.wrapper.domain.clip.ClipResponse;
 import com.philips.lighting.hue.sdk.wrapper.domain.device.light.LightPoint;
 import com.philips.lighting.hue.sdk.wrapper.domain.device.light.LightState;
 import com.philips.lighting.hue.sdk.wrapper.domain.resource.*;
-import com.philips.lighting.hue.sdk.wrapper.entertainment.*;
+import com.philips.lighting.hue.sdk.wrapper.entertainment.Entertainment;
+import com.philips.lighting.hue.sdk.wrapper.entertainment.Message;
 import com.philips.lighting.hue.sdk.wrapper.knownbridges.KnownBridge;
 import com.philips.lighting.hue.sdk.wrapper.knownbridges.KnownBridges;
 import javafx.application.Platform;
@@ -23,14 +24,14 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import net.ximias.peripheral.Hue.Hue.HueGameState;
 import net.ximias.gui.MainController;
+import net.ximias.logging.Logger;
 import net.ximias.peripheral.Hue.Hue.EffectExamples;
+import net.ximias.peripheral.Hue.Hue.HueGameState;
 import net.ximias.peripheral.Hue.Hue.examples.*;
 
 import java.io.File;
 import java.util.*;
-import net.ximias.logging.Logger;
 
 
 public class HueTab {
@@ -95,10 +96,12 @@ public class HueTab {
 		
 		
 	}
+	
 	static {
 		// Load the huesdk native library before calling any SDK method
 		System.loadLibrary("huesdk");
 	}
+	
 	public void injectMainController(MainController mainController) {
 		this.mainController = mainController;
 		File data = new File("data");
@@ -107,7 +110,7 @@ public class HueTab {
 		Persistence.setStorageLocation(data.getAbsolutePath(), "HueQuickStart");
 		HueLog.setConsoleLogLevel(HueLog.LogLevel.INFO);
 		setup();
-		updateUI(UIState.Off,"Philips hue disabled.");
+		updateUI(UIState.Off, "Philips hue disabled.");
 	}
 	
 	private void setup() {
@@ -123,7 +126,7 @@ public class HueTab {
 	
 	@FXML
 	private void toggleEnable(ActionEvent actionEvent) {
-		if (hueEnable.isSelected()){
+		if (hueEnable.isSelected()) {
 			// Connect to a bridge or start the bridge discovery
 			String bridgeIp = getLastUsedBridgeIp();
 			if (bridgeIp == null) {
@@ -131,17 +134,17 @@ public class HueTab {
 			} else {
 				connectToBridge(bridgeIp);
 			}
-		}else{
+		} else {
 			disconnectFromBridge();
 		}
 	}
-
+	
 	@FXML
 	private void toggleGameEffects(ActionEvent actionEvent) {
-		if (startGameEffectsButton.isSelected()){
+		if (startGameEffectsButton.isSelected()) {
 			updateUI(UIState.GameState, "Entertainment game effects enabled!");
 			gameState = new HueGameState(entertainment, mainController.getEffectContainer());
-		}else{
+		} else {
 			gameState.endGameState();
 			updateUI(UIState.EntertainmentReady, "Connected, entertainment ready.");
 		}
@@ -353,16 +356,20 @@ public class HueTab {
 	 * Refresh the username in case it was created before entertainment was available
 	 */
 	private void setupEntertainment() {
-		bridge.refreshUsername(new BridgeResponseCallback() {
+		setupEntertainmentGroup();
+		/*bridge.refreshUsername(new BridgeResponseCallback() {
 			@Override
 			public void handleCallback(Bridge bridge, ReturnCode returnCode, List<ClipResponse> responses, List<HueError> errors) {
 				if (returnCode == ReturnCode.SUCCESS) {
 					setupEntertainmentGroup();
 				} else {
+					logger.general().warning("Failed to setup hue entertainment: " +returnCode.name());
+					logger.general().warning("Failed to setup hue entertainment: " +errors.get(0).toString());
+					
 					// ...
 				}
 			}
-		});
+		});*/
 	}
 	
 	/**
@@ -455,7 +462,7 @@ public class HueTab {
 			}
 		});
 		entertainment.registerObserver(message -> {
-			if (!message.getUserMessage().isEmpty()){
+			if (!message.getUserMessage().isEmpty()) {
 				logger.network().info("Entertainment message: " + message.getType() + " " + message.getUserMessage());
 			}
 		}, Message.Type.RENDER);
@@ -506,7 +513,7 @@ public class HueTab {
 		playTestEffect(new LightSourceEffectExample());
 	}
 	
-	private void playTestEffect(HueExampleEffect effect){
+	private void playTestEffect(HueExampleEffect effect) {
 		effectExamples.play(effect);
 		updateUI(UIState.EntertainmentRunning, "Entertainment test effect running.");
 	}

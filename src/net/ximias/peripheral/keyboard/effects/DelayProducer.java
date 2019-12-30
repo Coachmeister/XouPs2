@@ -20,10 +20,12 @@ public class DelayProducer implements KeyEffectProducer {
 	}
 	
 	@Override
-	public void setColor(Color color) { }
+	public void setColor(Color color) {
+	}
 }
+
 @SuppressWarnings("MismatchedReadAndWriteOfArray")
-class Delay implements KeyEffect{
+class Delay implements KeyEffect {
 	private final long startTime = System.currentTimeMillis();
 	private final long delay;
 	private Color[][] colors;
@@ -45,6 +47,6 @@ class Delay implements KeyEffect{
 	
 	@Override
 	public boolean isDone() {
-		return System.currentTimeMillis() >= startTime+delay;
+		return System.currentTimeMillis() >= startTime + delay;
 	}
 }

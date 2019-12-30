@@ -1,22 +1,25 @@
 package net.ximias.fileSearch;
 
+import net.ximias.logging.Logger;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
-import net.ximias.logging.Logger;
 
 
 public class Searcher {
 	private final SearchProperties properties;
 	private int currentDepth = 0;
+	
 	public Searcher(SearchProperties properties) {
 		this.properties = properties;
 	}
+	
 	private final Logger logger = Logger.getLogger(getClass().getName());
 	
-	public HashSet<File> performSystemWideSearch(){
+	public HashSet<File> performSystemWideSearch() {
 		File[] roots = File.listRoots();
 		Node[] rootNodes = new Node[roots.length];
 		ArrayList<Node> bredth = new ArrayList<>(200);
@@ -64,18 +67,18 @@ public class Searcher {
 		return null;
 	}
 	
-	private void searchToList(ArrayList<Node> breadth, Collection<File> result){
-		while (!breadth.isEmpty()){
+	private void searchToList(ArrayList<Node> breadth, Collection<File> result) {
+		while (!breadth.isEmpty()) {
 			for (Node rootNode : breadth) {
-				if (rootNode.hasPriority()){
-					if (rootNode.expandPriority()){
+				if (rootNode.hasPriority()) {
+					if (rootNode.expandPriority()) {
 						result.add(rootNode.getGoalFile());
 					}
 				}
 			}
 			
 			for (Node rootNode : breadth) {
-				if (rootNode.expand()){
+				if (rootNode.expand()) {
 					result.add(rootNode.getGoalFile());
 				}
 			}
@@ -84,9 +87,9 @@ public class Searcher {
 				next.addAll(node.getAllChildren());
 			}
 			currentDepth++;
-			if (currentDepth>properties.maxDepth) return;
+			if (currentDepth > properties.maxDepth) return;
 			if (!properties.isSearchExhaustive && !result.isEmpty()) return;
-			logger.general().info("No result in prioritized directories. Expanded search to: "+next.size()+" directories.");
+			logger.general().info("No result in prioritized directories. Expanded search to: " + next.size() + " directories.");
 			breadth = next;
 		}
 	}

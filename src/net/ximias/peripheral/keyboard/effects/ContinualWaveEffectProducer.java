@@ -22,6 +22,7 @@ public class ContinualWaveEffectProducer implements KeyEffectProducer {
 	public void setColor(Color color) {
 	}
 }
+
 class ContinualWaveEffect implements KeyEffect {
 	private final WaveEffect effect;
 	private final long startTime = System.currentTimeMillis();
@@ -41,6 +42,6 @@ class ContinualWaveEffect implements KeyEffect {
 	
 	@Override
 	public boolean isDone() {
-		return System.currentTimeMillis() >= startTime+duration*iterations;
+		return System.currentTimeMillis() >= startTime + duration * iterations;
 	}
 }

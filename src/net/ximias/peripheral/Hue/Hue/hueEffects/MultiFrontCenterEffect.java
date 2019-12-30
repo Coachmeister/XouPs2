@@ -9,7 +9,7 @@ import net.ximias.logging.Logger;
 
 public class MultiFrontCenterEffect implements AreaEffectProducer {
 	private int duration;
-	private double opacityMultiplyer =1;
+	private double opacityMultiplyer = 1;
 	private SequenceAnimation r;
 	private SequenceAnimation g;
 	private SequenceAnimation b;
@@ -20,7 +20,7 @@ public class MultiFrontCenterEffect implements AreaEffectProducer {
 	
 	public MultiFrontCenterEffect(AreaEffectProducer[] effects) {
 		this.effects = effects;
-		logger.effects().fine("Initializing MultiFrontEffect with size of: "+effects.length);
+		logger.effects().fine("Initializing MultiFrontEffect with size of: " + effects.length);
 		
 		calculateValues(effects);
 		for (AreaEffectProducer effect : effects) {

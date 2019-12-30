@@ -3,15 +3,15 @@ package net.ximias.psEvent.handler;
 import net.ximias.effect.EffectProducer;
 import net.ximias.effect.EffectView;
 import net.ximias.fileParser.JsonSerializable;
+import net.ximias.logging.Logger;
 import net.ximias.network.Ps2EventStreamingConnection;
 import org.json.JSONObject;
-import net.ximias.logging.Logger;
 
 
 /**
  * Handler for receiving Ps2 events from the EventStreamingConnection.
  */
-public abstract class Ps2EventHandler extends JsonSerializable {
+public abstract class Ps2EventHandler implements JsonSerializable {
 	
 	private EffectView view;
 	protected EffectProducer effect;
@@ -21,7 +21,7 @@ public abstract class Ps2EventHandler extends JsonSerializable {
 	public Ps2EventHandler() {
 	}
 	
-	Ps2EventHandler(EffectProducer effect){
+	Ps2EventHandler(EffectProducer effect) {
 		this.effect = effect;
 	}
 	
@@ -29,14 +29,18 @@ public abstract class Ps2EventHandler extends JsonSerializable {
 		return name;
 	}
 	
-	public void eventReceived(JSONObject payload){
-		if (view!=null && conditionIsSatisfied(payload) && effect != null){
+	public void eventReceived(JSONObject payload) {
+		if (view != null && conditionIsSatisfied(payload) && effect != null) {
 			logger.effects().fine("Condition evaluated to true.");
 			view.addEffect(effect.build());
 		}
 	}
 	
-	public void setView(EffectView view){
+	public EffectProducer getEffect() {
+		return effect;
+	}
+	
+	public void setView(EffectView view) {
 		this.view = view;
 	}
 	

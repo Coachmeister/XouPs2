@@ -1,5 +1,6 @@
 package net.ximias.psEvent.condition;
 
+import net.ximias.logging.Logger;
 import net.ximias.network.CensusConnection;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -7,7 +8,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import net.ximias.logging.Logger;
 
 
 public class CensusData extends ConditionData {
@@ -31,15 +31,17 @@ public class CensusData extends ConditionData {
 	private HashMap<String, String> searchTerms;
 	private HashMap<String, String> eventSearchTerms;
 	private final Logger logger = Logger.getLogger(getClass().getName());
+	
 	/**
 	 * Example:
 	 * HashMap<String, String> params = new HashMap<>();
 	 * params.put("character_id", "8287548916321388337");
 	 * new CensusData("character", "faction_id", params, new HashMap<>(1));
-	 * @param lookup The subdomain to look up
-	 * @param get The data to get from result.
-	 * @param resolve Any resolve terms.
-	 * @param searchTerms The terms to put in the query.
+	 *
+	 * @param lookup           The subdomain to look up
+	 * @param get              The data to get from result.
+	 * @param resolve          Any resolve terms.
+	 * @param searchTerms      The terms to put in the query.
 	 * @param eventSearchTerms Ther terms to pull from the received event when querying
 	 */
 	private CensusData(String lookup, String get, String resolve, HashMap<String, String> searchTerms, HashMap<String, String> eventSearchTerms) {
@@ -55,32 +57,59 @@ public class CensusData extends ConditionData {
 		HashMap<String, String> searchTerms = new HashMap<>(20);
 		for (int i = 0; i < terms.length(); i++) {
 			JSONObject term = terms.getJSONObject(i);
-			searchTerms.put(term.getString("key"),term.getString("value"));
+			searchTerms.put(term.getString("key"), term.getString("value"));
 		}
 		
 		JSONArray eventTerms = data.getJSONArray("eventSearchTerms");
 		HashMap<String, String> eventSearchTerms = new HashMap<>(20);
 		for (int i = 0; i < eventTerms.length(); i++) {
-			JSONObject term = terms.getJSONObject(i);
-			eventSearchTerms.put(term.getString("key"),term.getString("value"));
+			JSONObject term = eventTerms.getJSONObject(i);
+			eventSearchTerms.put(term.getString("key"), term.getString("value"));
 		}
 		
 		String resolve = data.optString("resolve");
-		if (resolve == null) {
-			new CensusData(data.getString("lookup"),data.getString("get"), searchTerms, eventSearchTerms);
-		}else{
-			new CensusData(data.getString("lookup"),data.getString("get"), resolve ,searchTerms, eventSearchTerms);
+		if (resolve == null || resolve.isEmpty()) {
+			this.lookup = data.getString("lookup");
+			this.get = data.getString("get");
+			this.searchTerms = searchTerms;
+			this.eventSearchTerms = eventSearchTerms;
+		} else {
+			this.lookup = data.getString("lookup");
+			this.get = data.getString("get");
+			this.resolve = resolve;
+			this.searchTerms = searchTerms;
+			this.eventSearchTerms = eventSearchTerms;
 		}
 	}
+	
+	@Override
+	public JSONObject toJson() {
+		JSONObject ret = new JSONObject();
+		ret.put("source", "census");
+		ret.put("lookup", lookup);
+		ret.put("get", get);
+		if (resolve != null) {
+			ret.put("resolve", resolve);
+		}
+		
+		JSONArray jsonSearchTerms = mapToJsonArray(searchTerms);
+		JSONArray jsonEventSearchTerms = mapToJsonArray(eventSearchTerms);
+		
+		ret.put("searchTerms", jsonSearchTerms);
+		ret.put("eventSearchTerms", jsonEventSearchTerms);
+		return ret;
+	}
+	
 	/**
 	 * Example:
 	 * HashMap<String, String> params = new HashMap<>();
 	 * params.put("character_id", "8287548916321388337");
 	 * new CensusData("character", "faction_id", params, new HashMap<>(1));
-	 * @param lookup The subdomain to look up
-	 * @param get The data to get from result.
-	 * @param searchTerms The terms to put in the query.
-	 * @param eventSearchTerms There terms to pull from the received event when querying
+	 *
+	 * @param lookup           The subdomain to look up
+	 * @param get              The data to get from result.
+	 * @param searchTerms      The terms to put in the query.
+	 * @param eventSearchTerms The terms to pull from the received event when querying
 	 */
 	public CensusData(String lookup, String get, HashMap<String, String> searchTerms, HashMap<String, String> eventSearchTerms) {
 		this.lookup = lookup;
@@ -106,13 +135,13 @@ public class CensusData extends ConditionData {
 			
 			
 			if (response != null) {
-					response = unpackSingleResponseFromArray(response);
-					
-					if (response.has(get) || !response.isNull(get)) {
-						return response.getString(get);
-					}
-					
-					return "";
+				response = unpackSingleResponseFromArray(response);
+				
+				if (response.has(get) || !response.isNull(get)) {
+					return response.getString(get);
+				}
+				
+				return "";
 			}
 		} else {
 			queryString += "&c:resolve=" + resolve + "(" + get + ")";
@@ -139,39 +168,22 @@ public class CensusData extends ConditionData {
 	private JSONObject unpackSingleResponseFromArray(JSONObject response) {
 		if (response.keySet().stream().anyMatch(it -> it.contains("list"))) {
 			@SuppressWarnings("OptionalGetWithoutIsPresent") // Check ifPresent performed above
-			JSONArray responseList = response.getJSONArray(response.keySet().stream()
+					JSONArray responseList = response.getJSONArray(response.keySet().stream()
 					.filter(it -> it.contains("list"))
 					.findFirst().get());
-			if (responseList.length() > 0){
+			if (responseList.length() > 0) {
 				response = responseList.getJSONObject(0);
-			}else return new JSONObject("{}");
+			} else return new JSONObject("{}");
 		}
 		return response;
 	}
 	
-	@Override
-	public HashMap<String, String> toJson() {
-		HashMap<String, String> h = new HashMap<>(15);
-		h.put("lookup", lookup);
-		h.put("get",get);
-		if (resolve != null) {
-			h.put("resolve",resolve);
-		}
-
-		JSONArray jsonSearchTerms = mapToJsonArray(searchTerms);
-		JSONArray jsonEventSearchTerms = mapToJsonArray(eventSearchTerms);
-
-		h.put("searchTerms",jsonSearchTerms.toString());
-		h.put("eventSearchTerms", jsonEventSearchTerms.toString());
-		return h;
-	}
-
 	private JSONArray mapToJsonArray(HashMap<String, String> map) {
 		JSONArray jsonSearchTerms = new JSONArray();
 		for (Map.Entry<String, String> stringStringEntry : map.entrySet()) {
 			JSONObject entry = new JSONObject();
-			entry.put("key",stringStringEntry.getKey());
-			entry.put("value",stringStringEntry.getValue());
+			entry.put("key", stringStringEntry.getKey());
+			entry.put("value", stringStringEntry.getValue());
 			jsonSearchTerms.put(entry);
 		}
 		return jsonSearchTerms;

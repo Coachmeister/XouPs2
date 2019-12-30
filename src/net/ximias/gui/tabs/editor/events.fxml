@@ -1,32 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.ximias.gui.tabs.editor.controllers.EventTabController">
-   <children>
-      <VBox layoutX="10.0" layoutY="10.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <HBox>
-               <children>
-                  <Label text="Event Type" />
-                  <ChoiceBox fx:id="eventTypeChoice" prefWidth="150.0" />
-                  <Label text="Event" />
-                  <ChoiceBox fx:id="eventChoice" prefWidth="150.0" />
-                  <Label text="Condition:" />
-                  <ChoiceBox fx:id="conditionChoice" prefWidth="150.0" />
-               </children>
-            </HBox>
-            <HBox>
-               <children>
-                  <Label text="Event name:" />
-                  <TextField fx:id="eventNameField" />
-                  <Button fx:id="addButton" mnemonicParsing="false" onAction="#addEvent" text="Add" />
-               </children>
-            </HBox>
-            <Separator prefWidth="200.0" />
-         </children>
-      </VBox>
-   </children>
+    <children>
+        <VBox layoutX="10.0" layoutY="10.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <HBox>
+                    <children>
+                        <Label text="Event Type"/>
+                        <ChoiceBox fx:id="eventTypeChoice" prefWidth="150.0"/>
+                        <Label text="Event"/>
+                        <ChoiceBox fx:id="eventChoice" prefWidth="150.0"/>
+                        <Label text="Condition:"/>
+                        <ChoiceBox fx:id="conditionChoice" prefWidth="150.0"/>
+                    </children>
+                </HBox>
+                <HBox>
+                    <children>
+                        <Label text="Event name:"/>
+                        <TextField fx:id="eventNameField"/>
+                        <Button fx:id="addButton" mnemonicParsing="false" onAction="#addEvent" text="Add"/>
+                    </children>
+                </HBox>
+                <Separator prefWidth="200.0"/>
+            </children>
+        </VBox>
+    </children>
 </AnchorPane>

@@ -25,15 +25,15 @@ public class KeymapColoring {
 	
 	public HashMap<String, Color> getKeyColors() {
 		String xmlFileContents = readFileToString(userSettings);
-		JSONArray keymap = XML.toJSONObject(xmlFileContents,true).getJSONObject("Profile").getJSONArray("ActionSet");
+		JSONArray keymap = XML.toJSONObject(xmlFileContents, true).getJSONObject("Profile").getJSONArray("ActionSet");
 		
 		return getKeyColorMapAndPopulateUnusedActions(keymap);
 	}
 	
 	private String readFileToString(File file) {
 		StringBuilder sb = new StringBuilder();
-		try(Scanner scanner = new Scanner(file)){
-			while (scanner.hasNextLine()){
+		try (Scanner scanner = new Scanner(file)) {
+			while (scanner.hasNextLine()) {
 				sb.append(scanner.nextLine());
 			}
 		} catch (FileNotFoundException e) {
@@ -58,7 +58,7 @@ public class KeymapColoring {
 	private void populateActions(JSONArray keybindActionArray) {
 		for (int i = 0; i < keybindActionArray.length(); i++) {
 			String actionName = keybindActionArray.getJSONObject(i).getString("name");
-			if (!actionColorMap.containsKey(actionName)&& keybindActionArray.getJSONObject(i).has("Trigger")) {
+			if (!actionColorMap.containsKey(actionName) && keybindActionArray.getJSONObject(i).has("Trigger")) {
 				unusedActions.add(actionName);
 			}
 		}
@@ -73,7 +73,7 @@ public class KeymapColoring {
 	
 	private void addIfPresent(JSONObject action) {
 		for (String actionName : actionColorMap.keySet()) {
-			if (action.getString("name").equals(actionName)){
+			if (action.getString("name").equals(actionName)) {
 				addKeyColorsFromAction(action, actionName);
 			}
 		}
@@ -81,9 +81,9 @@ public class KeymapColoring {
 	
 	private void addKeyColorsFromAction(JSONObject action, String actionName) {
 		Object key = action.get("Trigger");
-		if (key instanceof JSONArray){
+		if (key instanceof JSONArray) {
 			addKeyArrayToMap(actionName, (JSONArray) key);
-		}else if (key instanceof String){
+		} else if (key instanceof String) {
 			addSingleKeyToMap(actionName, (String) key);
 		}
 	}
@@ -94,7 +94,7 @@ public class KeymapColoring {
 	
 	private void addKeyArrayToMap(String actionName, JSONArray key) {
 		for (int j = 0; j < key.length(); j++) {
-			keyColorMap.put(key.getString(j),actionColorMap.get(actionName));
+			keyColorMap.put(key.getString(j), actionColorMap.get(actionName));
 		}
 	}
 	
@@ -102,7 +102,7 @@ public class KeymapColoring {
 		return actionColorMap;
 	}
 	
-	public void addActionColor(String action, Color color){
+	public void addActionColor(String action, Color color) {
 		actionColorMap.put(action, color);
 	}
 	
@@ -113,7 +113,7 @@ public class KeymapColoring {
 	public void removeAll(Collection<Map.Entry<String, Color>> remove) {
 		for (Map.Entry<String, Color> stringColorEntry : remove) {
 			actionColorMap.remove(stringColorEntry.getKey());
-			 unusedActions.add(stringColorEntry.getKey());
+			unusedActions.add(stringColorEntry.getKey());
 		}
 	}
 }

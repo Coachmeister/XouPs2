@@ -22,7 +22,8 @@ public class MultiKeyEffectProducer implements KeyEffectProducer {
 	
 	}
 }
-class MultiKeyEffect implements KeyEffect{
+
+class MultiKeyEffect implements KeyEffect {
 	private final KeyEffectProducer[] effects;
 	private KeyEffect current;
 	private int count;
@@ -35,7 +36,7 @@ class MultiKeyEffect implements KeyEffect{
 	
 	@Override
 	public Color[][] getKeyColors(int width, int height) {
-		if (current.isDone() && count != effects.length-1){
+		if (current.isDone() && count != effects.length - 1) {
 			current = effects[++count].build();
 		}
 		return current.getKeyColors(width, height);
@@ -43,6 +44,6 @@ class MultiKeyEffect implements KeyEffect{
 	
 	@Override
 	public boolean isDone() {
-		return count == effects.length-1 && current.isDone();
+		return count == effects.length - 1 && current.isDone();
 	}
 }

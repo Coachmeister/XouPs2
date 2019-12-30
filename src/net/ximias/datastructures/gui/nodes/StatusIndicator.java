@@ -23,39 +23,39 @@ public class StatusIndicator {
 	private final HashMap<String, StatusSeverity> statuses = new HashMap<>();
 	private static StatusIndicator instance;
 	
-	private StatusIndicator(){
+	private StatusIndicator() {
 	
 	}
 	
-	public void injectMainController(MainController controller){
+	public void injectMainController(MainController controller) {
 		instance = this;
 		mainController = controller;
 	}
 	
-	public static StatusIndicator getInstance(){
+	public static StatusIndicator getInstance() {
 		if (instance == null) {
 			instance = new StatusIndicator();
 		}
 		return instance;
 	}
 	
-	public void injectComponents(Circle indicator, Rectangle rectangle, Text text){
+	public void injectComponents(Circle indicator, Rectangle rectangle, Text text) {
 		statusCircle = indicator;
 		tooltipRectangle = rectangle;
 		tooltipText = text;
 	}
 	
-	public void addStatus(String text, StatusSeverity severity){
-		statuses.put(text,severity);
+	public void addStatus(String text, StatusSeverity severity) {
+		statuses.put(text, severity);
 		showMostSevereStatus();
 	}
 	
-	public void setStatus(String text, StatusSeverity severity){
+	public void setStatus(String text, StatusSeverity severity) {
 		statuses.clear();
-		statuses.put(text,severity);
+		statuses.put(text, severity);
 	}
 	
-	private void showMostSevereStatus(){
+	private void showMostSevereStatus() {
 		int severity = -1;
 		for (Map.Entry<String, StatusSeverity> stringStatusSeverityEntry : statuses.entrySet()) {
 			if (stringStatusSeverityEntry.getValue().getSeverityValue() > severity) {
@@ -66,24 +66,24 @@ public class StatusIndicator {
 		updateStatusIndicatorColor(statuses.get(text).getSeverityValue());
 	}
 	
-	private void updateStatusIndicatorColor(int severity){
-		int severityLevel = severity/2;
+	private void updateStatusIndicatorColor(int severity) {
+		int severityLevel = severity / 2;
 		Color innerColor;
-		if (severityLevel <= 0) innerColor =  Color.LIME;
+		if (severityLevel <= 0) innerColor = Color.LIME;
 		else if (severityLevel == 1) innerColor = Color.YELLOW;
 		else if (severityLevel == 2) innerColor = Color.ORANGERED;
 		else innerColor = Color.MAROON;
-		Stop innerStop = new Stop(0,innerColor);
-		Stop outerStop = new Stop(1,Color.TRANSPARENT);
-		RadialGradient circleFill = new RadialGradient(0,0,0.5, 0.5, 0.5, true, CycleMethod.NO_CYCLE, innerStop, outerStop);
+		Stop innerStop = new Stop(0, innerColor);
+		Stop outerStop = new Stop(1, Color.TRANSPARENT);
+		RadialGradient circleFill = new RadialGradient(0, 0, 0.5, 0.5, 0.5, true, CycleMethod.NO_CYCLE, innerStop, outerStop);
 		statusCircle.setFill(circleFill);
 	}
 	
-	public void removeStatus(String text){
+	public void removeStatus(String text) {
 		statuses.remove(text);
 	}
 	
-	public void showTooltip(){
+	public void showTooltip() {
 		tooltipText.setText(text);
 		tooltipText.setTextAlignment(TextAlignment.RIGHT);
 		tooltipText.setStroke(Color.TRANSPARENT);
@@ -93,7 +93,7 @@ public class StatusIndicator {
 		tooltipRectangle.setVisible(true);
 	}
 	
-	public void hideToolTip(){
+	public void hideToolTip() {
 		tooltipText.setVisible(false);
 		tooltipRectangle.setVisible(false);
 	}

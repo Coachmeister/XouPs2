@@ -26,15 +26,16 @@ public class MulticolorWaveProducer implements IWaveEffectProducer {
 	}
 	
 	@SuppressWarnings("MismatchedReadAndWriteOfArray")
-	class MulticoloredWaveEffect extends WaveEffect{
+	class MulticoloredWaveEffect extends WaveEffect {
 		private final Color[] colors;
+		
 		MulticoloredWaveEffect(int duration, WaveEffectDirection direction, Color[] colors) {
 			super(colors[0], duration, colors.length, direction);
 			this.colors = colors;
 		}
 		
 		@Override
-		protected Color[][] getHorizontalColors(int width, int height){
+		protected Color[][] getHorizontalColors(int width, int height) {
 			Color[][] result = new Color[width][height];
 			Color[] empty = new Color[height];
 			Arrays.fill(empty, Color.TRANSPARENT);
@@ -51,12 +52,12 @@ public class MulticolorWaveProducer implements IWaveEffectProducer {
 		void fillColors(Color[][] destination, int startLocation, int endLocation) {
 			for (int i = startLocation; i < endLocation; i++) {
 				Color[] column = new Color[destination[i].length];
-				Arrays.fill(column, colors[i-startLocation]);
+				Arrays.fill(column, colors[i - startLocation]);
 				destination[i] = column;
 			}
 		}
 		
-		void fillColors(Color[] destination, int startLocation, int endLocation){
+		void fillColors(Color[] destination, int startLocation, int endLocation) {
 			if (endLocation - startLocation >= 0) System.arraycopy(colors, 0, destination, startLocation, endLocation - startLocation);
 		}
 		
@@ -64,10 +65,10 @@ public class MulticolorWaveProducer implements IWaveEffectProducer {
 		protected Color[][] getVerticalColors(int width, int height) {
 			Color[][] result = new Color[width][height];
 			Color[] column = new Color[height];
-			Arrays.fill(column,Color.TRANSPARENT);
+			Arrays.fill(column, Color.TRANSPARENT);
 			
 			int startLocation = getStartHorizontalLocation(height);
-			int endLocation = startLocation+getEffectWidth();
+			int endLocation = startLocation + getEffectWidth();
 			endLocation = Math.min(endLocation, height);
 			startLocation = Math.max(startLocation, 0);
 			fillColors(column, startLocation, endLocation);
@@ -84,10 +85,10 @@ public class MulticolorWaveProducer implements IWaveEffectProducer {
 			
 			for (int y = 0; y < height; y++) {
 				for (int x = 0; x < width; x++) {
-					double distanceFromCenter = dist(width / 2.0, height / 2.0, x+0.5, y+0.5);
-					if (distanceFromCenter <= outerRadius && distanceFromCenter >= innerRadius){
-						result[x][y] = colors[(int) Math.min(Math.floor(outerRadius-distanceFromCenter),colors.length-1)];
-					}else{
+					double distanceFromCenter = dist(width / 2.0, height / 2.0, x + 0.5, y + 0.5);
+					if (distanceFromCenter <= outerRadius && distanceFromCenter >= innerRadius) {
+						result[x][y] = colors[(int) Math.min(Math.floor(outerRadius - distanceFromCenter), colors.length - 1)];
+					} else {
 						result[x][y] = Color.TRANSPARENT;
 					}
 				}

@@ -10,7 +10,7 @@ public enum StatusSeverity {
 	}
 	
 	public void setSeverity(int severity) {
-		if (this == CUSTOM){
+		if (this == CUSTOM) {
 			this.severity = severity;
 		}
 	}

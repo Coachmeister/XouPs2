@@ -1,16 +1,23 @@
 package net.ximias.logging;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.Objects;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
 public class FileLogAppender extends Handler {
 	private final RandomAccessFile logFile;
-	public static final Charset UTF16 = Charset.forName("UTF16");
+	public static final Charset UTF16 = StandardCharsets.UTF_16;
+	
 	@SuppressWarnings("ResultOfMethodCallIgnored") // File stuff returns a boolean.
 	public FileLogAppender() {
 		WebLogFormatter formatter = new WebLogFormatter();
@@ -36,19 +43,19 @@ public class FileLogAppender extends Handler {
 	@Override
 	public void publish(LogRecord record) {
 		try {
-			synchronized (logFile){
+			synchronized (logFile) {
 				logFile.seek(logFile.length());
 				
 				ByteBuffer buf = UTF16.encode(getFormatter().format(record) + '\n');
 				
 				//System.out.println(new String(UTF16.decode(buf).array()));
-				while (buf.hasRemaining()){
+				while (buf.hasRemaining()) {
 					logFile.write(buf.get());
 				}
 			}
 			
 		} catch (IOException e) {
-			throw new Error("Could not append to log file: "+e);
+			throw new Error("Could not append to log file: " + e);
 		}
 		
 	}

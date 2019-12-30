@@ -6,8 +6,6 @@ import net.ximias.effect.EffectProducer;
 import net.ximias.effect.FixedEffect;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-
 /**
  * A timed color effect. Should probably be renamed. See EventColorEffect doc.
  */
@@ -15,13 +13,14 @@ public class TimedEffectProducer extends EffectProducer {
 	private final long duration;
 	private Color color;
 	
-	public TimedEffectProducer(Color color_javafx, long duration_milliseconds){
-		duration = duration_milliseconds;
+	public TimedEffectProducer(String name, Color color_javafx, long duration_milliseconds) {
+		this.name = name;
+		this.duration = duration_milliseconds;
 		color = color_javafx;
 	}
 	
 	public TimedEffectProducer(JSONObject data) {
-		this(Color.valueOf(data.getString("color")),data.getLong("duration"));
+		this(data.getString("name"), Color.valueOf(data.getString("color")), data.getLong("duration"));
 	}
 	
 	@Override
@@ -35,32 +34,35 @@ public class TimedEffectProducer extends EffectProducer {
 	}
 	
 	@Override
-	public HashMap<String, String> toJson() {
-		HashMap<String, String> h = new HashMap<>(4);
-		h.put("duration", String.valueOf(duration));
-		h.put("color", color.toString());
-		return h;
+	public JSONObject toJson() {
+		JSONObject ret = new JSONObject();
+		ret.put("name", name);
+		ret.put("type", "Timed");
+		ret.put("duration", String.valueOf(duration));
+		ret.put("color", color.toString());
+		return ret;
 	}
 	
 	public int getDuration() {
 		return (int) duration;
 	}
 }
-class TimedColorEffect implements FixedEffect{
+
+class TimedColorEffect implements FixedEffect {
 	private final long startTime;
 	private final long duration;
 	private final Color color;
 	private final EffectProducer parent;
 	
-	TimedColorEffect(long duration_milliseconds, Color color_javafx, EffectProducer parent){
+	TimedColorEffect(long duration_milliseconds, Color color_javafx, EffectProducer parent) {
 		this.parent = parent;
 		startTime = System.currentTimeMillis();
 		duration = duration_milliseconds;
 		color = color_javafx;
 	}
 	
-	public boolean isDone(){
-		return System.currentTimeMillis()-startTime > duration;
+	public boolean isDone() {
+		return System.currentTimeMillis() - startTime > duration;
 	}
 	
 	@Override
@@ -79,6 +81,6 @@ class TimedColorEffect implements FixedEffect{
 	
 	@Override
 	public long getRemainingTime() {
-		return System.currentTimeMillis()-startTime;
+		return System.currentTimeMillis() - startTime;
 	}
 }

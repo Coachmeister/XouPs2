@@ -16,15 +16,15 @@ public class LightIteratorExample implements HueExampleEffect {
 	public Effect getEffect() {
 		LightIteratorEffect effect = new LightIteratorEffect();
 		SequenceAnimation red = new SequenceAnimation();
-		red.append(new TweenAnimation(0.0,1,FADE_IN,TweenType.EaseInOutQuad), "Fade-in");
-		red.append(new TweenAnimation(1,1,HOLD, TweenType.Linear),"Hold");
-		red.append(new TweenAnimation(1,0.0,FADE_OUT,TweenType.EaseInOutQuad),"Fade-out");
+		red.append(new TweenAnimation(0.0, 1, FADE_IN, TweenType.EaseInOutQuad), "Fade-in");
+		red.append(new TweenAnimation(1, 1, HOLD, TweenType.Linear), "Hold");
+		red.append(new TweenAnimation(1, 0.0, FADE_OUT, TweenType.EaseInOutQuad), "Fade-out");
 		
 		
 		SequenceAnimation greenBlue = new SequenceAnimation();
-		greenBlue.append(new TweenAnimation(0.0,0.2,FADE_IN,TweenType.EaseInOutQuad), "Fade-in");
-		greenBlue.append(new TweenAnimation(0.2,0.2,HOLD, TweenType.Linear),"Hold");
-		greenBlue.append(new TweenAnimation(0.2,0.0,FADE_OUT,TweenType.EaseInOutQuad),"Fade-out");
+		greenBlue.append(new TweenAnimation(0.0, 0.2, FADE_IN, TweenType.EaseInOutQuad), "Fade-in");
+		greenBlue.append(new TweenAnimation(0.2, 0.2, HOLD, TweenType.Linear), "Hold");
+		greenBlue.append(new TweenAnimation(0.2, 0.0, FADE_OUT, TweenType.EaseInOutQuad), "Fade-out");
 		
 		effect.setColorAnimation(red, greenBlue, greenBlue);
 		effect.setOrder(LightIteratorEffect.Order.Clockwise);

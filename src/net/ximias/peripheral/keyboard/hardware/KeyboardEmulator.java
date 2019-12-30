@@ -44,7 +44,7 @@ public class KeyboardEmulator extends AbstractKeyboard implements Renderer {
 	private void animateFrame() {
 		GraphicsContext ctx = canvas.getGraphicsContext2D();
 		ctx.setFill(Color.BLACK);
-		ctx.fillRect(0,0,canvas.getWidth(), canvas.getHeight());
+		ctx.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		Color[][] perKey = effectContainer.getPerKeyColor();
 		int width, height;
 		width = getWidthOfSquare(perKey.length);
@@ -54,7 +54,7 @@ public class KeyboardEmulator extends AbstractKeyboard implements Renderer {
 			for (int column = 0; column < perKey.length; column++) {
 				Color color = perKey[column][row];
 				ctx.setFill(color);
-				ctx.fillRect(SPACING/2.0+column*(width+SPACING), SPACING/2.0+row*(height+SPACING),width, height);
+				ctx.fillRect(SPACING / 2.0 + column * (width + SPACING), SPACING / 2.0 + row * (height + SPACING), width, height);
 			}
 		}
 	}
@@ -63,42 +63,44 @@ public class KeyboardEmulator extends AbstractKeyboard implements Renderer {
 	 * Called when emulator is stopped.
 	 * Used for visual purposes.
 	 */
-	private void insertStoppedFrame(){
+	private void insertStoppedFrame() {
 		GraphicsContext ctx = canvas.getGraphicsContext2D();
-		ctx.applyEffect(new ColorAdjust(0,-1,-0.5,0));
+		ctx.applyEffect(new ColorAdjust(0, -1, -0.5, 0));
 	}
 	
 	/**
 	 * Starts the emulator.
 	 */
-	private void start(){
+	private void start() {
 		animationTimer.start();
 	}
 	
 	/**
 	 * Stops the emulator.
 	 */
-	public void stop(){
+	public void stop() {
 		animationTimer.stop();
 		insertStoppedFrame();
 	}
 	
 	/**
 	 * Utility function for calculating the with of a single key.
+	 *
 	 * @param numWidth the number of keys to fit in the width of the canvas.
 	 * @return the size in pixels of the with of the key.
 	 */
-	private int getWidthOfSquare(int numWidth){
-		return (int) Math.floor(canvas.getWidth()/numWidth - SPACING);
+	private int getWidthOfSquare(int numWidth) {
+		return (int) Math.floor(canvas.getWidth() / numWidth - SPACING);
 	}
 	
 	/**
 	 * Utility function for calculating the height of a single key.
+	 *
 	 * @param numHeight the number of keys to fit in the height of the canvas.
 	 * @return the size in pixels of the height of the key.
 	 */
-	private int getHeightOfSquare(int numHeight){
-		return (int) Math.floor(canvas.getHeight()/numHeight - SPACING);
+	private int getHeightOfSquare(int numHeight) {
+		return (int) Math.floor(canvas.getHeight() / numHeight - SPACING);
 	}
 	
 	@Override
@@ -117,23 +119,30 @@ public class KeyboardEmulator extends AbstractKeyboard implements Renderer {
 	}
 	
 	@Override
-	public void setAndExemptColors(Map<String, Color> keyColorMap) { }
+	public void setAndExemptColors(Map<String, Color> keyColorMap) {
+	}
 	
 	@Override
-	public void enable() { start(); }
+	public void enable() {
+		start();
+	}
 	
 	@Override
-	public void disable() { stop(); }
+	public void disable() {
+		stop();
+	}
 	
 	public KeyboardEffectContainer getEffectContainer() {
 		return effectContainer;
 	}
 	
 	@Override
-	public void resetExemptions() { }
+	public void resetExemptions() {
+	}
 	
 	@Override
-	public void setMultiKey(boolean enableMultiKey) { }
+	public void setMultiKey(boolean enableMultiKey) {
+	}
 	
 	@Override
 	public boolean isMultiKey() {

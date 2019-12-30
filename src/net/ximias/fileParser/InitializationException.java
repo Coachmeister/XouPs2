@@ -6,8 +6,12 @@ package net.ximias.fileParser;
  * Ex. If an object references another not-yet-initialized object,
  * it can't initialize before that other object has been initialized first.
  */
-public class InitializationException extends RuntimeException{
+public class InitializationException extends RuntimeException {
 	public InitializationException(String message) {
 		super(message);
+	}
+	
+	public InitializationException(String message, Throwable cause) {
+		super(message, cause);
 	}
 }

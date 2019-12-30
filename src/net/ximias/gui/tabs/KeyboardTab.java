@@ -8,20 +8,23 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
-import net.ximias.fileSearch.PsDirectoryLocator;
-import net.ximias.gui.MainController;
 import net.ximias.datastructures.gui.nodes.ResizableCanvas;
 import net.ximias.datastructures.gui.nodes.SortedStringColorTable;
+import net.ximias.fileSearch.PsDirectoryLocator;
+import net.ximias.gui.MainController;
+import net.ximias.peripheral.keyboard.KeyEffect;
+import net.ximias.peripheral.keyboard.Keyboard;
 import net.ximias.peripheral.keyboard.effects.*;
 import net.ximias.peripheral.keyboard.hardware.KeyboardEmulator;
 import net.ximias.peripheral.keyboard.hardware.logitech.Logitech;
-import net.ximias.peripheral.keyboard.KeyEffect;
-import net.ximias.peripheral.keyboard.Keyboard;
 import net.ximias.persistence.Persisted;
 
 import java.io.File;
@@ -127,10 +130,10 @@ public class KeyboardTab {
 	
 	private void addTestEffect(WaveEffectDirection direction) {
 		
-		WaveEffectProducer ke0 = new WaveEffectProducer(Color.BLACK, 200,2,WaveEffectDirection.CENTER_OUT);
+		WaveEffectProducer ke0 = new WaveEffectProducer(Color.BLACK, 200, 2, WaveEffectDirection.CENTER_OUT);
 		DelayProducer del = new DelayProducer(50);
 		
-		MultiKeyEffectProducer keyExplosion = new MultiKeyEffectProducer( del,ke0,del,ke0);
+		MultiKeyEffectProducer keyExplosion = new MultiKeyEffectProducer(del, ke0, del, ke0);
 		
 		if (keyboard != null) {
 			if (keyboard.getEffectContainer() != null) {

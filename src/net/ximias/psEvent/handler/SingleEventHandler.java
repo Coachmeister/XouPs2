@@ -2,16 +2,13 @@ package net.ximias.psEvent.handler;
 
 import net.ximias.effect.EffectProducer;
 import net.ximias.effect.EffectView;
-import net.ximias.fileParser.InitializationException;
 import net.ximias.fileParser.Initializer;
 import net.ximias.network.CurrentPlayer;
 import net.ximias.network.Ps2EventStreamingConnection;
-import net.ximias.psEvent.condition.*;
+import net.ximias.psEvent.condition.EventCondition;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-
-public class SingleEventHandler extends Ps2EventHandler {
+public class SingleEventHandler extends Ps2EventHandler implements ConditionedEventHandler {
 	/*
 	Need to know:
 	Event name
@@ -26,7 +23,8 @@ public class SingleEventHandler extends Ps2EventHandler {
 	private final EventCondition condition;
 	private final Ps2EventType type;
 	private final String eventName;
-	public SingleEventHandler(EffectView view, EffectProducer effect, EventCondition condition, Ps2EventType type, String planetsideEventName , String name) {
+	
+	public SingleEventHandler(EffectView view, EffectProducer effect, EventCondition condition, Ps2EventType type, String planetsideEventName, String name) {
 		super(effect);
 		this.name = name;
 		this.condition = condition;
@@ -35,51 +33,57 @@ public class SingleEventHandler extends Ps2EventHandler {
 		setView(view);
 	}
 	
-	public SingleEventHandler(JSONObject o){
-		checkParameters(o);
+	public SingleEventHandler(JSONObject o) {
 		name = o.getString("name");
 		eventName = o.getString("event");
-		if (o.getString("condition").equals("all")) condition = null;
-		else condition = new SingleCondition(o.getJSONObject("condition"));
+		condition = Initializer.eventConditionFromNameWhileInit(o.getString("condition"));
 		
-		if (o.getString("type").equals("player")) type = Ps2EventType.PLAYER;
+		if (o.getString("ps2EventType").equalsIgnoreCase("player")) type = Ps2EventType.PLAYER;
 		else type = Ps2EventType.WORLD;
 		
 		if (o.has("effect")) effect = Initializer.effectProducerFromNameWhileInit(o.getString("effect"));
 	}
 	
-	private void checkParameters(JSONObject o){
-		if (o.has("type")&&o.has("event")&&o.has("condition")){
-			if (!o.getString("type").equals("player") && !o.getString("type").equals("world")) {
-				throw new InitializationException("Invalid type. Allowed types are player and world");
-			}
-		}else {
-			throw new InitializationException("Missing parameters. Required parameters are: type, event, and condition");
+	@Override
+	public JSONObject toJson() {
+		JSONObject ret = new JSONObject();
+		ret.put("type", "Single");
+		ret.put("name", name);
+		ret.put("event", eventName);
+		ret.put("condition", condition.getName());
+		ret.put("ps2EventType", type.name());
+		if (effect != null) {
+			ret.put("effect", effect.getName());
 		}
+		return ret;
+	}
+	
+	public EventCondition getCondition() {
+		return condition;
 	}
 	
 	@Override
 	public boolean conditionIsSatisfied(JSONObject payload) {
-		return (condition==null || condition.evaluate(payload));
+		return (condition == null || condition.evaluate(payload));
 	}
 	
 	@Override
 	public void register(Ps2EventStreamingConnection con) {
-		if (effect!=null){
-			if (type == Ps2EventType.PLAYER){
-				con.subscribePlayerEvent(eventName, CurrentPlayer.getInstance().getPlayerID(),this);
-			}else{
-				con.subscribeWorldEvent(eventName,CurrentPlayer.getInstance().getValue("world_id"),this);
+		if (effect != null) {
+			if (type == Ps2EventType.PLAYER) {
+				con.subscribePlayerEvent(eventName, CurrentPlayer.getInstance().getPlayerID(), this);
+			} else {
+				con.subscribeWorldEvent(eventName, CurrentPlayer.getInstance().getValue("world_id"), this);
 			}
 		}
 	}
 	
 	@Override
 	public void registerOther(Ps2EventHandler handler, Ps2EventStreamingConnection con) {
-		if (type == Ps2EventType.PLAYER){
-			con.subscribePlayerEvent(eventName, CurrentPlayer.getInstance().getPlayerID(),handler);
-		}else{
-			con.subscribeWorldEvent(eventName,CurrentPlayer.getInstance().getWorld(),handler);
+		if (type == Ps2EventType.PLAYER) {
+			con.subscribePlayerEvent(eventName, CurrentPlayer.getInstance().getPlayerID(), handler);
+		} else {
+			con.subscribeWorldEvent(eventName, CurrentPlayer.getInstance().getWorld(), handler);
 		}
 	}
 	
@@ -101,15 +105,4 @@ public class SingleEventHandler extends Ps2EventHandler {
 		event.register(connection);
 		
 	}*/
-	
-	@Override
-	public HashMap<String, String> toJson() {
-		/*HashMap<String, String> h = new HashMap<>(15);
-		h.put("effect", effect.getName());
-		if (condition != null) {
-			h.put("condition", condition.getJsonObject().toString());
-		}
-		return h;*/
-		throw new UnsupportedOperationException("Later!");
-	}
 }

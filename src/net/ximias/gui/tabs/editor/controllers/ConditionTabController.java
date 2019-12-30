@@ -18,7 +18,7 @@ public class ConditionTabController {
 	public ListView conditionList;
 	
 	
-	public void injectEditorController(EffectEditorTab editorController){
+	public void injectEditorController(EffectEditorTab editorController) {
 	
 	}
 	

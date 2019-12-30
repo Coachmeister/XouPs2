@@ -10,11 +10,11 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import net.ximias.datastructures.gui.nodes.ResizableCanvas;
 import net.ximias.effect.producers.FadingEffectProducer;
 import net.ximias.gui.MainController;
-import net.ximias.datastructures.gui.nodes.ResizableCanvas;
-import net.ximias.persistence.ApplicationConstants;
 import net.ximias.network.CurrentPlayer;
+import net.ximias.persistence.ApplicationConstants;
 import net.ximias.persistence.Persisted;
 
 import java.util.Map;
@@ -27,8 +27,8 @@ public class Properties {
 	private int oldZone;
 	private boolean worldWasModified = false;
 	private TreeMap<String, Integer> selections;
-	private final FadingEffectProducer exampleEffect = new FadingEffectProducer(Color.LIME,1500);
-	private final FadingEffectProducer exampleDarkEffect = new FadingEffectProducer(Color.BLACK,1500);
+	private final FadingEffectProducer exampleEffect = new FadingEffectProducer("Green test effect", Color.LIME, 1500);
+	private final FadingEffectProducer exampleDarkEffect = new FadingEffectProducer("Black test effect", Color.BLACK, 1500);
 	
 	@FXML
 	private Canvas propertiesPreview = new ResizableCanvas();
@@ -47,12 +47,12 @@ public class Properties {
 	
 	
 	@FXML
-	private void addExampleEffect(ActionEvent e){
+	private void addExampleEffect(ActionEvent e) {
 		mainController.getEffectContainer().addEffect(exampleEffect.build());
 	}
 	
 	@FXML
-	private void addExampleDarkEffect(ActionEvent e){
+	private void addExampleDarkEffect(ActionEvent e) {
 		mainController.getEffectContainer().addEffect(exampleDarkEffect.build());
 	}
 	
@@ -65,7 +65,7 @@ public class Properties {
 	}
 	
 	@FXML
-	private void initialize(){
+	private void initialize() {
 		propertiesPreview.widthProperty().bind(propertiesPreviewContainer.widthProperty());
 		propertiesPreview.heightProperty().bind(propertiesPreviewContainer.heightProperty());
 	}
@@ -86,7 +86,7 @@ public class Properties {
 		previewBackgroundSelector.setItems(FXCollections.observableArrayList(selections.keySet()));
 		setSelectionToCurrentZone(selections);
 		previewBackgroundSelector.valueProperty().addListener((observable, oldValue, newValue) -> {
-			if (!worldWasModified){
+			if (!worldWasModified) {
 				worldWasModified = true;
 				oldZone = Integer.valueOf(CurrentPlayer.getInstance().getValue("zone_id"));
 			}
@@ -103,16 +103,16 @@ public class Properties {
 		addPropertyChangeListener(effectIntensitySlider);
 	}
 	
-	private void propertiesChanged(){
+	private void propertiesChanged() {
 		Persisted persisted = Persisted.getInstance();
 		persisted.EFFECT_TRANSPARENCY_SLIDER = effectIntensitySlider.getValue();
 		persisted.BACKGROUND_TRANSPARENCY_SLIDER = backgroundIntensitySlider.getValue();
 		persisted.BACKGROUND_BRIGHTNESS_SLIDER = backgroundBrightnessSlider.getValue();
 		mainController.getEffectContainer().setEffectIntensity(effectIntensitySlider.getValue());
-		mainController.getEffectData().intensityChanged(backgroundBrightnessSlider.getValue(),backgroundIntensitySlider.getValue());
+		mainController.getEffectData().intensityChanged(backgroundBrightnessSlider.getValue(), backgroundIntensitySlider.getValue());
 	}
 	
-	public void onTabChange(int newValue){
+	public void onTabChange(int newValue) {
 		if (newValue != 1 && worldWasModified) {
 			worldWasModified = false;
 			CurrentPlayer.getInstance().setZoneId(oldZone);
@@ -121,13 +121,13 @@ public class Properties {
 		}
 	}
 	
-	private void addPropertyChangeListener(Slider slider){
+	private void addPropertyChangeListener(Slider slider) {
 		slider.valueProperty().addListener(observable -> propertiesChanged());
 	}
 	
 	private void setSelectionToCurrentZone(TreeMap<String, Integer> selections) {
 		for (Map.Entry<String, Integer> stringIntegerEntry : selections.entrySet()) {
-			if (stringIntegerEntry.getValue().equals(Integer.valueOf(CurrentPlayer.getInstance().getValue("zone_id")))){
+			if (stringIntegerEntry.getValue().equals(Integer.valueOf(CurrentPlayer.getInstance().getValue("zone_id")))) {
 				previewBackgroundSelector.getSelectionModel().select(stringIntegerEntry.getKey());
 				return;
 			}
@@ -136,7 +136,7 @@ public class Properties {
 		previewBackgroundSelector.getSelectionModel().select("none");
 	}
 	
-	public boolean drawDebug(){
+	public boolean drawDebug() {
 		return debugTextToggle.isSelected();
 	}
 	

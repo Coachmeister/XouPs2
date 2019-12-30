@@ -7,5 +7,6 @@ import net.ximias.psEvent.handler.Ps2EventHandler;
 
 public interface UnlinkedEvent {
 	Ps2EventHandler linkWithEffect(EffectProducer producer, EffectView view, Ps2EventStreamingConnection connection);
+	
 	Ps2EventHandler getBareHandler(EffectView view);
 }

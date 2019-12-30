@@ -16,10 +16,12 @@ public class PersistColor implements Serializable {
 		this.b = b;
 		this.a = a;
 	}
-	public static PersistColor getPersistColor(Color color){
+	
+	public static PersistColor getPersistColor(Color color) {
 		return new PersistColor(color.getRed(), color.getGreen(), color.getBlue(), color.getOpacity());
 	}
-	public Color toColor(){
-		return new Color(r,g,b,a);
+	
+	public Color toColor() {
+		return new Color(r, g, b, a);
 	}
 }

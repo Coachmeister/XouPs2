@@ -11,10 +11,10 @@ public class SearchProperties {
 	public final boolean isSearchExhaustive;
 	
 	/**
-	 * @param goal The file to locate, including extention.
-	 * @param priorities The directory names with precedence.
-	 * @param exclusions The directory names to be ignored in search.
-	 * @param maxDepth The maximum depth of non-prioritized directories to search through.
+	 * @param goal               The file to locate, including extention.
+	 * @param priorities         The directory names with precedence.
+	 * @param exclusions         The directory names to be ignored in search.
+	 * @param maxDepth           The maximum depth of non-prioritized directories to search through.
 	 * @param isSearchExhaustive
 	 */
 	public SearchProperties(String goal, String[] priorities, String[] exclusions, int maxDepth, boolean isSearchExhaustive) {

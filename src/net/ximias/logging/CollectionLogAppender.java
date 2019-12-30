@@ -16,7 +16,7 @@ public class CollectionLogAppender extends Handler {
 	
 	@Override
 	public void publish(LogRecord record) {
-		collection.forEach(it->it.receiveMessage(getFormatter().formatMessage(record)));
+		collection.forEach(it -> it.receiveMessage(getFormatter().format(record)));
 	}
 	
 	@Override

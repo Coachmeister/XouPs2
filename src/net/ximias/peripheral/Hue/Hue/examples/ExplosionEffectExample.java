@@ -9,7 +9,7 @@ public class ExplosionEffectExample implements HueExampleEffect {
 	
 	@Override
 	public Effect getEffect() {
-		ExplosionEffect effect = new ExplosionEffect(DURATION, Color.YELLOW, Color.RED,0,0);
+		ExplosionEffect effect = new ExplosionEffect(DURATION, Color.YELLOW, Color.RED, 0, 0);
 		return effect.getEffect();
 	}
 	

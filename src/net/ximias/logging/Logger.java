@@ -9,27 +9,27 @@ public class Logger {
 		this.logger = logger;
 	}
 	
-	public TypedLogger general(){
+	public TypedLogger general() {
 		return getTypedLogger(Category.GENERAL);
 	}
 	
-	public TypedLogger application(){
+	public TypedLogger application() {
 		return getTypedLogger(Category.APPLICATION);
 	}
 	
-	public TypedLogger effects(){
+	public TypedLogger effects() {
 		return getTypedLogger(Category.EFFECTS);
 	}
 	
-	public TypedLogger network(){
+	public TypedLogger network() {
 		return getTypedLogger(Category.NETWORK);
 	}
 	
-	public static Logger getLogger(String name){
+	public static Logger getLogger(String name) {
 		return new Logger(java.util.logging.Logger.getLogger(name));
 	}
 	
-	private TypedLogger getTypedLogger(Category category){
+	private TypedLogger getTypedLogger(Category category) {
 		return new TypedLogger(logger, category);
 	}
 }

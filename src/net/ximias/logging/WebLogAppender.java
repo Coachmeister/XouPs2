@@ -2,10 +2,13 @@ package net.ximias.logging;
 
 import javafx.application.Platform;
 import javafx.scene.web.WebEngine;
-import org.w3c.dom.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
-import java.util.logging.*;
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
 
 public class WebLogAppender extends Handler {
 	private WebEngine engine;
@@ -38,10 +41,10 @@ public class WebLogAppender extends Handler {
 					//Append paragraph
 					"var e = document.createElement(\"p\");" +
 					" e.setAttribute(\"class\",\"" + record.getLevel() + "\");" +
-					" e.innerHTML = \"" + paragraphText(record).replace("\"","\\\"") + "\"; " +
+					" e.innerHTML = \"" + paragraphText(record).replace("\"", "\\\"") + "\"; " +
 					"document.body.appendChild(e);" +
 					//Append hr
-					"document.body.appendChild(document.createElement(\"hr\"));"+
+					"document.body.appendChild(document.createElement(\"hr\"));" +
 					//Scroll to bottom
 					"window.scrollTo(0, document.body.scrollHeight);"));
 		} else {

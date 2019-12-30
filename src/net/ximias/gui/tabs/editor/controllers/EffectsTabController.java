@@ -17,7 +17,7 @@ public class EffectsTabController {
 	public TextField valueField;
 	public Button addButton;
 	
-	public void injectEditorController(EffectEditorTab editorController){
+	public void injectEditorController(EffectEditorTab editorController) {
 	
 	}
 	

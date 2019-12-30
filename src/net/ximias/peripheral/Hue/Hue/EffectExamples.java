@@ -1,6 +1,5 @@
 package net.ximias.peripheral.Hue.Hue;
 
-import com.philips.lighting.hue.sdk.wrapper.entertainment.Callback;
 import com.philips.lighting.hue.sdk.wrapper.entertainment.Entertainment;
 import com.philips.lighting.hue.sdk.wrapper.entertainment.StartCallback;
 import com.philips.lighting.hue.sdk.wrapper.entertainment.effect.Effect;
@@ -16,15 +15,15 @@ public class EffectExamples {
 		this.entertainment = entertainment;
 	}
 	
-	public SimpleBooleanProperty getPlayingProperty(){
+	public SimpleBooleanProperty getPlayingProperty() {
 		return isPlaying;
 	}
 	
-	public boolean playing(){
+	public boolean playing() {
 		return isPlaying.get();
 	}
 	
-	public void play(HueExampleEffect hueEffect){
+	public void play(HueExampleEffect hueEffect) {
 		if (playing()) {
 			System.out.println("Can not play effect. Entertainment is already running");
 			return;
@@ -32,7 +31,7 @@ public class EffectExamples {
 		startEntertainmentSystem(hueEffect);
 	}
 	
-	private void playEffect(HueExampleEffect hueEffect){
+	private void playEffect(HueExampleEffect hueEffect) {
 		Effect effect = hueEffect.getEffect();
 		int duration = hueEffect.getDuration();
 		

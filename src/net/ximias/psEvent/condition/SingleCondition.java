@@ -1,19 +1,15 @@
 package net.ximias.psEvent.condition;
 
 import net.ximias.fileParser.JsonSerializable;
+import net.ximias.logging.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import net.ximias.logging.Logger;
 
 
 /**
  * Receives an array of Condition data and a Condition to apply to the given data.
  */
-public class SingleCondition extends JsonSerializable implements EventCondition {
+public class SingleCondition implements EventCondition, JsonSerializable {
 	
 	/*
 	Need to know:
@@ -29,19 +25,15 @@ public class SingleCondition extends JsonSerializable implements EventCondition 
 	Process payload
 	Return true or false
 	 */
-	private ArrayList<ConditionData> data;
+	private ConditionData[] data;
 	private final Logger logger = Logger.getLogger(getClass().getName());
-	
+	private String name;
 	private Condition condition;
 	
-	public SingleCondition(ArrayList<ConditionData> data, Condition condition) {
+	public SingleCondition(String name, Condition condition, ConditionData... data) {
 		this.data = data;
 		this.condition = condition;
-	}
-	public SingleCondition(Condition condition, ConditionData... data) {
-		this.data = new ArrayList<>();
-		this.data.addAll(Arrays.asList(data));
-		this.condition = condition;
+		this.name = name;
 	}
 	
 	public SingleCondition(JSONObject data) {
@@ -58,47 +50,55 @@ public class SingleCondition extends JsonSerializable implements EventCondition 
 		JSONArray conditionData = data.getJSONArray("conditionData");
 		ConditionData[] dataSources = new ConditionData[conditionData.length()];
 		for (int i = 0; i < conditionData.length(); i++) {
-			JSONObject conData = conditionData.getJSONObject(i);
+			JSONObject conData = (JSONObject) conditionData.get(i);
 			
-			if(conData.getString("source").equalsIgnoreCase("census")){
+			if (conData.getString("source").equalsIgnoreCase("census")) {
 				dataSources[i] = new CensusData(conData);
-			}else{
+			} else {
 				dataSources[i] = new EventData(conData);
 			}
 		}
-		new SingleCondition(condition, dataSources);
+		this.name = data.getString("name");
+		this.condition = condition;
+		this.data = dataSources;
 	}
 	
 	@Override
-	public HashMap<String, String> toJson() {
-		
-		HashMap<String, String> h = new HashMap<>(10);
-		h.put("condition", condition.toString());
+	public JSONObject toJson() {
+		JSONObject ret = new JSONObject();
+		ret.put("name", name);
+		ret.put("type", "Single");
+		ret.put("condition", condition.toString());
 		JSONArray dataArray = new JSONArray();
 		for (ConditionData datum : data) {
 			dataArray.put(datum.toJson());
 		}
-		h.put("conditionData", dataArray.toString());
+		ret.put("conditionData", dataArray);
 		
-		return h;
+		return ret;
 	}
 	
-	public boolean evaluate(JSONObject payload){
-			for (int i = 0; i < data.size()-1; i++) {
-				logger.effects().fine("evaluating: "+data.get(i).get(payload)+" "+condition.name()+" "+data.get(i+1).get(payload));
-				try{
-					if (!condition.eval(data.get(i).get(payload),data.get(i+1).get(payload))) {
-						logger.effects().fine("Evaluated to false");
-						return false;
-					}
-				}catch (NumberFormatException e){
-					logger.effects().severe("Letters can not be compared using "+condition.name()+
-							"\ncomparison was: "+data.get(i).get(payload)+" "+condition.name()+" "+data.get(i+1).get(payload));
+	public boolean evaluate(JSONObject payload) {
+		for (int i = 0; i < data.length - 1; i++) {
+			logger.effects().fine("evaluating: " + data[i].get(payload) + " " + condition.name() + " " + data[i + 1].get(payload));
+			try {
+				if (!condition.eval(data[i].get(payload), data[i + 1].get(payload))) {
+					logger.effects().fine("Evaluated to false");
 					return false;
 				}
+			} catch (NumberFormatException e) {
+				logger.effects().severe("Letters can not be compared using " + condition.name() +
+				                        "\ncomparison was: " + data[i].get(payload) + " " + condition.name() + " " + data[i + 1].get(payload));
+				return false;
 			}
-			logger.effects().fine("Evaluated to true");
-			return true;
+		}
+		logger.effects().fine("Evaluated to true");
+		return true;
+	}
+	
+	@Override
+	public String getName() {
+		return name;
 	}
 	
 	/*public static void main(String[] args) {

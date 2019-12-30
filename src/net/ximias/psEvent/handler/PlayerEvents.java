@@ -1,6 +1,6 @@
 package net.ximias.psEvent.handler;
 
-public enum PlayerEvents implements PsEvent{
+public enum PlayerEvents implements PsEvent {
 	ACHIEVEMENT_EARNED("AchievementEarned"),
 	BATTLE_RANK_UP("BattleRankUp"),
 	DEATH("Death"),

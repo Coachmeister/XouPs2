@@ -6,6 +6,8 @@ import java.awt.*;
 
 public interface HueEffectCreator {
 	Effect build();
+	
 	long getDurationMs();
+	
 	void setColor(Color color);
 }

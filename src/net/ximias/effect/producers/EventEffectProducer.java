@@ -5,11 +5,11 @@ import javafx.scene.paint.Color;
 import net.ximias.effect.Effect;
 import net.ximias.effect.EffectProducer;
 import net.ximias.effect.FixedEffect;
+import net.ximias.logging.Logger;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
-import net.ximias.logging.Logger;
 
 
 /**
@@ -19,17 +19,17 @@ import net.ximias.logging.Logger;
  * Should only return an effect on build, when no effect is showing with the same name.
  * Weak references!
  */
-public class EventEffectProducer extends EffectProducer{
+public class EventEffectProducer extends EffectProducer {
 	private static final HashMap<String, WeakReference<EventColorEffect>> eventEffects = new HashMap<>(12);
 	@SuppressWarnings("FieldCanBeLocal")
 	private final Logger logger = Logger.getLogger(getClass().getName());
 	private final String name;
 	private Color color;
 	
-	public EventEffectProducer(Color color, String name){
+	public EventEffectProducer(Color color, String name) {
 		this.name = name;
 		this.color = color;
-		if (color.getOpacity()==0) {
+		if (color.getOpacity() == 0) {
 			logger.effects().severe("This effect producer is fully transparent!");
 			//throw new Error("Event effects are backgrounds and shouldn't be fully transparent");
 		}
@@ -39,7 +39,7 @@ public class EventEffectProducer extends EffectProducer{
 		this(Color.valueOf(data.getString("color")), data.getString("name"));
 	}
 	
-	public void clearEffect(){
+	public void clearEffect() {
 		if (eventEffects.get(name) != null) {
 			EventColorEffect ec = eventEffects.get(name).get();
 			if (ec != null) {
@@ -62,9 +62,9 @@ public class EventEffectProducer extends EffectProducer{
 		}
 		
 		if (ec == null) {
-			ec = new EventColorEffect(color, name,this);
-			eventEffects.put(name,new WeakReference<>(ec));
-		}else{
+			ec = new EventColorEffect(color, name, this);
+			eventEffects.put(name, new WeakReference<>(ec));
+		} else {
 			ec.setColor(color);
 		}
 		
@@ -72,11 +72,12 @@ public class EventEffectProducer extends EffectProducer{
 	}
 	
 	@Override
-	public HashMap<String, String> toJson() {
-		HashMap<String, String> h = new HashMap<>();
-		h.put("color", color.toString());
-		h.put("name", name);
-		return h;
+	public JSONObject toJson() {
+		JSONObject ret = new JSONObject();
+		ret.put("name", name);
+		ret.put("type", "Event");
+		ret.put("color", color.toString());
+		return ret;
 	}
 }
 
@@ -85,6 +86,7 @@ class EventColorEffect implements FixedEffect {
 	private Color color;
 	private final String name;
 	private final EffectProducer parent;
+	
 	EventColorEffect(Color color_javafx, String name, EffectProducer parent) {
 		color = color_javafx;
 		this.parent = parent;
@@ -95,7 +97,7 @@ class EventColorEffect implements FixedEffect {
 	public Color getColor() {
 		return color;
 	}
-
+	
 	@Override
 	public boolean isDone() {
 		return done;
@@ -106,17 +108,17 @@ class EventColorEffect implements FixedEffect {
 		return false;
 	}
 	
-	public void setColor(Color color){
+	public void setColor(Color color) {
 		this.color = color;
 	}
 	
 	public void setDone() {
-		this.done= true;
+		this.done = true;
 	}
 	
 	@Override
 	public String getName() {
-		return "Constant color. Name: "+name;
+		return "Constant color. Name: " + name;
 	}
 	
 	@Override

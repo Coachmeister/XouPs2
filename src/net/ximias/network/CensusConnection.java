@@ -26,7 +26,7 @@ public class CensusConnection {
 		synchronized (recentQueries) {
 			cached = recentQueries.get(urlParameters);
 			
-			if (cached == null ||cached.isCompletedExceptionally()) {
+			if (cached == null || cached.isCompletedExceptionally()) {
 				cached = null;
 				recentQueries.put(urlParameters, new CompletableFuture<>());
 			}
@@ -43,14 +43,14 @@ public class CensusConnection {
 				return ApplicationConstants.EMPTY_JSON;
 			}
 		}
-		staticLogger.network().info("Looking up data in census: "+urlParameters);
+		staticLogger.network().info("Looking up data in census: " + urlParameters);
 		cached = recentQueries.get(urlParameters);
-		try{
+		try {
 			JSONObject response = establishConnectionAndQuery(urlParameters);
 			cached.complete(response);
-			System.out.println("Census response: "+response);
+			System.out.println("Census response: " + response);
 			return response;
-		}catch (Error e){
+		} catch (Error e) {
 			cached.completeExceptionally(e);
 			throw e;
 		}
@@ -96,6 +96,7 @@ public class CensusConnection {
 	
 	/**
 	 * Used to get data from the census. Will cache the response.
+	 *
 	 * @param queryString the string after .../get/ps2/
 	 * @return the response from the census servers.
 	 */
@@ -124,10 +125,11 @@ public class CensusConnection {
 	/**
 	 * Used to poll the census. Wil bypass the cache, as response might change on subsequent calls.
 	 * Needless to say, using this function is expensive, and should be avoided if possible.
+	 *
 	 * @param queryString the queryString to poll. Should start with [target]/?[query]
 	 * @return the response form the server. Or empty json on exception.
 	 */
-	public static JSONObject poll(String queryString){
+	public static JSONObject poll(String queryString) {
 		try {
 			return establishConnectionAndQuery(queryString);
 		} catch (IOException e) {

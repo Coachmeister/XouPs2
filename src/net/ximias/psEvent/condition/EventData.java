@@ -3,8 +3,6 @@ package net.ximias.psEvent.condition;
 import net.ximias.network.CurrentPlayer;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-
 public class EventData extends ConditionData {
 	private String value;
 	private ConditionDataSource source;
@@ -21,12 +19,13 @@ public class EventData extends ConditionData {
 			type = ConditionDataSource.CONSTANT;
 		} else if (dataType.equalsIgnoreCase("event")) {
 			type = ConditionDataSource.EVENT;
-		} else if (dataType.equalsIgnoreCase("player")){
+		} else if (dataType.equalsIgnoreCase("player")) {
 			type = ConditionDataSource.PLAYER;
-		}else{
+		} else {
 			throw new Error("Bad JSON");
 		}
-		new EventData(data.getString("value") ,type);
+		this.value = data.getString("value");
+		this.source = type;
 	}
 	
 	@Override
@@ -44,10 +43,10 @@ public class EventData extends ConditionData {
 	}
 	
 	@Override
-	public HashMap<String, String> toJson() {
-		HashMap<String, String> h = new HashMap<>(6);
-		h.put("source",source.name().toLowerCase());
-		h.put("value", value);
-		return h;
+	public JSONObject toJson() {
+		JSONObject ret = new JSONObject();
+		ret.put("source", source.name().toLowerCase());
+		ret.put("value", value);
+		return ret;
 	}
 }

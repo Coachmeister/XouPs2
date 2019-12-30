@@ -5,6 +5,7 @@ import java.util.logging.LogRecord;
 
 public class TypedRecord extends LogRecord {
 	private Category category = Category.GENERAL;
+	
 	/**
 	 * Construct a LogRecord with the given level and message values.
 	 * <p>
@@ -17,7 +18,8 @@ public class TypedRecord extends LogRecord {
 	 * the current thread.
 	 * <p>
 	 * All other properties will be initialized to "null".
-	 *  @param level a logging level value
+	 *
+	 * @param level a logging level value
 	 * @param msg   the raw non-localized logging message (may be null)
 	 */
 	public TypedRecord(Level level, String msg) {
@@ -32,7 +34,7 @@ public class TypedRecord extends LogRecord {
 		this.category = category;
 	}
 	
-	public static TypedRecord toTypedRecord(LogRecord record){
+	public static TypedRecord toTypedRecord(LogRecord record) {
 		TypedRecord ret = new TypedRecord(record.getLevel(), record.getMessage());
 		ret.setMillis(record.getMillis());
 		ret.setParameters(record.getParameters());

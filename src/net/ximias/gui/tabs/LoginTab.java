@@ -11,9 +11,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.util.StringConverter;
+import net.ximias.datastructures.gui.nodes.StatusIndicator;
 import net.ximias.gui.MainController;
 import net.ximias.gui.StatusSeverity;
-import net.ximias.datastructures.gui.nodes.StatusIndicator;
+import net.ximias.logging.Logger;
 import net.ximias.network.CensusConnection;
 import net.ximias.network.CurrentPlayer;
 import net.ximias.persistence.Persisted;
@@ -25,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Timer;
 import java.util.TimerTask;
-import net.ximias.logging.Logger;
 
 
 public class LoginTab {
@@ -40,7 +40,7 @@ public class LoginTab {
 	private MainController mainController;
 	private final ArrayList<String> errors = new ArrayList<>(5);
 	private final Logger logger = Logger.getLogger(getClass().getName());
-	private final Timer nameUpdateTimer = new Timer(LOGIN_NAME_CHANGE_TIMER,true);
+	private final Timer nameUpdateTimer = new Timer(LOGIN_NAME_CHANGE_TIMER, true);
 	private TimerTask nameUpdateTask = new TimerTask() {
 		@Override
 		public void run() {
@@ -55,7 +55,7 @@ public class LoginTab {
 			nameUpdateTask = new TimerTask() {
 				@Override
 				public void run() {
-					Platform.runLater(()->nameChanged());
+					Platform.runLater(() -> nameChanged());
 				}
 			};
 			characterChoice.setDisable(true);
@@ -64,11 +64,11 @@ public class LoginTab {
 		selectionButton.setDisable(true);
 		characterChoice.setDisable(true);
 		characterChoice.valueProperty().addListener((observable, oldValue, newValue) -> {
-			if (newValue == null){
+			if (newValue == null) {
 				selectionButton.setDisable(true);
 				characterChoice.setDisable(true);
-			}else{
-				if (init.get()){
+			} else {
+				if (init.get()) {
 					characterChoice.setDisable(false);
 					selectionButton.setDisable(false);
 				} else {

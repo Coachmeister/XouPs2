@@ -12,11 +12,11 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
+import net.ximias.logging.Logger;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
-import net.ximias.logging.Logger;
 
 
 public class SortedStringColorTable<S extends Map.Entry<String, Color>> extends javafx.scene.control.TableView<S> {
@@ -39,15 +39,15 @@ public class SortedStringColorTable<S extends Map.Entry<String, Color>> extends 
 	 * Saves the current selection in the table.
 	 * This operation overwrites any previous save operations with the current selection.
 	 */
-	public void saveSelection(){
-		getSelectionModel().getSelectedItems().forEach(it-> selectedActions.add(it.getKey()));
+	public void saveSelection() {
+		getSelectionModel().getSelectedItems().forEach(it -> selectedActions.add(it.getKey()));
 	}
 	
 	/**
 	 * Restores previously saved selection.
 	 * Multiple restores without save will not change the selected indices.
 	 */
-	public void restoreSelection(){
+	public void restoreSelection() {
 		if (selectedActions.isEmpty()) {
 			logger.application().info("Could not restore selection. Selected actions is empty.");
 			return;
@@ -68,14 +68,15 @@ public class SortedStringColorTable<S extends Map.Entry<String, Color>> extends 
 	
 	/**
 	 * Used to set the items contained within the table.
+	 *
 	 * @param items a Collection of string color map entries.
 	 */
-	public void setItems(Collection<S> items){
+	public void setItems(Collection<S> items) {
 		clear();
 		data.addAll(items);
 	}
 	
-	public void clear(){
+	public void clear() {
 		data.clear();
 	}
 	
@@ -104,7 +105,7 @@ public class SortedStringColorTable<S extends Map.Entry<String, Color>> extends 
 		colorColumn.setCellFactory(new Callback<TableColumn<S, String>, TableCell<S, String>>() {
 			@Override
 			public TableCell<S, String> call(TableColumn<S, String> param) {
-				return new TableCell<S, String>(){
+				return new TableCell<S, String>() {
 					@Override
 					protected void updateItem(String item, boolean empty) {
 						super.updateItem(item, empty);
@@ -115,7 +116,7 @@ public class SortedStringColorTable<S extends Map.Entry<String, Color>> extends 
 						} else {
 							setText(item);
 							Color color = Color.valueOf(item);
-							setBackground(new Background(new BackgroundFill(color,null, null)));
+							setBackground(new Background(new BackgroundFill(color, null, null)));
 							setTextFill(color.getBrightness() > 0.5 ? Color.BLACK : Color.WHITE);
 						}
 					}

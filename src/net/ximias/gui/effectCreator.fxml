@@ -1,40 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
-<?import java.lang.*?>
 <?import javafx.scene.layout.*?>
-
 <AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.ximias.gui.tabs.EffectEditorTab">
-   <children>
-      <TabPane layoutX="200.0" layoutY="100.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <tabs>
-          <Tab text="Linking">
-               <content>
-                  <fx:include fx:id="linkingTab" source="tabs/editor/linking.fxml" />
-               </content>
-          </Tab>
-          <Tab text="Effects">
-               <content>
-                  <fx:include fx:id="effectsTab" source="tabs/editor/effects.fxml" />
-               </content>
-          </Tab>
-            <Tab text="Events">
-               <content>
-                  <fx:include fx:id="eventsTab" source="tabs/editor/events.fxml" />
-               </content>
-            </Tab>
-            <Tab text="MultiEvents">
-               <content>
-                  <fx:include fx:id="multiEventsTab" source="tabs/editor/multiEvents.fxml" />
-               </content>
-            </Tab>
-            <Tab text="Conditions">
-               <content>
-                  <fx:include fx:id="conditionsTab" source="tabs/editor/conditions.fxml" />
-               </content>
-            </Tab>
-        </tabs>
-      </TabPane>
-   </children>
+    <children>
+        <TabPane layoutX="200.0" layoutY="100.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <tabs>
+                <Tab text="Linking">
+                    <content>
+                        <fx:include fx:id="linkingTab" source="tabs/editor/linking.fxml"/>
+                    </content>
+                </Tab>
+                <Tab text="Effects">
+                    <content>
+                        <fx:include fx:id="effectsTab" source="tabs/editor/effects.fxml"/>
+                    </content>
+                </Tab>
+                <Tab text="Events">
+                    <content>
+                        <fx:include fx:id="eventsTab" source="tabs/editor/events.fxml"/>
+                    </content>
+                </Tab>
+                <Tab text="MultiEvents">
+                    <content>
+                        <fx:include fx:id="multiEventsTab" source="tabs/editor/multiEvents.fxml"/>
+                    </content>
+                </Tab>
+                <Tab text="Conditions">
+                    <content>
+                        <fx:include fx:id="conditionsTab" source="tabs/editor/conditions.fxml"/>
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
+    </children>
 </AnchorPane>

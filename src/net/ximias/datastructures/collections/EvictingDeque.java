@@ -10,7 +10,7 @@ public class EvictingDeque<E> extends AbstractSequentialList<E> implements Deque
 	
 	public EvictingDeque(int maxSize) {
 		this.maxSize = maxSize;
-		deque = new LinkedBlockingDeque<>(maxSize+1);
+		deque = new LinkedBlockingDeque<>(maxSize + 1);
 	}
 	
 	@Override
@@ -44,11 +44,11 @@ public class EvictingDeque<E> extends AbstractSequentialList<E> implements Deque
 		Iterator<E> iter = iterator();
 		boolean b = false;
 		int index = 0;
-		while (iter.hasNext()){
+		while (iter.hasNext()) {
 			index++;
 			E val = iter.next();
-			if (c.contains(val)){
-				b=true;
+			if (c.contains(val)) {
+				b = true;
 				iter.remove();
 			}
 		}
@@ -60,11 +60,11 @@ public class EvictingDeque<E> extends AbstractSequentialList<E> implements Deque
 		Iterator<E> iter = iterator();
 		boolean b = false;
 		int index = 0;
-		while (iter.hasNext()){
+		while (iter.hasNext()) {
 			index++;
 			E val = iter.next();
-			if (!c.contains(val)){
-				b=true;
+			if (!c.contains(val)) {
+				b = true;
 				iter.remove();
 			}
 		}
@@ -114,8 +114,8 @@ public class EvictingDeque<E> extends AbstractSequentialList<E> implements Deque
 	@Override
 	public boolean removeFirstOccurrence(Object o) {
 		Iterator<E> iter = iterator();
-		while (iter.hasNext()){
-			if (iter.next().equals(o)){
+		while (iter.hasNext()) {
+			if (iter.next().equals(o)) {
 				iter.remove();
 				return true;
 			}
@@ -126,8 +126,8 @@ public class EvictingDeque<E> extends AbstractSequentialList<E> implements Deque
 	@Override
 	public boolean removeLastOccurrence(Object o) {
 		Iterator<E> iter = descendingIterator();
-		while (iter.hasNext()){
-			if (iter.next().equals(o)){
+		while (iter.hasNext()) {
+			if (iter.next().equals(o)) {
 				iter.remove();
 				return true;
 			}
@@ -169,7 +169,7 @@ public class EvictingDeque<E> extends AbstractSequentialList<E> implements Deque
 	}
 	
 	private boolean shouldRemove() {
-		return deque.size()> maxSize;
+		return deque.size() > maxSize;
 	}
 	
 	@Override
@@ -246,7 +246,8 @@ public class EvictingDeque<E> extends AbstractSequentialList<E> implements Deque
 	public int getMaxSize() {
 		return maxSize;
 	}
-	class Iter implements Iterator<E>{
+	
+	class Iter implements Iterator<E> {
 		final Iterator<E> chitor;
 		int index = 0;
 		E current;

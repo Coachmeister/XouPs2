@@ -12,12 +12,13 @@ import java.util.HashSet;
  * Stores values for to get and set as useful.
  */
 public class Persisted implements Serializable {
-	public static Persisted getInstance(){
+	public static Persisted getInstance() {
 		return PersistLoader.getInstance();
 	}
 	
 	/**
 	 * Used to set defaults if no saved data can be loaded.
+	 *
 	 * @return an instance initialized with default values.
 	 */
 	public Persisted defaults() {
@@ -31,13 +32,13 @@ public class Persisted implements Serializable {
 		ACTION_COLORING = populateActionColoring();
 		
 		INDAR = new Color(1, 0.8, 0.7, 1.0);
-		ESAMIR = new Color(0.7,0.9,1,1.0);
-		AMERISH = new Color(0.0,0.8,0.4,1.0);
-		HOSSIN = new Color(0.7,0.9,0.1,1.0);
-		OTHER = new Color(1.0,0.85,.75,1.0);
-		VS = new Color(0.4,0.0,1.0,1.0);
-		TR = new Color(0.8,0.0,0.0,1.0);
-		NC = new Color(0.1,0.3,0.9,1.0);
+		ESAMIR = new Color(0.7, 0.9, 1, 1.0);
+		AMERISH = new Color(0.0, 0.8, 0.4, 1.0);
+		HOSSIN = new Color(0.7, 0.9, 0.1, 1.0);
+		OTHER = new Color(1.0, 0.85, .75, 1.0);
+		VS = new Color(0.4, 0.0, 1.0, 1.0);
+		TR = new Color(0.8, 0.0, 0.0, 1.0);
+		NC = new Color(0.1, 0.3, 0.9, 1.0);
 		return this;
 	}
 	
@@ -59,23 +60,23 @@ public class Persisted implements Serializable {
 	public HashSet<File> PLANETSIDE_INPUT_PROFILE;
 	public File LAST_SELECTED_INPUT_PROFILE;
 	
-	private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException{
+	private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
 		in.defaultReadObject();
 		@SuppressWarnings("unchecked")
 		HashMap<String, PersistColor> actionColorPersist = (HashMap<String, PersistColor>) in.readObject();
 		ACTION_COLORING = new HashMap<>();
 		actionColorPersist.forEach((s, persistColor) -> ACTION_COLORING.put(s, persistColor.toColor()));
-		INDAR = ((PersistColor)in.readObject()).toColor();
-		ESAMIR =  ((PersistColor) in.readObject()).toColor();
+		INDAR = ((PersistColor) in.readObject()).toColor();
+		ESAMIR = ((PersistColor) in.readObject()).toColor();
 		AMERISH = ((PersistColor) in.readObject()).toColor();
-		HOSSIN =  ((PersistColor) in.readObject()).toColor();
-		OTHER =   ((PersistColor) in.readObject()).toColor();
+		HOSSIN = ((PersistColor) in.readObject()).toColor();
+		OTHER = ((PersistColor) in.readObject()).toColor();
 		VS = ((PersistColor) in.readObject()).toColor();
 		TR = ((PersistColor) in.readObject()).toColor();
 		NC = ((PersistColor) in.readObject()).toColor();
 	}
 	
-	private void writeObject(java.io.ObjectOutputStream out) throws IOException{
+	private void writeObject(java.io.ObjectOutputStream out) throws IOException {
 		out.defaultWriteObject();
 		HashMap<String, PersistColor> actionColorPersist = new HashMap<>();
 		ACTION_COLORING.forEach((key, value) -> actionColorPersist.put(key, PersistColor.getPersistColor(value)));
@@ -92,6 +93,7 @@ public class Persisted implements Serializable {
 	
 	/**
 	 * Adds default values to the actionColoring list.
+	 *
 	 * @return the actionColoring list.
 	 */
 	private HashMap<String, Color> populateActionColoring() {

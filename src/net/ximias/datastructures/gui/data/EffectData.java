@@ -4,93 +4,80 @@ import javafx.scene.paint.Color;
 import net.ximias.effect.EffectProducer;
 import net.ximias.effect.EffectView;
 import net.ximias.effect.producers.TimedEffectProducer;
-import net.ximias.effect.views.scenes.PlayStateScene;
+import net.ximias.effect.views.scenes.DefaultScene;
+import net.ximias.effect.views.scenes.EffectScene;
+import net.ximias.effect.views.scenes.JSONScene;
+import net.ximias.effect.views.scenes.PlayStateBackground;
+import net.ximias.logging.Logger;
 import net.ximias.network.Ps2EventStreamingConnection;
 import net.ximias.psEvent.condition.EventCondition;
 import net.ximias.psEvent.handler.Ps2EventHandler;
+import org.json.JSONObject;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
-import net.ximias.logging.Logger;
+import java.util.LinkedList;
 
 
 public class EffectData {
-	private final HashMap<String, EffectProducer> effects = new HashMap<>();
+	// Maybe..
 	private final HashMap<String, UnlinkedEvent> availableEvents = new HashMap<>();
-	private final HashMap<String, String> linkedEventNames = new HashMap<>();
-	private final HashMap<String, Ps2EventHandler> linkedEvents = new HashMap<>();
+	
+	private final HashMap<String, EffectProducer> effects = new HashMap<>();
 	private final HashMap<String, EventCondition> conditions = new HashMap<>();
+	private final HashMap<String, Ps2EventHandler> eventHandlers = new HashMap<>();
+	
 	private final Logger logger = Logger.getLogger(getClass().getName());
 	private final EffectView view;
 	
-	private final Ps2EventStreamingConnection connection = new Ps2EventStreamingConnection();
-	private final PlayStateScene scene;
+	private PlayStateBackground background;
 	
-	public EffectData(EffectView view) {
+	private final Ps2EventStreamingConnection connection = new Ps2EventStreamingConnection();
+	private final EffectScene scene;
+	
+	public EffectData(EffectView view, File effectDataFile) {
 		this.view = view;
-		scene = new PlayStateScene(view, connection);
+		
+		if (effectDataFile != null && effectDataFile.exists()) {
+			scene = new JSONScene(view, connection, effectDataFile);
+		} else {
+			scene = new DefaultScene(view, connection);
+		}
+		logger.general().info("Serializing all events to json...");
+		serializeAllEventsToFile("test2.json");
+		logger.general().info("Done serialising!");
+		
 		connection.hasDisconnectedProperty().addListener((observable, oldValue, newValue) -> {
-			if (newValue){
-				view.addEffect(new TimedEffectProducer(Color.BLACK, 200).build());
-				scene.updateBackground();
+			if (newValue) {
+				view.addEffect(new TimedEffectProducer("DisconnectedEffect", Color.BLACK, 200).build());
 			}
 		});
 	}
 	
-	public void linkEffectWithEvent(String eventName, String effectName){
-		if (!effects.containsKey(effectName) || !availableEvents.containsKey(eventName)) {
-			logger.application().warning("Effect could not be linked. One or more of the names does not exist");
-			return;
+	public void serializeAllEventsToFile(String filename) {
+		LinkedList<String> lines = new LinkedList<>();
+		JSONObject serialized = connection.serializeToJSON();
+		lines.add(serialized.toString());
+		try {
+			Files.write(Paths.get(filename), lines, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+		} catch (IOException e) {
+			throw new Error("Failed to write file", e);
 		}
-		if (linkedEvents.containsKey(eventName)){
-			logger.application().warning("Effect was already linked. Removing old link..");
-			connection.removeEvent(linkedEvents.get(eventName));
+	}
+	
+	public void intensityChanged(double brightness, double intensity) {
+		if (background == null) {
+			background = new PlayStateBackground(view, connection, intensity, brightness);
 		}
-		linkedEvents.put(eventName,availableEvents.get(eventName).linkWithEffect(effects.get(effectName),view, connection));
-		linkedEventNames.put(eventName, effectName);
-	}
-	
-	public void addAvailableEvent(String name, UnlinkedEvent unlinkedEvent){
-	    availableEvents.put(name, unlinkedEvent);
-	}
-	
-	public void removeAvailableEvent(String name){
-	    availableEvents.remove(name);
-	}
-	
-	public void addEffect(String name, EffectProducer producer){
-	    effects.put(name, producer);
-	}
-	
-	public void removeEffect(String name){
-	    effects.remove(name);
-	}
-	
-	public void addCondition(String name, EventCondition condition){
-	    conditions.put(name, condition);
-	}
-	
-	public void removeCondition(String name){
-	    conditions.remove(name);
-	}
-	
-	public HashMap<String, EventCondition> getConditions() {
-		return conditions;
-	}
-	
-	public EventCondition getConditionByName(String name){
-		return conditions.get(name);
-	}
-	
-	public HashMap<String, String> getLinkedEventNames() {
-		return linkedEventNames;
-	}
-	
-	public void intensityChanged(double brightness, double transparency) {
-		scene.intensityChanged(brightness, transparency);
+		background.intensityChanged(brightness, intensity);
 	}
 	
 	public void updateBackground() {
-		scene.updateBackground();
+		background.updateHandlers();
 	}
 	
 	public void playerIDUpdated() {

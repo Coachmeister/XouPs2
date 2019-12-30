@@ -2,9 +2,9 @@ package net.ximias.gui.tabs;
 
 
 import javafx.fxml.FXML;
+import net.ximias.datastructures.gui.data.EffectData;
 import net.ximias.gui.MainController;
 import net.ximias.gui.tabs.editor.controllers.*;
-import net.ximias.datastructures.gui.data.EffectData;
 
 public class EffectEditorTab {
 	private MainController mainController;

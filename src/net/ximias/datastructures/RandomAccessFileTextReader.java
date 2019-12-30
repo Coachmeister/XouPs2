@@ -22,26 +22,28 @@ public class RandomAccessFileTextReader {
 	
 	/**
 	 * Used to get the end position of the file.
+	 *
 	 * @return the end position of the file.
 	 */
 	public long endOfFile() throws IOException {
-		synchronized (file){
-			return file.length()/2;
+		synchronized (file) {
+			return file.length() / 2;
 		}
 	}
 	
 	/**
 	 * Use a comparator to locate a line with a binary search and sets the position before it.
-	 * @param line the target to find.
+	 *
+	 * @param line               the target to find.
 	 * @param locationComparator the comparator to use for determining the location of the lines in relation to each other.
 	 * @return {@code true}, if the line exists in the file.
 	 */
 	public boolean binarySearchLine(String line, Comparator<String> locationComparator, Comparator<String> valueComparator) throws IOException {
 		long largeIndex = endOfFile(); // EOF.
 		long smallIndex = 0;
-		this.charPos = endOfFile()/2; // Middle of file.
+		this.charPos = endOfFile() / 2; // Middle of file.
 		String readLine;
-		while (largeIndex- smallIndex >2){
+		while (largeIndex - smallIndex > 2) {
 			long currentPos = ((largeIndex - smallIndex) / 2) + smallIndex;
 			this.charPos = currentPos;
 			readLine = readNextLine();
@@ -49,15 +51,15 @@ public class RandomAccessFileTextReader {
 			if (comparison == 0) {
 				skipLines(-1);
 				break;
-			} else if (comparison < 0){
+			} else if (comparison < 0) {
 				largeIndex = currentPos;
-			}else {
+			} else {
 				smallIndex = currentPos;
 			}
 		}
 		for (long i = smallIndex; i < largeIndex; i++) {
 			this.charPos = i;
-			if (valueComparator.compare(line, readNextLine())==0) {
+			if (valueComparator.compare(line, readNextLine()) == 0) {
 				skipLines(-1);
 				//System.out.println(readPreviousLine());
 				return true;
@@ -72,49 +74,52 @@ public class RandomAccessFileTextReader {
 	
 	/**
 	 * Used to set the file read location.
+	 *
 	 * @param location the location in the file to start reading from
 	 */
 	public void seek(long location) throws IOException {
 		charPos = location;
-		if (isOutOfBounds()) throw new IndexOutOfBoundsException("Provided value is out of bounds: "+location+" size: "+endOfFile());
+		if (isOutOfBounds()) throw new IndexOutOfBoundsException("Provided value is out of bounds: " + location + " size: " + endOfFile());
 	}
 	
 	
 	/**
 	 * Skips a number of lines forwards and backwards in the file.
+	 *
 	 * @param lines the amount of lines to skip. May be negative.
 	 */
 	public void skipLines(int lines) throws IOException {
 		if (lines == 0) return;
-		if (lines<0){
+		if (lines < 0) {
 			findPrevLineBreak();
 			charPos--;
-			if (charPos <= 0){
+			if (charPos <= 0) {
 				charPos = 0;
 				return;
 			}
-			skipLines(lines+1);
-		}else{
+			skipLines(lines + 1);
+		} else {
 			findNextLineBreak();
 			charPos++;
-			if (charPos >= endOfFile()){
+			if (charPos >= endOfFile()) {
 				charPos = endOfFile();
 				return;
 			}
-			skipLines(lines-1);
+			skipLines(lines - 1);
 		}
 		
 	}
 	
 	/**
 	 * Finds the target line, and places the cursor before it.
+	 *
 	 * @param line the target to locate.
 	 * @return true, if the line is contained within the file.
 	 * @see #binarySearchLine(String, Comparator)
 	 */
 	public boolean seekLine(String line) throws IOException {
 		charPos = 0;
-		while (hasNext()){
+		while (hasNext()) {
 			String readLine = readNextLine();
 			if (readLine.equals(line)) break;
 		}
@@ -124,6 +129,7 @@ public class RandomAccessFileTextReader {
 	
 	/**
 	 * Reads the next line from the file, and returns it.
+	 *
 	 * @return the next line.
 	 */
 	public String readNextLine() throws IOException {
@@ -131,7 +137,7 @@ public class RandomAccessFileTextReader {
 			//System.out.println("No more lines found");
 			return null;
 		}
-		if (charPos != 0){
+		if (charPos != 0) {
 			findNextLineBreak();
 			charPos++;
 		}
@@ -143,11 +149,12 @@ public class RandomAccessFileTextReader {
 		
 		//System.out.println("Line start: " + lineStart);
 		//System.out.println("Line end: " + lineEnd);
-		return readDecodedString((int) (lineEnd-lineStart));
+		return readDecodedString((int) (lineEnd - lineStart));
 	}
 	
 	/**
 	 * Used to determine if more lines are available in the forward direction.
+	 *
 	 * @return {@code true}, if there are more lines to be read.
 	 * @throws IOException
 	 */
@@ -158,6 +165,7 @@ public class RandomAccessFileTextReader {
 	/**
 	 * Used to obtain the previous line.
 	 * readNextLine().equals(readPreviousLine()) will return true as long as hasNext is.
+	 *
 	 * @return
 	 * @throws IOException
 	 */
@@ -166,7 +174,7 @@ public class RandomAccessFileTextReader {
 			//System.out.println("No more lines found");
 			return null;
 		}
-		if (charPos != endOfFile()-1){
+		if (charPos != endOfFile() - 1) {
 			findNextLineBreak();
 		}
 		long lineStart = charPos;
@@ -178,12 +186,13 @@ public class RandomAccessFileTextReader {
 		//System.out.println("Line start: " + lineStart);
 		//System.out.println("Line end: " + lineEnd);
 		String result = readDecodedString((int) (lineEnd - lineStart));
-		charPos = Math.max(lineEnd-1,0);
+		charPos = Math.max(lineEnd - 1, 0);
 		return result;
 	}
 	
 	/**
 	 * Used to determine if there are more lines in the backwards direction.
+	 *
 	 * @return {@code true}, if there are more lines to be read in the backwards direction.
 	 */
 	public boolean hasPrevious() {
@@ -192,6 +201,7 @@ public class RandomAccessFileTextReader {
 	
 	/**
 	 * Reads a decoded string from the current character position and length forwards or backwards.
+	 *
 	 * @param length the length of data to read. May be negative.
 	 * @return the read data.
 	 * @throws IOException
@@ -203,10 +213,10 @@ public class RandomAccessFileTextReader {
 			return null;
 		}
 		CharBuffer decode = charset.decode(bb);
-		while (decode.hasRemaining()){
+		while (decode.hasRemaining()) {
 			char c = decode.get();
 			// GO AWAY, ZERO-WIDTH-NO-BREAK-SPACE. YOU'RE NOT REALLY THERE!:
-			if (Character.getType(c) != Character.FORMAT && Character.getType(c) != Character.CONTROL){
+			if (Character.getType(c) != Character.FORMAT && Character.getType(c) != Character.CONTROL) {
 				sb.append(c);
 			}
 		}
@@ -215,6 +225,7 @@ public class RandomAccessFileTextReader {
 	
 	/**
 	 * convenience method for locating the next line break.
+	 *
 	 * @throws IOException
 	 */
 	private void findNextLineBreak() throws IOException {
@@ -223,6 +234,7 @@ public class RandomAccessFileTextReader {
 	
 	/**
 	 * convenience method for locating the previous line break.
+	 *
 	 * @throws IOException
 	 */
 	private void findPrevLineBreak() throws IOException {
@@ -232,6 +244,7 @@ public class RandomAccessFileTextReader {
 	
 	/**
 	 * Locates the next line break in either direction.
+	 *
 	 * @param positive the direction to locate the line break in.
 	 * @throws IOException
 	 */
@@ -249,13 +262,13 @@ public class RandomAccessFileTextReader {
 				//Decode
 				CharBuffer decode = FileLogAppender.UTF16.decode(map);
 				boolean lineBreak = false;
-				while (decode.hasRemaining()){
+				while (decode.hasRemaining()) {
 					char character = decode.get();
 					//System.out.println(Character.getName(character));
 					
-					if (character == '\n'||lineBreak){
+					if (character == '\n' || lineBreak) {
 						lineBreak = true;
-						if (positive)charPos--;
+						if (positive) charPos--;
 						else charPos++;
 					}
 				}
@@ -269,6 +282,7 @@ public class RandomAccessFileTextReader {
 	
 	/**
 	 * Reads the individual bytes from the file.
+	 *
 	 * @param length the amount of bytes to read. May be negative.
 	 * @return a buffer containing the read bytes.
 	 * @throws IOException
@@ -288,13 +302,13 @@ public class RandomAccessFileTextReader {
 			return performReadOnlyRead((int) -charPos);
 		}
 		
-		synchronized (file){
+		synchronized (file) {
 			if (length < 0) {
 				length = Math.abs(length);
 				charPos -= length;
-				result = file.getChannel().map(FileChannel.MapMode.READ_ONLY, charPos*2, length*2);
+				result = file.getChannel().map(FileChannel.MapMode.READ_ONLY, charPos * 2, length * 2);
 			} else {
-				result = file.getChannel().map(FileChannel.MapMode.READ_ONLY, charPos*2, length*2);
+				result = file.getChannel().map(FileChannel.MapMode.READ_ONLY, charPos * 2, length * 2);
 				charPos += length;
 			}
 		}
@@ -303,10 +317,11 @@ public class RandomAccessFileTextReader {
 	
 	/**
 	 * used to determine if the character position is out of bounds.
+	 *
 	 * @return {@true}, if the character position is out of bounds.
 	 * @throws IOException
 	 */
 	private boolean isOutOfBounds() throws IOException {
-		return charPos<0 && charPos > endOfFile();
+		return charPos < 0 && charPos > endOfFile();
 	}
 }

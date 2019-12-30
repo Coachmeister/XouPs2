@@ -10,7 +10,7 @@ public class LinkingTabController {
 	public ListView effectList;
 	public TextField selectedEffect;
 	
-	public void injectEditorController(EffectEditorTab editorController){
+	public void injectEditorController(EffectEditorTab editorController) {
 	
 	}
 }

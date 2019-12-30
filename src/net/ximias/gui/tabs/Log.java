@@ -13,16 +13,16 @@ import javafx.util.Callback;
 import net.ximias.datastructures.RandomAccessFileTextReader;
 import net.ximias.datastructures.collections.EvictingObservableList;
 import net.ximias.gui.MainController;
-import net.ximias.logging.Category;
-import net.ximias.logging.CollectionLogAppender;
-import net.ximias.logging.CollectionLogReciever;
-import net.ximias.logging.FileLogAppender;
+import net.ximias.gui.tabs.log.Filter;
+import net.ximias.logging.*;
 
-import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedList;
 
 public class Log implements CollectionLogReciever {
+	private final Filter filter = new Filter(this);
+	private final LogfileReader logfileReader = new LogfileReader(this, filter);
 	@FXML
 	public ListView<String> list;
 	@FXML
@@ -31,93 +31,54 @@ public class Log implements CollectionLogReciever {
 	public ChoiceBox<String> levelChoice;
 	@FXML
 	public CheckBox filtersAnd;
-	private static final int LINES_PR_SCREEN = 100;
+	private static final int LINES_PR_SCREEN = 1000;
 	private static final int BUFFERED_SCREENS = 1;
-	private static final int LINES_TO_READ = (BUFFERED_SCREENS*LINES_PR_SCREEN)/2;
-	private static final char COMPARE_SUBSTRING_CHAR = '[';
+	public static final int LINES_TO_READ = (BUFFERED_SCREENS * LINES_PR_SCREEN) / 2;
+	public static final char COMPARE_SUBSTRING_CHAR = '[';
 	
 	/*
-	* 2 bytes pr char
-	* 250 char pr line
-	* 150 lines pr screen
-	
-	* 75000 bytes pr screen
-	* 10% of screen pr scrollInAbove
-	* */
+	 * 2 bytes pr char
+	 * 250 char pr line
+	 * 150 lines pr screen
+	 
+	 * 75000 bytes pr screen
+	 * 10% of screen pr scrollInAbove
+	 * */
 	private VirtualFlow<IndexedCell<String>> visibleItems;
-	private RandomAccessFileTextReader fileReader;
 	private ScrollBar verticalScroll;
 	private final EvictingObservableList<String> recentMessages = new EvictingObservableList<>(LINES_PR_SCREEN);
 	private final EvictingObservableList<String> pastMessages = new EvictingObservableList<>(BUFFERED_SCREENS * LINES_PR_SCREEN);
 	private boolean autoscroll = true;
 	private boolean cached = true;
-	private boolean topReached = false;
-	private final String[] SEVERE_FILTER = {"SEVERE"};
-	private final String[] WARNING_FILTER = {"SEVERE", "WARNING"};
-	private final String[] INFO_FILTER = {"SEVERE", "WARNING", "INFO"};
-	private String[] currentFilter = INFO_FILTER;
 	LinkedList<String> toRemove = new LinkedList<>();
+	private final Logger logger = Logger.getLogger(getClass().getName());
+	private int msg = 1;
 	
-	public void injectMainController(MainController controller, RandomAccessFile logFile){
-		fileReader = new RandomAccessFileTextReader(logFile, FileLogAppender.UTF16);
+	public Log() {
+		logfileReader.lineReaderThread.setDaemon(true);
+	}
+	
+	public void injectMainController(MainController controller, RandomAccessFile logFile) {
+		logfileReader.fileReader = new RandomAccessFileTextReader(logFile, FileLogAppender.UTF16);
 		recentMessages.add("Log tab initializing...");
 		populateFilters();
 		setupListView();
 		
 		
 		controller.addProjectLevelLoggerHandler(new CollectionLogAppender(this));
-	}
-	
-	private void populateFilters() {
-		LinkedList<String> categories = new LinkedList<>();
-		categories.add("All");
-		Arrays.stream(Category.values()).forEach(it-> categories.add(it.getName()));
-		categoryChoice.setItems(FXCollections.observableList(categories));
-		categoryChoice.getSelectionModel().select("All");
-		
-		levelChoice.setItems(FXCollections.observableArrayList("SEVERE","WARNING", "INFO"));
-		levelChoice.getSelectionModel().select("INFO");
-		levelChoice.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-			switch (newValue) {
-				case "SEVERE":
-					currentFilter = SEVERE_FILTER;
-					System.out.println("Severe");
-					break;
-				case "WARNING":
-					System.out.println("Warning");
-					currentFilter = WARNING_FILTER;
-					break;
-				default:
-					System.out.println("Default");
-					currentFilter = INFO_FILTER;
-					break;
+		/*new Timer(true).scheduleAtFixedRate(new TimerTask() {
+			@Override
+			public void run() {
+				if (msg % 2 == 0) {
+					logger.general().warning("Fill message: " + msg++);
+				} else {
+					logger.general().info("Fill message: " + msg++);
+				}
 			}
-			applyFilter();
-		});
-		categoryChoice.valueProperty().addListener(observable -> applyFilter());
-		filtersAnd.selectedProperty().addListener(observable -> applyFilter());
-		applyFilter();
+		}, 0, 500);*/
 	}
 	
-	private void applyFilter() {
-			recentMessages.clear();
-			pastMessages.clear();
-			readPastLines();
-			recentMessages.addAll(pastMessages);
-	}
-	
-	private boolean containsFilter(String it) {
-		boolean containsFilter = false;
-		for (String s : currentFilter) {
-			if (it.contains("[" + s + "]")){
-				containsFilter = true;
-				break;
-			}
-		}
-		return containsFilter;
-	}
-	
-	private void setupListView(){
+	private void setupListView() {
 		verticalScroll = getScrollbar();
 		if (verticalScroll == null) {
 			throw new Error("Scrollbar not found");
@@ -126,7 +87,7 @@ public class Log implements CollectionLogReciever {
 		list.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
 			@Override
 			public ListCell<String> call(ListView<String> param) {
-				return new ListCell<String>(){
+				return new ListCell<String>() {
 					@Override
 					protected void updateItem(String item, boolean empty) {
 						super.updateItem(item, empty);
@@ -137,7 +98,7 @@ public class Log implements CollectionLogReciever {
 							setText(item);
 							getStyleClass().clear();
 							getStyleClass().add("list-cell");
-							if (item.contains("[INFO]")){
+							if (item.contains("[INFO]")) {
 								getStyleClass().add("info");
 							}
 							if (item.contains("[WARNING]")) {
@@ -157,166 +118,176 @@ public class Log implements CollectionLogReciever {
 		verticalScroll.valueProperty().addListener((observable, oldValue, newValue) -> {
 			double position = newValue.doubleValue();
 			ScrollBar scrollBar = getScrollbar();
-			if (position == scrollBar.getMax()){
-				bottomReached();
-			}else if (position == scrollBar.getMin()){
-				topReached();
+			if (position == scrollBar.getMax()) {
+				scrollBottomReached();
+			} else if (position == scrollBar.getMin()) {
+				scrollTopReached();
+			} else {
+				autoscroll = false;
 			}
 		});
 		// I left the warning until I know that this will always work.
-		visibleItems = (VirtualFlow<IndexedCell<String>>) ((ListViewSkin<?>)list.getSkin()).getChildren().get(0);
+		visibleItems = (VirtualFlow<IndexedCell<String>>) ((ListViewSkin<?>) list.getSkin()).getChildren().get(0);
 		
 		list.setItems(recentMessages);
 	}
 	
+	private void populateFilters() {
+		LinkedList<String> categories = new LinkedList<>();
+		categories.add("All");
+		Arrays.stream(Category.values()).forEach(it -> categories.add(it.getName()));
+		categoryChoice.setItems(FXCollections.observableList(categories));
+		categoryChoice.getSelectionModel().select("All");
+		
+		levelChoice.setItems(FXCollections.observableArrayList("SEVERE", "WARNING", "INFO"));
+		levelChoice.getSelectionModel().select("INFO");
+		levelChoice.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+			switch (newValue) {
+				case "SEVERE":
+					filter.setCurrentFilter(Filter.SEVERE_FILTER);
+					break;
+				case "WARNING":
+					filter.setCurrentFilter(Filter.WARNING_FILTER);
+					break;
+				default:
+					filter.setCurrentFilter(Filter.INFO_FILTER);
+					break;
+			}
+			applyFilter();
+		});
+		categoryChoice.valueProperty().addListener((observable, oldValue, newValue) -> {
+			filter.setCategory(newValue);
+			applyFilter();
+		});
+		filtersAnd.selectedProperty().addListener((observable, oldValue, newValue) -> {
+			filter.setAnd(newValue);
+			applyFilter();
+		});
+		applyFilter();
+	}
+	
+	private synchronized void applyFilter() {
+		recentMessages.clear();
+		pastMessages.clear();
+		
+		logfileReader.readPastLinesOnLineReaderThread(this::filterApplyRead);
+		
+	}
+	
+	private synchronized void filterApplyRead(LinkedList<String> lines) {
+		Platform.runLater(() -> {
+			recentMessages.addAll(lines);
+			pastMessages.addAll(lines);
+			logfileReader.setTopReached(false);
+			bottomOfFileReached();
+			if (list.getItems().size() < LINES_PR_SCREEN) {
+				System.out.println("Filter Padding...");
+				logfileReader.readPastLinesOnLineReaderThread(this::padWithPastLines);
+			}
+		});
+	}
+	
+	private synchronized void padWithPastLines(LinkedList<String> lines) {
+		Platform.runLater(() -> {
+			while (!lines.isEmpty() && list.getItems().size() < LINES_PR_SCREEN) {
+				System.out.println("Added: " + lines.getLast());
+				recentMessages.addFirst(lines.getLast());
+				pastMessages.addFirst(lines.getLast());
+				lines.removeLast();
+			}
+			if (list.getItems().size() < LINES_PR_SCREEN && !logfileReader.isTopReached()) {
+				System.out.println("Recurse Padding...");
+				logfileReader.readPastLinesOnLineReaderThread(this::padWithPastLines);
+			} else {
+				logfileReader.setTopReached(false);
+			}
+		});
+	}
+	
 	private ScrollBar getScrollbar() {
-		for (Node node : list.lookupAll(".scroll-bar")){
-			if (node instanceof ScrollBar){
+		for (Node node : list.lookupAll(".scroll-bar")) {
+			if (node instanceof ScrollBar) {
 				if (((ScrollBar) node).getOrientation() == Orientation.VERTICAL) return (ScrollBar) node;
 			}
 		}
 		return null;
 	}
 	
-	private void topReached() {
-		if (recentMessages.size() < LINES_PR_SCREEN) return;
+	private void scrollTopReached() {
+		if (list.getItems().size() < LINES_PR_SCREEN) {
+			System.out.println("Not full");
+			return;
+		}
 		scrollUp();
 	}
 	
-	private void bottomReached() {
+	private void scrollBottomReached() {
 		if (cached) return;
-		if (pastMessages.getLast().equals(recentMessages.getLast()) ){
-			autoscroll = true;
-			cached = true;
-			list.setItems(recentMessages);
-		}else {
+		if ((pastMessages.isEmpty() && recentMessages.isEmpty()) || pastMessages.getLast().equals(recentMessages.getLast())) {
+			bottomOfFileReached();
+		} else {
 			scrollDown();
 		}
 	}
 	
-	private void scrollUp(){
+	public void bottomOfFileReached() {
+		Platform.runLater(() -> {
+			cached = true;
+			autoscroll = true;
+			list.setItems(recentMessages);
+		});
+	}
+	
+	private void scrollUp() {
 		System.out.println("Scroll up");
-		if (cached){
+		if (cached) {
 			list.setItems(pastMessages);
 			pastMessages.addAll(recentMessages);
 			cached = false;
-			readPastLines();
-		}else if (!topReached){
-			readPastLines();
+			logfileReader.setTopReached(false);
+			logfileReader.readPastLinesOnLineReaderThread(this::onPastLinesRead);
+		} else if (!logfileReader.isTopReached()) {
+			logfileReader.readPastLinesOnLineReaderThread(this::onPastLinesRead); //TODO REMEMBER TO SCROLL
 		}
 	}
 	
-	private void scrollDown(){
-		if (!cached){
-			readFutureLines();
+	private void scrollDown() {
+		if (!cached) {
+			logfileReader.readFutureLinesOnLineReaderThread(this::onFutureLinesRead);
 		}
-	}
-	
-	private void readFutureLines() {
-		String lastItem = visibleItems.getFirstVisibleCell().getItem();
-		try {
-			fileReader.binarySearchLine(pastMessages.getLast(),Comparator.comparing(s -> {
-				System.out.println(s);
-				if (!s.contains(COMPARE_SUBSTRING_CHAR+"")){
-					return "0";
-				}
-				return s.substring(0, s.indexOf(COMPARE_SUBSTRING_CHAR));
-			}));
-			for (int i = 0; i < LINES_TO_READ; i++) {
-				if (!fileReader.hasNext()) {
-					bottomReached();
-					break;
-				}
-				
-				
-				String line = fileReader.readNextLine();
-				if (inFilter(line)) {
-					pastMessages.addLast(line);
-				}else {
-					i--;
-				}
-				
-				
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		verticalScroll.setValue((verticalScroll.getMax()-verticalScroll.getMin())/2+verticalScroll.getMin());
-		list.scrollTo(lastItem);
-	}
-	
-	
-	private void readPastLines() {
-		String target;
-		String firstItem;
-		if (pastMessages.isEmpty()) {
-			target = null;
-			firstItem = null;
-		} else {
-			target = pastMessages.getFirst();
-			firstItem = visibleItems.getFirstVisibleCell().getItem();
-		}
-		try {
-			if (target != null) {
-				fileReader.binarySearchLine(target,Comparator.comparing(s -> {
-					System.out.println(s);
-					if (!s.contains(COMPARE_SUBSTRING_CHAR+"")){
-						return "z";
-					}
-					return s.substring(0, s.indexOf(COMPARE_SUBSTRING_CHAR));
-				}));
-			}else {
-				fileReader.seek(fileReader.endOfFile());
-			}
-			for (int i = 0; i < LINES_TO_READ; i++) {
-				if (!fileReader.hasPrevious()) {
-					System.out.println("Top reached");
-					topReached = true;
-					break;
-				}
-				String line = fileReader.readPreviousLine();
-				if (inFilter(line)) {
-					pastMessages.addFirst(line);
-				}else {
-					i--;
-				}
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		Platform.runLater(() -> {
-			if (firstItem != null){
-				list.scrollTo(firstItem);
-			}
-		});
 	}
 	
 	@Override
 	public void receiveMessage(String logMessage) {
-		if (inFilter(logMessage)){
-			Platform.runLater(()->recentMessages.addLast(logMessage));
+		//System.out.println("Message: "+logMessage+" In filter: "+inFilter(logMessage));
+		//System.out.println(recentMessages == list.getItems());
+		if (filter.inFilter(logMessage)) {
+			Platform.runLater(() -> recentMessages.addLast(logMessage));
 		}
 	}
 	
-	private boolean inFilter(String string){
-		if (filtersAnd.isSelected()){
-			return inLevelFilter(string) && inCategoryFilter(string);
-		}else{
-			return inLevelFilter(string) || inCategoryFilter(string);
-		}
+	public void onFutureLinesRead(LinkedList<String> lines) {
+		Platform.runLater(() -> pastMessages.addAll(lines));
 	}
 	
-	private boolean inLevelFilter(String string) {
-		for (String s : currentFilter) {
-			if (string.contains("["+s+"]")) {
-				return true;
+	public void onPastLinesRead(LinkedList<String> lines) {
+		Platform.runLater(() -> {
+			while (!lines.isEmpty()) {
+				pastMessages.addFirst(lines.getLast());
+				lines.removeLast();
 			}
-		}
-		return false;
+		});
 	}
 	
-	private boolean inCategoryFilter(String string){
-		if (categoryChoice.getValue().equals("All")) return true;
-		return string.contains("["+categoryChoice.getValue().toUpperCase()+"]");
+	public String getNewestLoadedMessage() {
+		return list.getItems().get(list.getItems().size() - 1);
+	}
+	
+	public String getOldestLoadedMessage() {
+		return list.getItems().get(0);
+	}
+	
+	public boolean isPastMessagesEmpty() {
+		return pastMessages.isEmpty();
 	}
 }

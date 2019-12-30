@@ -1,6 +1,5 @@
 package net.ximias.peripheral.Hue.Hue.hueEffects;
 
-import com.philips.lighting.hue.sdk.wrapper.entertainment.Color;
 import com.philips.lighting.hue.sdk.wrapper.entertainment.animation.ConstantAnimation;
 import com.philips.lighting.hue.sdk.wrapper.entertainment.effect.LightSourceEffect;
 
@@ -16,7 +15,7 @@ public class HueDelayEffect implements AreaEffectProducer, LightSourceEffectProd
 	public LightSourceEffect getEffect() {
 		LightSourceEffect effect = new LightSourceEffect();
 		ConstantAnimation emptyAnimation = new ConstantAnimation(0, durationMS);
-		effect.setColorAnimation(emptyAnimation,emptyAnimation, emptyAnimation);
+		effect.setColorAnimation(emptyAnimation, emptyAnimation, emptyAnimation);
 		effect.setOpacityAnimation(emptyAnimation);
 		effect.setRadiusAnimation(emptyAnimation);
 		effect.setPositionAnimation(emptyAnimation, emptyAnimation);

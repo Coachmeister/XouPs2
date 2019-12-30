@@ -3,47 +3,49 @@ package net.ximias.psEvent.handler;
 import net.ximias.effect.EffectProducer;
 import net.ximias.effect.EffectView;
 import net.ximias.fileParser.Initializer;
+import net.ximias.logging.Logger;
 import net.ximias.network.Ps2EventStreamingConnection;
 import net.ximias.psEvent.condition.EventCondition;
-import net.ximias.psEvent.condition.SingleCondition;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import net.ximias.logging.Logger;
 
-
-public class GlobalHandler extends Ps2EventHandler {
+public class GlobalEventHandler extends Ps2EventHandler implements ConditionedEventHandler {
 	private final EventCondition condition;
 	private final Logger logger = Logger.getLogger(getClass().getName());
 	
-	public GlobalHandler(EventCondition con, EffectProducer effect, EffectView view){
+	public GlobalEventHandler(EventCondition con, EffectProducer effect, EffectView view) {
 		super(effect);
 		condition = con;
 		this.effect = effect;
 		setView(view);
 	}
 	
-	public GlobalHandler(JSONObject o) {
-		if (o.getString("condition").equals("all")) condition = null;
-		else condition = new SingleCondition(o.getJSONObject("condition"));
-		
-		/*
-		if (o.getString("type").equals("player")) type = Ps2EventType.PLAYER;
-		else type = Ps2EventType.WORLD;*/
+	public GlobalEventHandler(JSONObject o) {
+		condition = Initializer.eventConditionFromNameWhileInit(o.getString("condition"));
 		
 		if (o.has("effect")) effect = Initializer.effectProducerFromNameWhileInit(o.getString("effect"));
 	}
 	
 	@Override
-	public HashMap<String, String> toJson() {
-		throw new UnsupportedOperationException("Not yet implemented!");
+	public JSONObject toJson() {
+		JSONObject ret = new JSONObject();
+		ret.put("type", "Global");
+		ret.put("condition", condition.getName());
+		if (effect != null) {
+			ret.put("effect", effect.getName());
+		}
+		return ret;
+	}
+	
+	public EventCondition getCondition() {
+		return condition;
 	}
 	
 	@Override
 	protected boolean conditionIsSatisfied(JSONObject payload) {
 		boolean evaluate = condition.evaluate(payload);
-		if (evaluate){
-			logger.effects().fine("Condition is true. Source: "+payload.optString("event_name","Not an event"));
+		if (evaluate) {
+			logger.effects().fine("Condition is true. Source: " + payload.optString("event_name", "Not an event"));
 		}
 		return evaluate;
 	}

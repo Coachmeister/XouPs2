@@ -8,7 +8,7 @@ import net.ximias.psEvent.handler.Ps2EventHandler;
 
 import java.util.ArrayList;
 
-public class UnlinkedMultiEvent implements UnlinkedEvent{
+public class UnlinkedMultiEvent implements UnlinkedEvent {
 	private ArrayList<UnlinkedEvent> handlers;
 	private ArrayList<UnlinkedEvent> resetters;
 	private boolean inOrder;
@@ -25,12 +25,12 @@ public class UnlinkedMultiEvent implements UnlinkedEvent{
 		this.name = name;
 	}
 	
-	public void addHandler(UnlinkedEvent handler){
+	public void addHandler(UnlinkedEvent handler) {
 		handlers.add(handler);
 	}
 	
-	public void addResetter(UnlinkedEvent event){
-	    resetters.add(event);
+	public void addResetter(UnlinkedEvent event) {
+		resetters.add(event);
 	}
 	
 	@Override

@@ -8,6 +8,6 @@ public interface GlobalKeyEffect extends KeyEffect {
 	
 	@Override
 	default Color[][] getKeyColors(int width, int height) {
-		return new Color[][] {{getGlobalColor()}};
+		return new Color[][]{{getGlobalColor()}};
 	}
 }

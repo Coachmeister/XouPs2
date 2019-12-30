@@ -9,7 +9,7 @@ import net.ximias.psEvent.handler.Ps2EventType;
 import net.ximias.psEvent.handler.PsEvent;
 import net.ximias.psEvent.handler.SingleEventHandler;
 
-public class UnlinkedSingleEvent implements UnlinkedEvent{
+public class UnlinkedSingleEvent implements UnlinkedEvent {
 	private Ps2EventType type;
 	private PsEvent eventName;
 	private EventCondition condition;

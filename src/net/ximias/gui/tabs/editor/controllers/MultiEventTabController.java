@@ -13,7 +13,7 @@ public class MultiEventTabController {
 	public TextField eventNameField;
 	public HBox eventListContainer;
 	
-	public void injectEditorController(EffectEditorTab editorController){
+	public void injectEditorController(EffectEditorTab editorController) {
 	
 	}
 	

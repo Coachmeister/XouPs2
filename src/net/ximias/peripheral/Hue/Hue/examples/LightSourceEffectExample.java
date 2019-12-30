@@ -1,16 +1,9 @@
 package net.ximias.peripheral.Hue.Hue.examples;
 
 import com.philips.lighting.hue.sdk.wrapper.entertainment.TweenType;
-import com.philips.lighting.hue.sdk.wrapper.entertainment.animation.ConstantAnimation;
-import com.philips.lighting.hue.sdk.wrapper.entertainment.animation.SequenceAnimation;
-import com.philips.lighting.hue.sdk.wrapper.entertainment.animation.TweenAnimation;
 import com.philips.lighting.hue.sdk.wrapper.entertainment.effect.Effect;
-import com.philips.lighting.hue.sdk.wrapper.entertainment.effect.LightSourceEffect;
 import javafx.scene.paint.Color;
 import net.ximias.peripheral.Hue.Hue.hueEffects.CircularEffect;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class LightSourceEffectExample implements HueExampleEffect {
 	private static final int DURATION = 2300;
@@ -19,7 +12,7 @@ public class LightSourceEffectExample implements HueExampleEffect {
 	
 	@Override
 	public Effect getEffect() {
-		CircularEffect hueEffect = new CircularEffect(DURATION,ROTATION, Color.RED, Color.PINK,1.5);
+		CircularEffect hueEffect = new CircularEffect(DURATION, ROTATION, Color.RED, Color.PINK, 1.5);
 		return hueEffect.getEffect();
 	}
 	

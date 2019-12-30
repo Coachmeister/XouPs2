@@ -12,10 +12,10 @@ public class MultiChannelEffectExample implements HueExampleEffect {
 	public Effect getEffect() {
 		MultiChannelEffect effect = new MultiChannelEffect();
 		
-		Channel frontLeft = new Channel(new Location(1,1),new ConstantAnimation(1),new ConstantAnimation(0), new ConstantAnimation(0),new ConstantAnimation(1));
-		Channel frontRight = new Channel(new Location(-1,1),new ConstantAnimation(0),new ConstantAnimation(1), new ConstantAnimation(0),new ConstantAnimation(1));
-		Channel backLeft = new Channel(new Location(1,-1),new ConstantAnimation(0),new ConstantAnimation(0), new ConstantAnimation(1),new ConstantAnimation(1));
-		Channel backRight = new Channel(new Location(-1,-1),new ConstantAnimation(0),new ConstantAnimation(1), new ConstantAnimation(1),new ConstantAnimation(1));
+		Channel frontLeft = new Channel(new Location(1, 1), new ConstantAnimation(1), new ConstantAnimation(0), new ConstantAnimation(0), new ConstantAnimation(1));
+		Channel frontRight = new Channel(new Location(-1, 1), new ConstantAnimation(0), new ConstantAnimation(1), new ConstantAnimation(0), new ConstantAnimation(1));
+		Channel backLeft = new Channel(new Location(1, -1), new ConstantAnimation(0), new ConstantAnimation(0), new ConstantAnimation(1), new ConstantAnimation(1));
+		Channel backRight = new Channel(new Location(-1, -1), new ConstantAnimation(0), new ConstantAnimation(1), new ConstantAnimation(1), new ConstantAnimation(1));
 		
 		effect.addChannel(frontLeft);
 		effect.addChannel(frontRight);

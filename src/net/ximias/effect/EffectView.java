@@ -5,5 +5,6 @@ package net.ximias.effect;
  */
 public interface EffectView {
 	void addEffect(Effect effect);
+	
 	double getEffectIntensity();
 }

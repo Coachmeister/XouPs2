@@ -30,15 +30,19 @@ import net.ximias.logging.FileLogAppender;
 import net.ximias.persistence.ApplicationConstants;
 import net.ximias.persistence.Persisted;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.logging.*;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.LogRecord;
 
 /**
  * Debug gui view
  * Displays the overall effect color
  */
-public class MainController extends Application implements Renderer{
+public class MainController extends Application implements Renderer {
 	
 	private static final java.util.logging.Logger PROJECT_LEVEL_LOGGER = java.util.logging.Logger.getLogger("net.ximias");
 	private final net.ximias.logging.Logger logger = net.ximias.logging.Logger.getLogger(getClass().getName());
@@ -47,7 +51,7 @@ public class MainController extends Application implements Renderer{
 	private final EffectContainer effectContainer = new EffectContainer(ApplicationConstants.DEFAULT_EFFECT_INTENSITY, this);
 	private AnimationTimer animationTimer;
 	private Rectangle statusArea;
-	private final StatusIndicator statusIndicatorController = StatusIndicator.getInstance() ;
+	private final StatusIndicator statusIndicatorController = StatusIndicator.getInstance();
 	
 	@FXML
 	private MainEffectView effectViewController;
@@ -113,11 +117,12 @@ public class MainController extends Application implements Renderer{
 		primaryStage.show();
 	}
 	
-	private void onResizeHeight(int newValue){
+	private void onResizeHeight(int newValue) {
 		logger.application().info("Height updated!");
 		Persisted.getInstance().APPLICATION_HEIGHT = newValue;
 	}
-	private void onResizeWidth(int newValue){
+	
+	private void onResizeWidth(int newValue) {
 		Persisted.getInstance().APPLICATION_WIDTH = newValue;
 	}
 	
@@ -143,7 +148,7 @@ public class MainController extends Application implements Renderer{
 				}
 			};
 			loginTabController.initProperty().addListener((observable, oldValue, newValue) -> {
-				if (!newValue){
+				if (!newValue) {
 					onLogin();
 				}
 			});
@@ -164,27 +169,27 @@ public class MainController extends Application implements Renderer{
 	}
 	
 	private void onLogin() {
-		effectData = new EffectData(effectContainer);
+		effectData = new EffectData(effectContainer, new File("test.json"));
 		setupEffectViewTab();
 		setupPropertiesTab();
 		setupEffectEditorTab();
 	}
 	
 	@FXML
-	private void showStatus(MouseEvent event){
+	private void showStatus(MouseEvent event) {
 		statusIndicatorController.showTooltip();
 	}
 	
 	@FXML
-	private void hideStatus(MouseEvent event){
+	private void hideStatus(MouseEvent event) {
 		statusIndicatorController.hideToolTip();
 	}
 	
-	public void addStatus(String text, StatusSeverity severity){
+	public void addStatus(String text, StatusSeverity severity) {
 		statusIndicatorController.addStatus(text, severity);
 	}
 	
-	public void removeStatus(String text){
+	public void removeStatus(String text) {
 		statusIndicatorController.removeStatus(text);
 	}
 	
@@ -206,7 +211,7 @@ public class MainController extends Application implements Renderer{
 		logger.application().info("Login tab init.");
 		loginTabController.injectMainController(this);
 		loginTabController.initProperty().addListener((observable, oldValue, newValue) -> {
-			if (newValue) effectData = new EffectData(getEffectContainer());
+			if (newValue) effectData = new EffectData(getEffectContainer(), new File("test.json"));
 		});
 	}
 	
@@ -244,7 +249,7 @@ public class MainController extends Application implements Renderer{
 	}
 	
 	private void animateFrame() {
-		if (effectContainer.isPausable()){
+		if (effectContainer.isPausable()) {
 			animationTimer.stop();
 		}
 		Canvas activeCanvas = getActiveCanvas();
@@ -273,9 +278,9 @@ public class MainController extends Application implements Renderer{
 		return tabPane.getSelectionModel().getSelectedIndex() == 0 ? effectViewController.getCanvas() : propertiesTabController.getCanvas();
 	}
 	
-	public void addProjectLevelLoggerHandler(Handler handler){
+	public void addProjectLevelLoggerHandler(Handler handler) {
 		PROJECT_LEVEL_LOGGER.addHandler(handler);
-		if (logDisabled){
+		if (logDisabled) {
 			handler.publish(new LogRecord(Level.SEVERE, "Logging is disabled on account of missing logging.properties file."));
 		}
 	}
@@ -298,7 +303,7 @@ public class MainController extends Application implements Renderer{
 	}
 	
 	
-	public EffectData getEffectData(){
+	public EffectData getEffectData() {
 		return effectData;
 	}
 	
